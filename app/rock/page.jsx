@@ -15,13 +15,14 @@ export default function RockyLocationsExplorer() {
   const [isDataLoading, setIsDataLoading] = useState(true);
 
   // Load data from rock
- useEffect(() => {
+useEffect(() => {
   const loadLocationData = async () => {
     try {
       setIsDataLoading(true);
-      console.log("Fetching from:", process.env.NEXT_PUBLIC_API_URL);
+      const backendUrl = 'https://locate-my-city-backend-production-e8a2.up.railway.app';
+      console.log("Fetching from:", backendUrl);
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/locations`);
+      const response = await fetch(`${backendUrl}/api/locations`);
       console.log("Response status:", response.status);
 
       if (!response.ok) {
