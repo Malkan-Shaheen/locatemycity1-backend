@@ -20,7 +20,7 @@ export default function RockyLocationsExplorer() {
   try {
     setIsDataLoading(true);
     // Point to your Express server running on port 3001
-    const response = await fetch('http://localhost:3001/api/locations');
+const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/locations`);
     
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
