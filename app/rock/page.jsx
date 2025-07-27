@@ -15,38 +15,31 @@ export default function RockyLocationsExplorer() {
   const [isDataLoading, setIsDataLoading] = useState(true);
 
   // Load data from backend
-  useEffect(() => {
-   const loadLocationData = async () => {
-  try {
-    setIsDataLoading(true);
-    // Point to your Express server running on port 3001
-const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/locations`);
-    
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    
-    const locationData = await response.json();
-    setAllRockyLocations(locationData);
-  } catch (error) {
-    console.error('Error loading location data:', error);
-    // Fallback to sample data if API fails
-    setAllRockyLocations([
-      {
-        "name": "Rocky Point",
-        "state": "Alaska",
-        "county": "Skagway",
-        "lat": 59.5066667,
-        "lon": -135.2477778
-      },
-    ]);
-  } finally {
-    setIsDataLoading(false);
-  }
-};
+ useEffect(() => {
+  const loadLocationData = async () => {
+    try {
+      setIsDataLoading(true);
+      console.log("Fetching from:", process.env.NEXT_PUBLIC_API_URL);
 
-    loadLocationData();
-  }, []);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/locations`);
+      console.log("Response status:", response.status);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const locationData = await response.json();
+      console.log("Fetched data:", locationData);
+      setAllRockyLocations(locationData);
+    } catch (error) {
+      console.error('Error loading location data:', error);
+    } finally {
+      setIsDataLoading(false);
+    }
+  };
+
+  loadLocationData();
+}, []);
 
   // Calculate most common names
   const getCommonLocationNames = () => {
