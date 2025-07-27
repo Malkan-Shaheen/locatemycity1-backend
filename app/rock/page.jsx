@@ -14,7 +14,7 @@ export default function RockyLocationsExplorer() {
   const [selectedUSState, setSelectedUSState] = useState(null);
   const [isDataLoading, setIsDataLoading] = useState(true);
 
-  // Load data from backend
+  // Load data from rock
  useEffect(() => {
   const loadLocationData = async () => {
     try {
