@@ -1410,6 +1410,9 @@ body {
   position: relative;
   overflow: hidden;
   z-index: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: auto;
 }
 
 .feature-card:hover {
@@ -1441,12 +1444,18 @@ h3 {
   border: none;
   margin-top: 15px;
   padding: 12px 25px;
-  font-size: 1px;
+  font-size: 1rem; /* Changed from 1px to 1rem */
   font-weight: 400;
   border-radius: 50px;
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 5px 15px rgba(3, 169, 244, 0.3);
+  white-space: normal; /* Allow text to wrap */
+  text-align: center; /* Center the text */
+  min-height: 44px; /* Minimum touch target size for mobile */
+  display: flex; /* Better text alignment */
+  align-items: center; /* Vertically center text */
+  justify-content: center; /* Horizontally center text */
 }
 
 .floating-elements .floating-element {
@@ -1574,6 +1583,17 @@ h3 {
     padding: 16px 35px;
     font-size: 1rem;
     max-width: 240px;
+  }
+}
+@media (max-width: 768px) {
+  .card-btn {
+    padding: 10px 15px;
+    font-size: 0.9rem;
+    width: 100%; /* Full width on mobile */
+  }
+  
+  .feature-card {
+    padding: 25px; /* Reduce padding on mobile */
   }
 }
 
