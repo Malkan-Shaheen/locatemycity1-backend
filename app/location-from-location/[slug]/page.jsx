@@ -345,7 +345,7 @@ const getLanguageByCode = (code) => {
     const destFormatted = formatForUrl(destination);
     
     // Navigate to the new route
-    router.push(`/card2/how-far-is-${destFormatted}-from-${sourceFormatted}`);
+    router.push(`/location-from-location/how-far-is-${destFormatted}-from-${sourceFormatted}`);
   };
 
   if (!sourcePlace || !destinationPlace) {

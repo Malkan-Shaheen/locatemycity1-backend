@@ -146,12 +146,10 @@ const handleCalculate = () => {
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
 
-  // Navigate to the clean URL only
-  router.push(`/card1/how-far-is-${destinationSlug}-from-me`);
-  
-  // Store the full destination in state or context if needed
-  // Or use the rewrites to handle it internally
+  // Navigate to the new URL structure (but keep the same displayed URL)
+  router.push(`/location-from-me/how-far-is-${destinationSlug}-from-me`);
 };
+
 
   return (
     <>

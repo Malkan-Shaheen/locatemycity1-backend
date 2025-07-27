@@ -24,7 +24,7 @@ import {
   FaLanguage
 } from 'react-icons/fa';
 import { useRouter, usePathname } from 'next/navigation';
-import Header from '../../../../components/Header';
+import Header from '../../../components/Header';
 import dynamic from 'next/dynamic';
 
 const Map = dynamic(() => import('@/components/Map-comp'), { ssr: false });
@@ -94,14 +94,15 @@ export default function DistanceResult() {
   const router = useRouter();
   const pathname = usePathname();
 
-  // Get destination from path
-const getDestinationFromPath = () => {
-  // First try to get from pathname directly
-  const pathMatch = pathname?.match(/how-far-is-(.+?)(-from-me)?$/);
-  if (pathMatch) {
-    const rawName = pathMatch[1];
-    // Clean up the name - replace hyphens with spaces
-    return decodeURIComponent(rawName).replace(/-/g, ' ').trim();
+
+const getDestinationFromPath = (pathname) => {
+  // First try to get from pathname parameter
+  if (pathname) {
+    const pathMatch = pathname.match(/how-far-is-(.+?)(-from-me)?$/);
+    if (pathMatch) {
+      const rawName = pathMatch[1];
+      return decodeURIComponent(rawName).replace(/-/g, ' ').trim();
+    }
   }
   
   // Fallback to checking window.location only on client side
@@ -109,10 +110,12 @@ const getDestinationFromPath = () => {
     const urlMatch = window.location.pathname.match(/how-far-is-(.+?)(-from-me)?$/);
     return urlMatch ? decodeURIComponent(urlMatch[1]).replace(/-/g, ' ').trim() : null;
   }
+  
   return null;
 };
 
-  const [destination, setDestination] = useState(getDestinationFromPath());
+ const [destination, setDestination] = useState(null);
+
 
   // Add this useEffect hook near the top of your component
  useEffect(() => {
@@ -126,6 +129,14 @@ const getDestinationFromPath = () => {
     }
   }
 }, []);
+useEffect(() => {
+  const dest = getDestinationFromPath(pathname);
+  if (dest) {
+    setDestination(dest);
+    setDestinationName(dest); // optional, so heading updates immediately
+  }
+}, [pathname]);
+
 
   // Clean up URL if needed
   useEffect(() => {

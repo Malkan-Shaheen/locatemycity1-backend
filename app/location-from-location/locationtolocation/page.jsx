@@ -36,7 +36,7 @@ export default function DistanceCalculator() {
       .replace(/^-|-$/g, '');
     
     // Navigate to the clean URL
-    router.push(`/card2/how-far-is-${sourceSlug}-from-${destSlug}`);
+    router.push(`/location-from-location/how-far-is-${sourceSlug}-from-${destSlug}`);
   };
 
   return (
@@ -75,7 +75,7 @@ export default function DistanceCalculator() {
             <button 
               className="calculate-btn" 
               onClick={handleCalculate} 
-              disabled={isLoading || !sourcePlace || !destinationPlace}
+              
             >
               {isLoading ? (
                 <span><span className="spinner"></span> Calculating</span>

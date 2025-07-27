@@ -102,7 +102,7 @@ const focusOnMapLocation = (lat, lon, name) => {
     .toLowerCase(); // Convert to lowercase
   
   // Open the how-far-is page with just the clean name
-  window.open(`/card1/how-far-is-${cleanName}-from-me`, '_blank');
+  window.open(`/location-from-me/how-far-is-${cleanName}-from-me`, '_blank');
 };
 
 

@@ -67,7 +67,7 @@ export default function SpringLocationsExplorer() {
   const focusOnLocation = (lat, lon, name) => {
   // Create a clean URL path
   const cleanName = name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-  const cleanUrl = `/card1/how-far-is-${cleanName}-from-me`;
+  const cleanUrl = `/location-from-me/how-far-is-${cleanName}-from-me`;
   
   // Create a hidden form to submit the data
   const form = document.createElement('form');

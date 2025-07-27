@@ -103,7 +103,7 @@ export default function HeroSection() {
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-+|-+$/g, '');
 
-    router.push(`/card1/how-far-is-${destinationSlug}-from-me`);
+      router.push(`/location-from-me/how-far-is-${destinationSlug}-from-me`);
   };
 
   return (
