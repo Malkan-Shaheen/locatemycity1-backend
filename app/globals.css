@@ -150,51 +150,26 @@ body {
 .info-card:nth-child(2) { background: linear-gradient(to top right, #f5f5ff, #ffffff); }
 .info-card:nth-child(3) { background: linear-gradient(to top right, #fff8f5, #ffffff); }
 
-/* Mobile Responsiveness */
-@media (max-width: 768px) {
-  .cards-container {
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 20px;
-    padding: 0 10px;
-  }
-  
-  .info-card {
-    padding: 16px;
-  }
-  
-  .info-card h3 {
-    font-size: 1.1rem;
-    margin-bottom: 12px;
-  }
-  
-  .info-card .card-button {
-    padding: 8px 12px;
-    font-size: 0.85rem;
-  }
-}
-
 @media (max-width: 480px) {
-  .cards-container {
-    grid-template-columns: 1fr;
-  }
-  
-  .info-card {
-    padding: 14px;
-  }
-  
-  .info-card h3 {
-    font-size: 1rem;
-  }
-  
-  /* Force button text to always show */
   .info-card .card-button {
-    white-space: normal;
-    height: auto;
-    min-height: 36px; /* Ensure enough space for text */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
+    /* Size & Spacing */
+    min-height: 44px !important; /* Apple's recommended tap target */
+    padding: 10px 12px !important;
+    
+    /* Text Control */
+    white-space: normal !important;
+    line-height: 1.3 !important; /* Prevents text clipping */
+    overflow: visible !important;
+    
+    /* Layout */
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important; /* Full-width for better touch */
+    
+    /* Emergency Fallbacks */
+    font-size: 14px !important;
+    word-break: break-word !important;
   }
 }
 
