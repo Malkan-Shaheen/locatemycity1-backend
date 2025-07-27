@@ -13,16 +13,26 @@ export default function SpringLocationsExplorer() {
   const [selectedState, setSelectedState] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
+ useEffect(() => {
     const loadData = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch('http://localhost:3001/api/springs/flat');
-        if (!response.ok) throw new Error(`Error: ${response.status}`);
+        const backendUrl = 'https://locate-my-city-backend-production-e8a2.up.railway.app';
+        console.log("Fetching from:", backendUrl);
+
+        const response = await fetch(`${backendUrl}/api/springs/flat`);
+        console.log("Response status:", response.status);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data = await response.json();
+        console.log("Fetched data:", data);
         setAllSprings(data);
       } catch (error) {
         console.error('Error loading spring data:', error);
+        // Fallback data if API fails
         setAllSprings([
           {
             name: "Blue Springs",
@@ -36,6 +46,7 @@ export default function SpringLocationsExplorer() {
         setIsLoading(false);
       }
     };
+
     loadData();
   }, []);
 
