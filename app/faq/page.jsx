@@ -1,5 +1,6 @@
 'use client';
 import Header from '../../components/Header';
+import Footer from '../../components/Footer'
 
 import { useState } from 'react';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
@@ -60,6 +61,8 @@ export default function FAQPage() {
           </div>
         ))}
       </div>
-    </div></div>
+    </div>
+    <Footer />
+    </div>
   );
 }

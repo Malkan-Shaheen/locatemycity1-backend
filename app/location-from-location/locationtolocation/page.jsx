@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Head from 'next/head';
 import Header from '../../../components/Header';
+import Footer from '../../../components/Footer';
 import LocationInput from './LocationInput';
 
 export default function DistanceCalculator() {
@@ -89,6 +90,7 @@ export default function DistanceCalculator() {
           </div>
         </div>
       </div>
+      <Footer />
     </>
   );
 }

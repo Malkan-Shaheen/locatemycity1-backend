@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
 import Header from '../../../components/Header';
+import Footer from '../../../components/Footer';
 import { FaGlobe, FaSun, FaWind, FaPlane, FaAnchor, FaClock } from 'react-icons/fa';
 import { WiSunrise, WiSunset } from 'react-icons/wi';
 
@@ -513,10 +514,12 @@ const faqs = [
                   onClick={() => navigateToRoute(route.source, route.destination)}
                 />
               ))}
-            </div>
+            </div> 
           </section>
+          
         )}
       </main>
+     <Footer />
     </>
   );
 }

@@ -4,6 +4,7 @@ import Head from 'next/head';
 import { FaMapMarkerAlt, FaArrowRight } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import Header from '../../../components/Header';
+import Footer from '../../../components/Footer'
 
 export default function DistanceCalculator() {
   const [userLatitude, setUserLatitude] = useState(null);
@@ -264,8 +265,9 @@ const handleCalculate = () => {
             </button>
           </div>
         </div>
+       
       </div>
-
+ <Footer />
       
     </>
   );

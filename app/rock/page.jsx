@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import Image from 'next/image';
 import Header from '../../components/Header';
+import Footer from '../../components/Footer';
 
 // Dynamically import Leaflet to avoid SSR issues
 const MapWithNoSSR = dynamic(() => import('../../components/MapComponent'), { ssr: false });
@@ -291,8 +292,10 @@ const focusOnMapLocation = (lat, lon, name) => {
               ))
             )}
           </div>
-        </section>
+        </section><Footer />
+      
       </main>
+      
 
      
     </>
