@@ -593,7 +593,7 @@ const getPlaceDetails = async (address) => {
     return (
       <li key={index} className="route-item"> {/* Added route-item class */}
         <Link 
-          href={`/card2/how-far-is-${countrySlug}-from-${destSlug}`}
+          href={`/location-from-location/how-far-is-${countrySlug}-from-${destSlug}`}
           className="route-link" /* Added route-link class */
         >
           How far is {country.name} from {destinationName.split(',')[0]}?
@@ -628,7 +628,7 @@ const getPlaceDetails = async (address) => {
 
         return (
           <li key={index}>
-            <Link href={`/card2/how-far-is-${citySlug}-from-${destSlug}`}>
+            <Link href={`/location-from-location/how-far-is-${citySlug}-from-${destSlug}`}>
               {city} to {destinationName.split(',')[0]}
             </Link>
           </li>
