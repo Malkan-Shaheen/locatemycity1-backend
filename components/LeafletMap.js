@@ -6,17 +6,31 @@ import 'leaflet/dist/leaflet.css';
 
 const LeafletMap = ({ source, destination, distance }) => {
   const mapRef = useRef(null);
-  const mapInstanceRef = useRef(null); // optional to ensure map doesn't get reinitialized
+  const mapInstanceRef = useRef(null);
+  const layerRef = useRef(null);
 
   useEffect(() => {
     if (!source || !destination || !mapRef.current) return;
 
-    // Prevent reinitialization
-    if (mapInstanceRef.current) {
-      mapInstanceRef.current.remove();
-    }
+    // Cleanup previous map instance
+    const cleanup = () => {
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.off();
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+      }
+      if (layerRef.current) {
+        layerRef.current.clearLayers();
+        layerRef.current = null;
+      }
+    };
 
-    const map = L.map(mapRef.current).setView(
+    cleanup();
+
+    // Initialize new map
+    const map = L.map(mapRef.current, {
+      preferCanvas: true, // Better performance for frequent updates
+    }).setView(
       [
         (parseFloat(source.lat) + parseFloat(destination.lat)) / 2,
         (parseFloat(source.lng) + parseFloat(destination.lng)) / 2
@@ -25,6 +39,7 @@ const LeafletMap = ({ source, destination, distance }) => {
     );
 
     mapInstanceRef.current = map;
+    layerRef.current = L.layerGroup().addTo(map);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors',
@@ -48,18 +63,19 @@ const LeafletMap = ({ source, destination, distance }) => {
       shadowSize: [41, 41],
     });
 
+    // Add markers to layer group
     L.marker([source.lat, source.lng], { icon: sourceIcon })
-      .addTo(map)
+      .addTo(layerRef.current)
       .bindPopup(`<b>Source:</b> ${source.name}<br>Lat: ${source.lat}, Lng: ${source.lng}`);
 
     L.marker([destination.lat, destination.lng], { icon: destinationIcon })
-      .addTo(map)
+      .addTo(layerRef.current)
       .bindPopup(`<b>Destination:</b> ${destination.name}<br>Lat: ${destination.lat}, Lng: ${destination.lng}`);
 
     const line = L.polyline(
       [[source.lat, source.lng], [destination.lat, destination.lng]],
       { color: 'blue', weight: 2, dashArray: '5,5' }
-    ).addTo(map);
+    ).addTo(layerRef.current);
 
     const midpoint = line.getBounds().getCenter();
     L.marker(midpoint, {
@@ -68,16 +84,14 @@ const LeafletMap = ({ source, destination, distance }) => {
         className: 'distance-label-container',
         iconSize: [100, 30],
       }),
-    }).addTo(map);
+    }).addTo(layerRef.current);
 
     map.fitBounds([
       [source.lat, source.lng],
       [destination.lat, destination.lng],
     ], { padding: [50, 50] });
 
-    return () => {
-      map.remove();
-    };
+    return cleanup;
   }, [source, destination, distance]);
 
   return (
