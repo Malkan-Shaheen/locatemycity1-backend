@@ -1,4 +1,3 @@
-/** @type {import('next').NextConfig} */
 const nextConfig = {
   async rewrites() {
     return [
@@ -10,7 +9,7 @@ const nextConfig = {
       // Add the new rewrite with proper parameter mapping
       {
         source: '/card1/how-far-is-:destination-from-me',
-        destination: '/card1/how-far-is-:destination-from-me', // Same as source
+        destination: '/card1/how-far-is-:destination-from-me', 
       },
       // Optional: trailing slash version
       {

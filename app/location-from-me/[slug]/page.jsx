@@ -361,6 +361,13 @@ const getPlaceDetails = async (address) => {
   };
 
   const handleUnitChange = (newUnit) => setUnit(newUnit);
+  
+  const capitalizeWords = (str) => {
+  if (!str) return '';
+  return str.split(' ').map(word => 
+    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+  ).join(' ');
+};
 
   // Weather icon component
   const getWeatherIcon = () => {
@@ -398,7 +405,7 @@ const getPlaceDetails = async (address) => {
     <>
       <Header />
       <Head>
-        <title>How far is {destinationName} from me? | LocateMyCity</title>
+        <title>How far is {capitalizeWords(destinationName)} from me? | LocateMyCity</title>
         <link rel="icon" type="image/png" href="/favicon.png" />
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
@@ -406,15 +413,14 @@ const getPlaceDetails = async (address) => {
       </Head>
 
       <div className="distance-page">
-       <div className="page-header">
-  <h1>How far is {destinationName} from me?</h1>
+     <div className="page-header">
+  <h1>How far is {capitalizeWords(destinationName)} from me?</h1>
   <p className="description">
-    Find out exactly how far {destinationName} is from your current location. 
+    Find out exactly how far {capitalizeWords(destinationName)} is from your current location. 
     Use our interactive tool to calculate the distance in miles, kilometers, 
     or nautical miles. Includes weather, nearby places, and travel insights.
   </p>
 </div>
-
         <div className="map-container">
           {sourceCoords && destCoords && (
             <Map 
