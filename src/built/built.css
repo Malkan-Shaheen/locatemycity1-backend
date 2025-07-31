@@ -1,67 +1,164 @@
+/* Main container - full viewport */
 .bp-container {
-  background-color: black;
-  color: white;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem;
-  text-align: center;
   position: relative;
-  font-family: 'Segoe UI', Roboto, sans-serif;
-  height: 550px;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #000;
 }
 
-.bp-text-content {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.bp-main-heading {
-  font-size: 1.8rem;
-  font-weight: 650;
-  margin-top: 10px;
-  margin-bottom: 0.5rem;
-  line-height: 1;
-}
-
-.bp-sub-heading {
-  font-size: 1.8rem;
-  font-weight: 650;
-  margin-bottom: 2rem;
-  line-height: 1;
-}
-
-.bp-description-text {
-  font-size: 1.1rem;
-  line-height: 1.2;
-  margin-bottom: 2rem;
-}
-
-.bp-paragraph {
-  margin-bottom: 0.5rem;
-}
-
-.bp-tagline-text {
-  font-size: 1.2rem;
-  font-style: italic;
-  font-weight: bold;
-}
-
-
+/* Image container - full height */
 .bp-image-container {
   position: absolute;
-  bottom: 0;
+  top: 0;
   left: 0;
-  margin-left: 90px;
-  /* transform: rotate(-15deg); */
-  opacity: 0.8;
-  width: 230px;
-  margin-top: 30px;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  overflow: hidden;
 }
 
+/* Background image - extends beyond container */
 .bp-main-image {
+  position: absolute;
+  top: 50%;
+  left: 0;
   width: 100%;
-  height: auto;
+  height: 300%; /* Double height for scrollable area */
+  object-fit: cover;
+  object-position: center;
+  transform: translateY(-20);
+  will-change: transform;
+  transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+/* Content overlay - always centered */
+.bp-text-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 800px;
+  z-index: 2;
+  padding: 2rem;
   border-radius: 0.5rem;
+  color: white;
+  text-align: center;
+  pointer-events: none;
+}
+
+/* Scroll hint */
+.bp-scroll-hint {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255,255,255,0.7);
+  font-size: 0.9rem;
+  z-index: 3;
+  animation: bounce 2s infinite;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0) translateX(-50%); }
+  40% { transform: translateY(-15px) translateX(-50%); }
+  60% { transform: translateY(-7px) translateX(-50%); }
+}
+
+
+/* ===== Typography ===== */
+.bp-text-content h1 {
+  font-size: 34px;
+  font-family: 'Poppins', sans-serif;
+  line-height: 145%;
+  letter-spacing: 6%;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+  text-transform: uppercase;
+ 
+}
+
+.bp-text-content h2 {
+    font-size: 34px;
+  font-family: 'Poppins', sans-serif;
+  line-height: 145%;
+  letter-spacing: 6%;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+  text-transform: uppercase;
+  margin-bottom: 30px;
+}
+
+.bp-text-content p {
+  font-size: 18px;
+  line-height: 6%;
+  margin-bottom: 1.25rem;
+ font-family: 'Poppins', sans-serif;
+  font-weight: 400;
+  letter-spacing: 3px;
+  
+}
+
+/* ===== Scroll Hint ===== */
+.bp-scroll-hint {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  color: rgba(255,255,255,0.8);
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 1px;
+  animation: bounce 2s infinite ease-in-out;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+
+
+/* ===== Responsive Adjustments ===== */
+@media (max-width: 768px) {
+  .bp-text-content {
+    padding: 1.75rem;
+    width: 95%;
+  }
+  
+  .bp-text-content h1 {
+    font-size: 1.7rem;
+  }
+  
+  .bp-text-content h2 {
+    font-size: 1.3rem;
+  }
+  
+  .bp-text-content p {
+    font-size: 1rem;
+  }
+  
+  .bp-scroll-hint {
+    bottom: 1.5rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .bp-text-content {
+    padding: 1.25rem;
+  }
+  
+  .bp-text-content h1 {
+    font-size: 1.4rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .bp-text-content h2 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+  }
 }

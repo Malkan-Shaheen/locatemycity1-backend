@@ -51,7 +51,12 @@ const timerComponents = timerArray.map(([unit, value], index) => (
       <div className="overlay" />
 
       <div className="content">
-       <img src="/heading.png" alt="Project Black Logo" className="heading-image" />
+         
+    <img className='img-frame' src="/images/frame-hero.png" alt="Left Leaf"  />
+<h1 className="heading">Project BLACK</h1>
+    {/* <img src="images/leaf-right.png" alt="Right Leaf" style="width: 50px; height: auto;" /> */}
+  
+  <div id="root"></div>
 
         <p className="subtitle">BE A PART OF THE MOVEMENT</p>
         <p className="description">
@@ -66,7 +71,7 @@ const timerComponents = timerArray.map(([unit, value], index) => (
            
         </div>
       </div>
-    </div>
+   </div>
   );
 };
 
