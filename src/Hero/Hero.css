@@ -243,3 +243,16 @@ body, html {
   display: block;
   text-transform: capitalize;
 }
+@media (max-width: 768px) {
+  .heading {
+    white-space: normal; /* Allow text wrapping on mobile */
+    line-height: 1.2;
+    letter-spacing: min(8px, 0.8vw);
+  }
+  
+  .countdown-line {
+    width: 90vw;
+    height: 0.3vh;
+    top: 12%;
+  }
+}
