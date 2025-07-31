@@ -183,16 +183,3 @@
     height: 250%;
   }
 }
-@media (min-width: 1440px) {
-  .bp-text-content h1 {
-    font-size: 3rem;
-  }
-
-  .bp-text-content h2 {
-    font-size: 2.2rem;
-  }
-
-  .bp-text-content p {
-    font-size: 1.2rem;
-  }
-}
