@@ -1,0 +1,67 @@
+.bp-container {
+  background-color: black;
+  color: white;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  text-align: center;
+  position: relative;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  height: 550px;
+}
+
+.bp-text-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.bp-main-heading {
+  font-size: 1.8rem;
+  font-weight: 650;
+  margin-top: 10px;
+  margin-bottom: 0.5rem;
+  line-height: 1;
+}
+
+.bp-sub-heading {
+  font-size: 1.8rem;
+  font-weight: 650;
+  margin-bottom: 2rem;
+  line-height: 1;
+}
+
+.bp-description-text {
+  font-size: 1.1rem;
+  line-height: 1.2;
+  margin-bottom: 2rem;
+}
+
+.bp-paragraph {
+  margin-bottom: 0.5rem;
+}
+
+.bp-tagline-text {
+  font-size: 1.2rem;
+  font-style: italic;
+  font-weight: bold;
+}
+
+
+.bp-image-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  margin-left: 90px;
+  /* transform: rotate(-15deg); */
+  opacity: 0.8;
+  width: 230px;
+  margin-top: 30px;
+}
+
+.bp-main-image {
+  width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+}

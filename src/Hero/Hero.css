@@ -1,0 +1,207 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  height: 100%;
+  font-family: 'Orbitron', sans-serif;
+}
+
+.hero-container {
+  position: relative;
+  height: 130vh;
+  width: 100%;
+  overflow: hidden;
+  color: white;
+  background-image: url('/src/images/hero-bg1.png');
+    background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.background-image {
+  position: absolute;
+  width: 100%;
+  height: 130%;
+  object-fit: cover;
+  opacity: 0.9;
+  z-index: 0;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+
+.content {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.heading-image {
+  width: 1000px;
+  max-width: 100%;
+  height: auto;
+  margin-top: 30px;
+  max-height: 150px;
+  object-fit: contain;
+  margin-bottom: 1rem;
+}
+
+
+.symbol {
+  color: #FFD700;
+  display: inline-block;
+  margin: 0 5px;
+}
+
+.rotate {
+  transform: rotate(90deg);
+}
+
+.angle {
+  transform: rotate(45deg);
+}
+
+.subtitle {
+  margin-top: 15px;
+  font-size: 0.9rem;
+  letter-spacing: 0.75em;
+  text-transform: uppercase;
+  color: #ddd;
+}
+
+.description {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 0.95rem;
+  color: #ccc;
+  line-height: 1.6;
+  margin-top: 40px;
+  max-width: 800px;
+  text-align: center;
+  letter-spacing: 0.1rem;
+}
+
+.cta-button {
+  margin-top: 30px;
+  background: white;
+  color: black;
+  padding: 12px 28px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.cta-button:hover {
+  background: #e0e0e0;
+}
+
+
+
+.countdown-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 80px;
+  position: relative;
+}
+
+.coming-soon {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: white;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  text-align: center;
+}
+.timer-colon {
+  color: white;
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin: 0 0px;
+  align-self: center;
+  font-family: 'Orbitron', sans-serif;
+  z-index: 1;
+ 
+
+}
+
+
+.countdown-line {
+  position: absolute;
+  top: 30%;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 4px;
+  background-color: #0096FF;
+  border-radius: 2px;
+  z-index: 1;
+}
+
+.countdown {
+  position: relative;
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+
+}
+
+
+.timer-box {
+  background: linear-gradient(145deg, #c78a00, #ffe17b);
+  /* box-shadow: 0 3px 0 #c78a00; */
+  border-radius: 3px;
+  padding: 3px 3px;
+  min-width: 40px;
+  text-align: center;
+  color: white;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: lighter;
+  z-index: 2;
+  font-size: 40px;
+}
+.timer-value {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2.8rem;
+  font-weight: 600;
+  color: white;
+  transform: scaleX(0.85); /* ✅ Slight horizontal compression (smart look) */
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+  margin: 0;
+  padding: 0;
+}
+
+
+.timer-label {
+  font-size: 0.65rem;
+  font-weight: 300;
+  margin-top: 4px;
+  letter-spacing: 1px;
+  display: block;
+  text-transform: capitalize;
+}

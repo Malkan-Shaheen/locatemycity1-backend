@@ -1,0 +1,84 @@
+.custom-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 50px;
+  background-image: url('./../images/header-bg.png');
+  background-repeat: no-repeat;
+  background-size: cover; /* Optional: make it fit nicely */
+  background-position: center;
+  font-family: 'Roboto', sans-serif;
+  border-top: 1px solid white;
+  border-bottom: 1px solid white;
+  height: 60px;
+  box-sizing: border-box;
+}
+
+
+.logo-img {
+  height: 55px;
+  width: auto;
+  object-fit: contain;
+  margin-left: 80px;
+}
+
+.nav {
+  display: flex;
+  gap: 35px; /* more spacing */
+}
+
+.lineage-button {
+  background: transparent;
+  color: white;
+  border: 1px solid white;
+  padding: 6px 16px;
+  font-size: 13px;
+  border-radius: 10px; /* reduced */
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+
+/* Right side with nav + button */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 25px; /* Small spacing between nav and button */
+}
+
+/* Nav links */
+
+
+.nav-link {
+  color: white;
+  font-size: 13px;
+  font-weight: 400;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+  color: #fdb913;
+}
+
+.nav-link.active {
+  color: #fdb913;
+  font-weight: 600;
+}
+
+/* Button styling */
+
+
+.lineage-button:hover {
+  background-color: #fdb913;
+  color: black;
+  border-color: #fdb913;
+}
+
+.cart-icon {
+  font-size: 14px;
+  transform: translateY(1px);
+}
