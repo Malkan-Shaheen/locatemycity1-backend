@@ -50,11 +50,13 @@ body, html {
   left: 50%;
   transform: translateX(-50%);
   height: auto;
-  width: 120%; /* Makes the frame significantly larger */
-  min-width: 150%;
-  max-width: 150%;
+  width: 105%; /* Makes the frame significantly larger */
+  min-width: 90%;
+  max-width: 120%;
   padding: 0;
   z-index: 4;
+  bottom: 7px;
+
 }
 
 
