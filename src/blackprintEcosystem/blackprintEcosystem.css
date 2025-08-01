@@ -37,13 +37,14 @@
 .bp-wrapper::before {
   width: min(140vw, 600px); /* reduced size */
   height: min(40vw, 600px); /* keep aspect ratio manually defined */
-  top: -10%; /* moved down */
+  top: 10%; /* moved down */
   left: -13%;
-  background: radial-gradient(
-    circle,
-    rgba(255, 132, 12, 0.35) 0%,
-    rgba(255, 132, 12, 0) 65%
-  );
+ background: radial-gradient(
+  circle,
+  rgba(255, 132, 12, 0.35) 0%,
+  rgba(255, 132, 12, 0) 65%
+);
+
   filter: blur(100px);
 
 }

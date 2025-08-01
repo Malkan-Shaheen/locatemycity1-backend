@@ -166,13 +166,13 @@
 .line-top-left {
   top: 15px;
   left: 60px; /* Changed from -4.5px to 0px */
-  height: 123px;
+  height: 135px;
 }
 
 .line-bottom-left {
-  top: 370px;
+  top: 295px;
   left: 60px; /* Changed from -4.5px to 0px */
-  height: 68px;
+  height: 155px;
 }
 .empower-text {
   padding-left: 16px; /* Optional: creates room between line and text */
@@ -182,8 +182,8 @@
 /* Right vertical line is correct */
 .line-right-vertical {
   top: 135px;
-  right: -30px;
-  height: 253px;
+  right: 0px;
+  height: 140px;
 }
 
 @media (max-width: 1024px) {
@@ -257,10 +257,13 @@
   border-image: linear-gradient(90deg, #CD9E3C 0%, #BD8A2D 100%);
   border-image-slice: 1;
 }
-.frame-img-2 {
+/* .frame-img-2 {
   width: 217.5px;
   height: 150.75px;
-  margin-top: 113px; /* ✅ Adds space on top */
+  margin-top: 113px; 
+} */
+.frame-img-4 {
+  margin-top: -120px; 
 }
 .frame-img:hover {
   transform: scale(1.03); /* Slight zoom */
