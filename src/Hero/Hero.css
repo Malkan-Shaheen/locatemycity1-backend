@@ -51,7 +51,7 @@ body, html {
     left: 50%;
     transform: translateX(-50%);
     height: auto;
-    width: 80%;
+    width: 18%;
     min-width: 87%;
     max-width: 120%;
     padding: 0;
@@ -62,8 +62,8 @@ body, html {
 
 @media (min-width: 1200px) {
   .img-frame {
-    min-width: 90%; /* Slightly wider than the heading */
-    max-width: 110%; /* Allows more growth on very large screens */
+    min-width: 120%; /* Slightly wider than the heading */
+    max-width: 130%; /* Allows more growth on very large screens */
     bottom: -15px; /* Adjust position for larger heading */
   }
 }
@@ -80,7 +80,7 @@ body, html {
 .hero-container {
   position: relative;
   height: 100vh;
-  width: 100%;
+  width: 130%;
   overflow: hidden;
   color: white;
   background-image: url('/src/images/hero-bg1.png');
