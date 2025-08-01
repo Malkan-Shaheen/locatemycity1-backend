@@ -45,17 +45,17 @@ body, html {
  /* margin-bottom: 60px; */
 }
 .img-frame {
-  position: absolute;
-  bottom: -60px; /* Or whatever vertical spacing you prefer */
-  left: 50%;
-  transform: translateX(-50%);
-  height: auto;
-  width: 105%; /* Makes the frame significantly larger */
-  min-width: 90%;
-  max-width: 120%;
-  padding: 0;
-  z-index: 4;
-  bottom: 7px;
+  
+    position: absolute;
+    bottom: -13px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: auto;
+    width: 80%;
+    min-width: 87%;
+    max-width: 120%;
+    padding: 0;
+    z-index: 4;
 
 }
 
