@@ -1,0 +1,130 @@
+.directory-section {
+  display: flex;
+  width: 1389.84px;
+  height: 558.36px;
+  margin: auto;
+  background-color: #0d0d0d;
+  color: white;
+  font-family: 'Poppins', sans-serif;
+  position: relative;
+}
+
+.directory-left {
+  width: 720px;
+  display: flex;
+  flex-direction: row;
+  align-items: center; /* ✅ Center content vertically */
+  padding: 40px;
+  box-sizing: border-box;
+  background-color: #0d0d0d;
+}
+
+.side-icons {
+  display: flex;
+  flex-direction: column;
+  gap: 6.15px;
+  margin-right: 20px;
+}
+
+.icon {
+  width: 33.84px;
+  height: 33.84px;
+  padding: 6.15px;
+  border-radius: 117.53px;
+  border: 0.62px solid #CD9E3C;
+  background: linear-gradient(90deg, #CD9E3C 0%, #BD8A2D 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: black;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.icon:hover {
+  transform: scale(1.1);
+}
+
+.directory-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* ✅ Vertically center text */
+}
+
+.directory-heading {
+  position: absolute;
+  top: -100px;
+  width: 100%;
+  text-align: center;
+}
+
+.directory-heading h1 {
+  font-family: 'Poppins';
+  font-weight: 700;
+  font-size: 34px;
+  line-height: 145%;
+  letter-spacing: 6%;
+  text-align: center;
+  text-transform: capitalize;
+  margin: 0;
+}
+
+.directory-heading h3 {
+  font-family: 'Poppins';
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 145%;
+  letter-spacing: 6%;
+  text-align: center;
+  text-transform: capitalize;
+  margin-top: 10px;
+}
+
+.directory-title {
+  font-family: 'Satoshi', sans-serif;
+  font-weight: 700;
+  font-size: 17px;
+  line-height: 150%;
+  margin-bottom: 20px;
+  text-transform: capitalize;
+}
+
+.directory-text {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 150%;
+  text-align: justify;
+  margin-bottom: 20px;
+}
+
+.join-btn {
+  background-color: white;
+  color: black;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 10px 24px;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.join-btn:hover {
+  background-color: #f0f0f0;
+}
+
+.directory-right {
+  width: 669.84px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.directory-image {
+  width: 582px;
+  height: 435px;
+  border-radius: 7px;
+  object-fit: cover;
+}

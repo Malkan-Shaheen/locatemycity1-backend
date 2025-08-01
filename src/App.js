@@ -3,7 +3,8 @@ import Header from './Header/Header';
 import HeroSection from './Hero/Hero';
 import Built from './built/built';
 import NextSection from './blackprintEcosystem/blackprintEcosystem';
-import empower from './Empower/empower';
+import Vision from './vision/vision';
+import Directory from './built/Directory/directory';
 
 function App() {
   const nextSectionRef = useRef();
@@ -29,8 +30,11 @@ function App() {
         <NextSection />
       </div>
 
-      <empower />
+   <Vision />
+   <Directory />
     </div>
+
+    
   );
 }
 

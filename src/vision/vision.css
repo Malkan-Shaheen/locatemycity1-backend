@@ -1,0 +1,193 @@
+/* Center everything on the page */
+.page-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 40px;
+  background-color: #0d0d0d;
+}
+
+
+/* Adjust layout to support the line */
+.empower-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0px; /* We'll control spacing with margins now */
+  align-items: center;
+  justify-content: center;
+}
+
+/* Hide vertical line on smaller screens */
+@media (max-width: 1024px) {
+  .vertical-line {
+    display: none;
+  }
+
+  .empower-section {
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .empower-text {
+    margin-left: 0;
+    padding: 0 10px;
+  }
+}
+
+
+/* Section that holds image + text */
+.empower-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  align-items: flex-start;
+  max-width: 1200px;
+  background-color: #0d0d0d;
+  color: #ffffff;
+  font-family: 'Poppins', sans-serif;
+  border-radius: 2px;
+}
+
+/* Frame container */
+.frame-container {
+  width: 564.25px;
+  height: 499.25px;
+  border-radius: 12px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.frame-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+/* Text section */
+.empower-text {
+  max-width: 492.75px;
+  display: flex;
+  flex-direction: column;
+  gap: 21px;
+    margin-left: 80px; 
+    position: relative;
+}
+
+
+
+@media (max-width: 1024px) {
+  .empower-section {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .frame-container {
+    width: 100%;
+    height: auto;
+  }
+
+  .frame-image {
+    height: auto;
+    width: 100%;
+  }
+
+  .empower-text {
+    max-width: 100%;
+    margin-left: 0;      /* Remove the 104px margin on smaller screens */
+    padding: 0 10px;     /* Optional: add horizontal padding for breathing space */
+  }
+}
+
+.empower-heading {
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: capitalize;
+  line-height: 1.45;
+}
+
+.empower-border-line {
+  height: 4.5px;
+  width: 100px;
+  background: linear-gradient(90deg, #CD9E3C 0%, #BD8A2D 100%);
+}
+
+.empower-desc {
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: capitalize;
+  line-height: 1.45;
+  color: #d0d0d0;
+}
+
+/* Responsive layout */
+@media (max-width: 768px) {
+  .empower-section {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .frame-container {
+    width: 100%;
+    height: auto;
+  }
+
+  .frame-image {
+    height: auto;
+    width: 100%;
+  }
+
+  .empower-text {
+    max-width: 100%;
+    padding: 0 10px;
+  }
+}
+.text-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Common line style */
+.line {
+  position: absolute;
+  width: 4.5px;
+  background: linear-gradient(180deg, #CD9E3C 0%, #BD8A2D 100%);
+  border-radius: 2px;
+}
+
+/* Adjusted left lines closer to text */
+.line-top-left {
+  top: 48px;
+  left: 50px; /* Changed from -4.5px to 0px */
+  height: 123px;
+}
+
+.line-bottom-left {
+  top: 270px;
+  left: 50px; /* Changed from -4.5px to 0px */
+  height: 68px;
+}
+.empower-text {
+  padding-left: 16px; /* Optional: creates room between line and text */
+}
+
+
+/* Right vertical line is correct */
+.line-right-vertical {
+  top: 212px;
+  right: -30px;
+  height: 253px;
+}
+
+@media (max-width: 1024px) {
+  .line {
+    display: none;
+  }
+}
