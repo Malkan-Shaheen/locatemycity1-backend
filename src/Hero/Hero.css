@@ -27,6 +27,7 @@ body, html {
   white-space: nowrap; 
   max-width: 100%; 
   padding: 0 20px;
+  align-items: center;
 }
 
 .heading {
@@ -36,6 +37,7 @@ body, html {
   line-height: 1;
   letter-spacing: 12px;
   text-align: center;
+  align-items: center;
   white-space: nowrap;
   overflow: visible;
   text-overflow: clip;
@@ -52,12 +54,21 @@ body, html {
   left: 50%;
   transform: translateX(-50%);
   height: auto;
-  width: 100%;
-  min-width: 100%;
+  width: auto; /* Changed from 100% to auto */
+  min-width: 90%; /* This ensures it doesn't shrink smaller than the heading */
+  max-width: 90%; /* Allows it to grow slightly beyond the heading */
   padding: 0;
   z-index: 2;
+
 }
 
+@media (min-width: 1200px) {
+  .img-frame {
+    min-width: 110%; /* Slightly wider than the heading */
+    max-width: 130%; /* Allows more growth on very large screens */
+    bottom: -15px; /* Adjust position for larger heading */
+  }
+}
 .subtitle {
   margin-top: 40px;
   font-size: 0.9rem;
@@ -162,23 +173,71 @@ body, html {
 }
 
 /* Flip Clock Styles */
+/* Container for the entire countdown */
 .flipClock {
   display: flex;
   justify-content: center;
-  gap: 15px;
-  margin-top: 20px;
+  align-items: center;
+  gap: 15px; /* Space between units */
 }
 
-.flipUnitContainer {
-  display: block;
+/* Wrapper for each flip unit (day/hour/minute/second) */
+.flipUnitWrapper {
   position: relative;
-  width: 80px;
-  height: 100px;
+  width: 83.42px; /* Width to contain the flip unit and decorations */
+  height: 110px; /* Height to contain all elements */
+}
+
+/* The actual flip container - now matches Figma specs */
+.flipUnitContainer {
+  position: relative;
+  width: 75.28px;
+  height: 31.81px;
   perspective: 300px;
-  perspective-origin: center;
-  background: linear-gradient(135deg, #d4af37, #b8860b);
-  border-radius: 8px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  top: 21.91px;
+  left: 4.07px;
+  border-radius: 4.57px;
+  background: linear-gradient(248.62deg, #946318 0%, #B48424 23.06%, #E4C658 51.93%, #9E6A17 85.55%, #85560F 100%);
+  overflow: hidden;
+}
+
+/* Colon separator between units */
+.flipUnitWrapper:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: white;
+  border-radius: 50%;
+  right: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Flip cards inside - maintaining animation */
+.upperCard, .lowerCard {
+  position: absolute;
+  width: 100%;
+  height: 50%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 8px;
+  overflow: hidden;
+}
+
+.upperCard {
+  top: 0;
+  align-items: flex-end;
+  border-top-left-radius: 4.57px;
+  border-top-right-radius: 4.57px;
+}
+
+.lowerCard {
+  bottom: 0;
+  align-items: flex-start;
+  border-bottom-left-radius: 4.57px;
+  border-bottom-right-radius: 4.57px;
 }
 
 .flipUnitContainer::before,
@@ -202,16 +261,6 @@ body, html {
   right: -6px;
 }
 
-.upperCard, .lowerCard {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  width: 100%;
-  height: 50%;
-  overflow: hidden;
-  z-index: 1;
-}
 
 .upperCard span, .lowerCard span {
   font-size: 2.5em;
@@ -337,9 +386,7 @@ body, html {
     width: 110%; /* Slightly wider than text */
   }
 
-  .flipClock {
-    gap: 8px;
-  }
+ 
 
   .flipUnitContainer {
     width: 60px;

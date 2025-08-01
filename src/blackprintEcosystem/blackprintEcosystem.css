@@ -197,8 +197,8 @@
 /* COMING SOON TAG - PERFECT DIAGONAL PLACEMENT */
 .bp-coming-soon-tag {
   position: absolute;
-  top: 15px; /* Adjust this to move up/down */
-  right: -40px; /* Adjust this to move left/right */
+  top: 30px;          
+  right: -40px;       /* Adjust this to move left/right */
   background: #ff3a3a;
   color: white;
   padding: 5px 40px;
@@ -211,8 +211,9 @@
   text-align: center;
   opacity: 0;
   transition: opacity 0.3s ease;
-    border-top-left-radius: 130px;
+  border-top-left-radius: 130px;
   border-bottom-right-radius: 94px;
+
 }
 
 /* CARD CONTAINER */

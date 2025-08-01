@@ -21,10 +21,10 @@ const FlipUnitContainer = ({ digit, shuffle, unit }) => {
   let currentDigit = digit;
   let previousDigit = digit - 1;
 
-  if (unit !== 'hours') {
-    previousDigit = previousDigit === -1 ? 59 : previousDigit;
+  if (unit !== 'days') {
+    previousDigit = previousDigit === -1 ? (unit === 'hours' ? 23 : 59) : previousDigit;
   } else {
-    previousDigit = previousDigit === -1 ? 23 : previousDigit;
+    previousDigit = previousDigit === -1 ? 364 : previousDigit;
   }
 
   if (currentDigit < 10) {
@@ -42,16 +42,28 @@ const FlipUnitContainer = ({ digit, shuffle, unit }) => {
 
   return (
     <div className={'flipUnitContainer'}>
+      <div className="number-rectangle"></div>
       <StaticCard position={'upperCard'} digit={currentDigit} />
       <StaticCard position={'lowerCard'} digit={previousDigit} />
       <AnimatedCard digit={digit1} animation={animation1} />
       <AnimatedCard digit={digit2} animation={animation2} />
+      {unit !== 'seconds' && (
+        <div className="colon-container">
+          <div className="colon-dot top"></div>
+          <div className="colon-dot bottom"></div>
+          <div className="colon-line"></div>
+          <div className="colon-circle left"></div>
+          <div className="colon-circle right"></div>
+        </div>
+      )}
     </div>
   );
 };
 
 const FlipClock = () => {
-  const [time, setTime] = useState({
+  const [timeLeft, setTimeLeft] = useState({
+    days: 0,
+    daysShuffle: true,
     hours: 0,
     hoursShuffle: true,
     minutes: 0,
@@ -61,13 +73,28 @@ const FlipClock = () => {
   });
 
   useEffect(() => {
-    const timerID = setInterval(() => {
-      const date = new Date();
-      const hours = date.getHours();
-      const minutes = date.getMinutes();
-      const seconds = date.getSeconds();
+    const calculateTimeLeft = () => {
+      const now = new Date();
+      const targetDate = new Date('December 31, 2025 23:59:59');
+      const difference = targetDate - now;
 
-      setTime(prevTime => ({
+      if (difference > 0) {
+        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((difference / 1000 / 60) % 60);
+        const seconds = Math.floor((difference / 1000) % 60);
+
+        return { days, hours, minutes, seconds };
+      }
+      return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+    };
+
+    const updateTimer = () => {
+      const { days, hours, minutes, seconds } = calculateTimeLeft();
+
+      setTimeLeft(prevTime => ({
+        days,
+        daysShuffle: days !== prevTime.days ? !prevTime.daysShuffle : prevTime.daysShuffle,
         hours,
         hoursShuffle: hours !== prevTime.hours ? !prevTime.hoursShuffle : prevTime.hoursShuffle,
         minutes,
@@ -75,16 +102,20 @@ const FlipClock = () => {
         seconds,
         secondsShuffle: seconds !== prevTime.seconds ? !prevTime.secondsShuffle : prevTime.secondsShuffle,
       }));
-    }, 50);
+    };
+
+    updateTimer();
+    const timerID = setInterval(updateTimer, 1000);
 
     return () => clearInterval(timerID);
   }, []);
 
   return (
     <div className={'flipClock'}>
-      <FlipUnitContainer unit={'hours'} digit={time.hours} shuffle={time.hoursShuffle} />
-      <FlipUnitContainer unit={'minutes'} digit={time.minutes} shuffle={time.minutesShuffle} />
-      <FlipUnitContainer unit={'seconds'} digit={time.seconds} shuffle={time.secondsShuffle} />
+      <FlipUnitContainer unit={'days'} digit={timeLeft.days} shuffle={timeLeft.daysShuffle} />
+      <FlipUnitContainer unit={'hours'} digit={timeLeft.hours} shuffle={timeLeft.hoursShuffle} />
+      <FlipUnitContainer unit={'minutes'} digit={timeLeft.minutes} shuffle={timeLeft.minutesShuffle} />
+      <FlipUnitContainer unit={'seconds'} digit={timeLeft.seconds} shuffle={timeLeft.secondsShuffle} />
     </div>
   );
 };
@@ -107,7 +138,7 @@ const ProjectBlackLanding = () => {
         </p>
         <button className="cta-button">Get Updates</button>
         <div className="countdown-wrapper">
-          <p className="coming-soon">Coming Soon (30 August 2025)</p>
+          <p className="coming-soon">Coming Soon (31 December 2025)</p>
           <FlipClock />
         </div>
       </div>
