@@ -11,28 +11,36 @@ const Built = ({ onScrollComplete }) => {
   const currentScroll = useRef(0);
   const [isVisible, setIsVisible] = useState(false);
 
-  // Smooth scroll animation
+  // Smooth scroll animation with slower movement
   const animateScroll = () => {
-    // Apply easing for smooth movement
-    currentScroll.current += (targetScroll.current - currentScroll.current) * 0.1;
+  // Slower easing (changed from 0.1 to 0.05)
+  currentScroll.current += (targetScroll.current - currentScroll.current) * 0.05;
+  
+  if (imageRef.current && containerRef.current) {
+    // Calculate maximum scrollable percentage
+    const containerHeight = containerRef.current.clientHeight;
+    const imageHeight = imageRef.current.clientHeight;
+    const maxScrollable = ((imageHeight - containerHeight) / imageHeight) * 100;
     
-    // Update image position (from 0% to -100%)
-    if (imageRef.current) {
-      imageRef.current.style.transform = `translateY(-${currentScroll.current}%)`;
-    }
+    // Clamp the scroll percentage to not exceed the image bounds
+    const clampedScroll = Math.min(currentScroll.current, maxScrollable);
     
-    // Update scroll hint opacity
+    // Apply the transform
+    imageRef.current.style.transform = `translateY(-${clampedScroll}%)`;
+    
+    // Update hint opacity based on clamped scroll
     if (hintRef.current) {
-      hintRef.current.style.opacity = `${1 - (currentScroll.current / 100)}`;
-      hintRef.current.style.display = currentScroll.current >= 100 ? 'none' : 'block';
+      const scrollProgress = clampedScroll / maxScrollable;
+      hintRef.current.style.opacity = `${1 - scrollProgress}`;
+      hintRef.current.style.display = clampedScroll >= maxScrollable ? 'none' : 'block';
     }
 
-    // Check if scroll is complete
-    if (Math.abs(targetScroll.current - currentScroll.current) < 0.5) {
-      currentScroll.current = targetScroll.current;
+    // Check if scroll is complete (with small threshold)
+    if (Math.abs(targetScroll.current - currentScroll.current) < 0.5 || 
+        clampedScroll >= maxScrollable) {
+      currentScroll.current = Math.min(targetScroll.current, maxScrollable);
       
-      // Trigger completion when fully scrolled
-      if (currentScroll.current >= 100 && onScrollComplete) {
+      if (clampedScroll >= maxScrollable && onScrollComplete) {
         onScrollComplete();
       }
       
@@ -41,9 +49,10 @@ const Built = ({ onScrollComplete }) => {
     } else {
       animationFrameId.current = requestAnimationFrame(animateScroll);
     }
-  };
+  }
+};
 
-  // Handle scroll events
+  // Handle scroll events with reduced sensitivity
   const handleScroll = (e) => {
     if (!containerRef.current || !isVisible) return;
     
@@ -51,18 +60,16 @@ const Built = ({ onScrollComplete }) => {
     const containerTop = containerRect.top;
     const containerHeight = containerRect.height;
     
-    // Only trigger when container is in viewport
     if (containerTop < window.innerHeight && containerTop > -containerHeight) {
       e.preventDefault();
       
-      // Calculate scroll direction and amount
+      // Reduced scroll sensitivity (changed from 0.5 to 0.3)
       const delta = e.deltaY || e.detail || -e.wheelDelta;
       targetScroll.current = Math.min(
-        Math.max(targetScroll.current + delta * 0.5, 0),
+        Math.max(targetScroll.current + delta * 0.3, 0),
         100
       );
       
-      // Start animation if not already running
       if (!animationFrameId.current) {
         animationFrameId.current = requestAnimationFrame(animateScroll);
       }
@@ -120,7 +127,6 @@ const Built = ({ onScrollComplete }) => {
         <p className="bp-tagline-text">The Revolution Is Premium ™</p>
       </div>
 
-     
     </div>
   );
 };
