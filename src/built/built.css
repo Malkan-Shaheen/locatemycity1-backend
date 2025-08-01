@@ -1,4 +1,7 @@
-/* Main container - full viewport */
+html {
+  scroll-behavior: smooth;
+}
+
 .bp-container {
   position: relative;
   width: 100%;
@@ -31,13 +34,14 @@
   object-position: center;
   transform: translateY(0);
   will-change: transform;
- transition: transform 2s cubic-bezier(0.16, 0.77, 0.22, 0.99);
- /* Slower transition */
+transition: transform 0.3s ease-out; /* Changed from 'none' to smooth transition */
+  will-change: transform;
 }
 
 /* Content overlay - always centered */
 .bp-text-content {
   position: absolute;
+  line-height: 10px;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -79,8 +83,9 @@
   letter-spacing: 6%;
   font-weight: 700;
   margin-bottom: 1rem;
-  line-height: 1.2;
+  line-height: 1.5;
   text-transform: uppercase;
+
 }
 
 .bp-text-content h2 {
@@ -97,11 +102,25 @@
 
 .bp-text-content p {
   font-size: 18px;
-  line-height: 6%;
+  line-height: 0.5;
   margin-bottom: 1.25rem;
   font-family: 'Poppins', sans-serif;
   font-weight: 400;
   letter-spacing: 3px;
+
+}
+.bp-tagline-text{
+font-family: 'Poppins';
+font-weight: 700;
+font-style: Italic;
+font-size: 18px;
+text-emphasis-style: bold;
+line-height: 1;
+letter-spacing: 6%;
+text-align: center;
+text-transform: capitalize;
+
+
 }
 
 /* ===== Responsive Adjustments ===== */

@@ -22,12 +22,12 @@ body, html {
 
 .heading-container {
   position: relative;
-  display: inline-block;
+  display: flex;  /* Use flexbox for centering */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
   margin: 0 auto;
-  white-space: nowrap; 
-  max-width: 100%; 
   padding: 0 20px;
-  align-items: center;
+  width: 100%;
 }
 
 .heading {
@@ -37,16 +37,14 @@ body, html {
   line-height: 1;
   letter-spacing: 12px;
   text-align: center;
-  align-items: center;
-  white-space: nowrap;
-  overflow: visible;
-  text-overflow: clip;
   padding: 0;
-  position: relative;
-  z-index: 3;
   margin: 0;
-  display: inline-block;
+  z-index: 3;
+  white-space: nowrap; /* Keep the heading on a single line */
+  overflow: visible;
 }
+
+
 
 .img-frame {
   position: absolute;
@@ -55,8 +53,8 @@ body, html {
   transform: translateX(-50%);
   height: auto;
   width: auto; /* Changed from 100% to auto */
-  min-width: 90%; /* This ensures it doesn't shrink smaller than the heading */
-  max-width: 90%; /* Allows it to grow slightly beyond the heading */
+  min-width: 115%; /* This ensures it doesn't shrink smaller than the heading */
+  max-width: 115%; /* Allows it to grow slightly beyond the heading */
   padding: 0;
   z-index: 2;
 
