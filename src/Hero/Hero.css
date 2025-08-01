@@ -412,3 +412,17 @@ body, html {
     font-size: clamp(28px, 7vw, 36px);
   }
 }
+@media (min-width: 1919px) and (max-width: 1921px) and (min-height: 1079px) and (max-height: 1081px) {
+  .img-frame {
+    position: absolute;
+    bottom: -13px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: auto;
+    width: 80%;
+    min-width: 87%;
+    max-width: 120%;
+    padding: 0;
+    z-index: 4;
+  }
+}
