@@ -13,15 +13,23 @@ export default function Map({ sourceCoords, destinationCoords, distance }) {
   useEffect(() => {
     if (!mapRef.current || mapInstance.current) return;
 
-    // Create map instance with a more appropriate initial view
+    // Create map instance with world view
     mapInstance.current = L.map(mapRef.current, {
-      zoomControl: false
+      zoomControl: true,
+      worldCopyJump: true,
     });
 
-    // Add tile layer
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    // Add tile layer with neutral map style
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      subdomains: 'abcd',
+      minZoom: 2,
+      maxZoom: 8,
     }).addTo(mapInstance.current);
+
+    // Set initial view
+    mapInstance.current.setView([30, 0], 2);
 
     return () => {
       if (mapInstance.current) {
@@ -31,88 +39,92 @@ export default function Map({ sourceCoords, destinationCoords, distance }) {
     };
   }, []);
 
-  // Update map markers and polyline
+  // Update markers and polyline when coordinates change
   useEffect(() => {
     if (!mapInstance.current) return;
 
     // Clear previous markers
-    markersRef.current.forEach(marker => marker.remove());
+    markersRef.current.forEach((marker) => marker.remove());
     markersRef.current = [];
-    
+
     // Remove previous polyline
     if (polylineRef.current) {
       polylineRef.current.remove();
     }
 
-    // Add destination marker (always shown when available)
-    if (destinationCoords) {
-      const destMarker = L.marker([destinationCoords.lat, destinationCoords.lng], {
-        icon: L.divIcon({
-          className: 'custom-icon destination',
-          html: '<div class="marker-pin"></div>',
-          iconSize: [30, 42],
-          iconAnchor: [15, 42]
-        })
+    // Marker helper
+    const createMarker = (coords, color, label) => {
+      return L.circleMarker([coords.lat, coords.lng], {
+        radius: 6,
+        fillColor: color,
+        color: '#fff',
+        weight: 1,
+        opacity: 1,
+        fillOpacity: 0.8,
       })
-      .addTo(mapInstance.current)
-      .bindPopup("Destination");
-      
+        .addTo(mapInstance.current)
+        .bindPopup(label);
+    };
+
+    // Add markers
+    if (destinationCoords) {
+      const destMarker = createMarker(
+        destinationCoords,
+        '#ff0000',
+        `Destination (${destinationCoords.lat.toFixed(2)}, ${destinationCoords.lng.toFixed(2)})`
+      );
       markersRef.current.push(destMarker);
     }
 
-    // Add source marker if available
     if (sourceCoords) {
-      const sourceMarker = L.marker([sourceCoords.lat, sourceCoords.lng], {
-        icon: L.divIcon({
-          className: 'custom-icon',
-          html: '<div class="marker-pin"></div>',
-          iconSize: [30, 42],
-          iconAnchor: [15, 42]
-        })
-      })
-      .addTo(mapInstance.current)
-      .bindPopup("Your Location");
-      
+      const sourceMarker = createMarker(
+        sourceCoords,
+        '#4682B4',
+        `Your Location (${sourceCoords.lat.toFixed(2)}, ${sourceCoords.lng.toFixed(2)})`
+      );
       markersRef.current.push(sourceMarker);
     }
 
-    // Set appropriate view based on available coordinates
+    // Add simple line between points if both exist
     if (destinationCoords && sourceCoords) {
-      // If both points exist, show both with polyline
-      polylineRef.current = L.polyline([
-        [sourceCoords.lat, sourceCoords.lng],
-        [destinationCoords.lat, destinationCoords.lng]
-      ], { 
-        color: '#4682B4',
-        weight: 4,
-        dashArray: '5, 5'
-      }).addTo(mapInstance.current);
+      polylineRef.current = L.polyline(
+        [
+          [sourceCoords.lat, sourceCoords.lng],
+          [destinationCoords.lat, destinationCoords.lng],
+        ],
+        {
+          color: '#4682B4',
+          weight: 2,
+          dashArray: '5, 5',
+        }
+      ).addTo(mapInstance.current);
 
-      mapInstance.current.fitBounds([
-        [sourceCoords.lat, sourceCoords.lng],
-        [destinationCoords.lat, destinationCoords.lng]
-      ], { padding: [50, 50] });
-    } else if (destinationCoords) {
-      // If only destination exists, center on it
-      mapInstance.current.setView(
-        [destinationCoords.lat, destinationCoords.lng], 
-        12 // Zoom level for city-level view
+      mapInstance.current.fitBounds(
+        [
+          [sourceCoords.lat, sourceCoords.lng],
+          [destinationCoords.lat, destinationCoords.lng],
+        ],
+        { padding: [50, 50] }
       );
+    } else if (destinationCoords) {
+      mapInstance.current.setView([destinationCoords.lat, destinationCoords.lng], 4);
+    } else if (sourceCoords) {
+      mapInstance.current.setView([sourceCoords.lat, sourceCoords.lng], 4);
     } else {
-      // Default view if no coordinates
-      mapInstance.current.setView([20, 0], 2);
+      mapInstance.current.setView([30, 0], 2);
     }
   }, [sourceCoords, destinationCoords, distance]);
 
   return (
-    <div 
-      ref={mapRef} 
-      style={{ 
-        height: '100%', 
+    <div
+      ref={mapRef}
+      style={{
+        height: '100%',
         width: '100%',
         borderRadius: '10px',
-        minHeight: '400px'
-      }} 
+        minHeight: '400px',
+        backgroundColor: '#f5f5f5',
+      }}
     />
   );
 }

@@ -251,28 +251,47 @@ export default function DistanceResult() {
     }
   };
 
-  const getLocation = () => {
-    if (navigator.geolocation) {
-      setCurrentLocationText('Detecting your location...');
-      
-      navigator.geolocation.getCurrentPosition(
-        position => {
-          const lat = position.coords.latitude;
-          const lng = position.coords.longitude;
-          setUserLatitude(lat);
-          setUserLongitude(lng);
-          setCurrentLocationText('Location detected!');
-          reverseGeocode(lat, lng);
-        },
-        error => {
-          setCurrentLocationText('Could not detect location');
-          alert('Could not detect your location. Please enter it manually.');
-        },
-        { enableHighAccuracy: true, timeout: 10000 }
-      );
-    } else {
+  const getLocation = async () => {
+    if (!navigator.geolocation) {
       setCurrentLocationText('Geolocation not supported');
       alert('Geolocation is not supported by your browser. Please enter your location manually.');
+      return;
+    }
+
+    // Show permission prompt
+    try {
+      const permissionResult = await navigator.permissions.query({ name: 'geolocation' });
+      if (permissionResult.state === 'denied') {
+        setCurrentLocationText('Location permission denied');
+        alert('Please enable location permissions to use this feature.');
+        return;
+      }
+    } catch (error) {
+      console.log('Permission API not supported, proceeding with geolocation');
+    }
+
+    setCurrentLocationText('Detecting your location...');
+    
+    try {
+      const position = await new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject, {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0
+        });
+      });
+
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
+      setUserLatitude(lat);
+      setUserLongitude(lng);
+      setCurrentLocationText('Location detected!');
+      
+      // Immediately update the map without waiting for reverse geocode
+      reverseGeocode(lat, lng);
+    } catch (error) {
+      setCurrentLocationText('Could not detect location');
+      alert('Could not detect your location. Please enter it manually.');
     }
   };
 
@@ -414,6 +433,74 @@ export default function DistanceResult() {
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+        <style jsx>{`
+          .my-location-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 15px;
+            background-color: #4a6bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+          }
+          
+          .my-location-btn:hover {
+            background-color: #3a5bef;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+          }
+          
+          .my-location-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+          }
+          
+          .calculate-btn {
+            padding: 10px 15px;
+            background-color: #f0f0f0;
+            color: #333;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+          }
+          
+          .calculate-btn:hover {
+            background-color: #e0e0e0;
+          }
+          
+          .source-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+          }
+          
+          .source-input-box {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 600px;
+          }
+          
+          .source-input {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+          }
+          
+          .source-input-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+          }
+        `}</style>
       </Head>
 
       <div className="distance-page">
@@ -441,7 +528,8 @@ export default function DistanceResult() {
                 className="my-location-btn"
                 onClick={getLocation}
               >
-                My Location
+                <FaMapMarkerAlt style={{ marginRight: '8px' }} />
+                Use My Location
               </button>
               <button 
                 className="calculate-btn"
@@ -453,76 +541,76 @@ export default function DistanceResult() {
           </div>
         </div>
 
-      
-{/* Map Container - Always shown with at least destination marker */}
-<div className="map-container">
-  <Map 
-    sourceCoords={sourceCoords} // Will be null when not set
-    destinationCoords={destCoords}
-    distance={sourceCoords ? distanceInKm : null}
-  />
-  {!sourceCoords && (
-    <div className="map-overlay-message">
-      <FaMapMarkerAlt className="marker-icon" />
-      <p> calculating...</p>
-    </div>
-  )}
-</div>
-
-{/* Distance Card - Always shown but empty when source not set */}
-<div className="cards-container">
-  <div className="info-card">
-    <h3>Distance to Destination</h3>
-    
-    <div className="distance-value">
-      {sourceCoords ? (
-        !isCalculating && distanceInKm > 0 ? (
-          unit === 'km' 
-            ? `${distanceInKm.toFixed(1)} km` 
-            : `${kmToMiles(distanceInKm).toFixed(1)} mi`
-        ) : (
-          <div className="spinner"></div>
-        )
-      ) : (
-        <div className="empty-distance">
-          <span className="empty-value">-- {unit === 'km' ? 'km' : 'mi'}</span>
-          <span className="unit-hint"> </span>
+        {/* Map Container - Always shown with at least destination marker */}
+        <div className="map-container">
+          <Map 
+            sourceCoords={sourceCoords} // Will be null when not set
+            destinationCoords={destCoords}
+            distance={sourceCoords ? distanceInKm : null}
+          />
+          {!sourceCoords && (
+            <div className="map-overlay-message">
+              <FaMapMarkerAlt className="marker-icon" />
+              <p> calculating...</p>
+            </div>
+          )}
         </div>
-      )}
-    </div>
 
-    <div className="unit-toggle">
-      <button 
-        className={`unit-btn ${unit === 'km' ? 'active' : ''}`}
-        onClick={() => handleUnitChange('km')}
-      >
-        Kilometers
-      </button>
-      <button 
-        className={`unit-btn ${unit === 'mi' ? 'active' : ''}`}
-        onClick={() => handleUnitChange('mi')}
-      >
-        Miles
-      </button>
-    </div>
+        {/* Distance Card - Always shown but empty when source not set */}
+        <div className="cards-container">
+          <div className="info-card">
+            <h3>Distance to Destination</h3>
+            
+            <div className="distance-value">
+              {sourceCoords ? (
+                !isCalculating && distanceInKm > 0 ? (
+                  unit === 'km' 
+                    ? `${distanceInKm.toFixed(1)} km` 
+                    : `${kmToMiles(distanceInKm).toFixed(1)} mi`
+                ) : (
+                  <div className="spinner"></div>
+                )
+              ) : (
+                <div className="empty-distance">
+                  <span className="empty-value">-- {unit === 'km' ? 'km' : 'mi'}</span>
+                  <span className="unit-hint"> </span>
+                </div>
+              )}
+            </div>
 
-    <div className="travel-times">
-      <h4>Estimated Travel Times</h4>
-      <div className="travel-method">
-        <FaRoad className="method-icon" />
-        <span>Driving: {sourceCoords ? (travelTime.driving || 'Calculating...') : '--'}</span>
-      </div>
-      <div className="travel-method">
-        <FaPlane className="method-icon" />
-        <span>Flying: {sourceCoords ? (travelTime.flying || 'Calculating...') : '--'}</span>
-      </div>
-      <div className="travel-method">
-        <FaWalking className="method-icon" />
-        <span>Walking: {sourceCoords ? (travelTime.walking || 'Calculating...') : '--'}</span>
-      </div>
-    </div>
-  </div>
-</div>
+            <div className="unit-toggle">
+              <button 
+                className={`unit-btn ${unit === 'km' ? 'active' : ''}`}
+                onClick={() => handleUnitChange('km')}
+              >
+                Kilometers
+              </button>
+              <button 
+                className={`unit-btn ${unit === 'mi' ? 'active' : ''}`}
+                onClick={() => handleUnitChange('mi')}
+              >
+                Miles
+              </button>
+            </div>
+
+            <div className="travel-times">
+              <h4>Estimated Travel Times</h4>
+              <div className="travel-method">
+                <FaRoad className="method-icon" />
+                <span>Driving: {sourceCoords ? (travelTime.driving || 'Calculating...') : '--'}</span>
+              </div>
+              <div className="travel-method">
+                <FaPlane className="method-icon" />
+                <span>Flying: {sourceCoords ? (travelTime.flying || 'Calculating...') : '--'}</span>
+              </div>
+              <div className="travel-method">
+                <FaWalking className="method-icon" />
+                <span>Walking: {sourceCoords ? (travelTime.walking || 'Calculating...') : '--'}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Always show destination info cards */}
         <div className="cards-container">
           {/* Weather Card */}
