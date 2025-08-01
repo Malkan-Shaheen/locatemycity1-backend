@@ -31,7 +31,8 @@
   object-position: center;
   transform: translateY(0);
   will-change: transform;
-  transition: transform 1s cubic-bezier(0.16, 0.77, 0.22, 0.99); /* Slower transition */
+ transition: transform 2s cubic-bezier(0.16, 0.77, 0.22, 0.99);
+ /* Slower transition */
 }
 
 /* Content overlay - always centered */

@@ -12,6 +12,8 @@ const Directory = () => {
         <h3>Fueling the Future of Black Innovation</h3>
       </div>
 
+    
+
       {/* Left Side */}
       <div className="directory-left">
         <div className="side-icons">
@@ -43,6 +45,8 @@ const Directory = () => {
         <img src={seedImage} alt="Child planting seed" className="directory-image" />
       </div>
     </div>
+
+    
   );
 };
 

@@ -5,7 +5,7 @@
   justify-content: center;
   min-height: 100vh;
   padding: 40px;
-  background-color: #0d0d0d;
+  /* background: radial-gradient(120% 120% at top right, #2d1c00, #000000 80%); */
 }
 
 
@@ -43,7 +43,7 @@
   gap: 40px;
   align-items: flex-start;
   max-width: 1200px;
-  background-color: #0d0d0d;
+  background-color: transparent;
   color: #ffffff;
   font-family: 'Poppins', sans-serif;
   border-radius: 2px;

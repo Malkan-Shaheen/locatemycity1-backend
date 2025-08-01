@@ -14,7 +14,7 @@ const Built = ({ onScrollComplete }) => {
   // Smooth scroll animation with slower movement
   const animateScroll = () => {
   // Slower easing (changed from 0.1 to 0.05)
-  currentScroll.current += (targetScroll.current - currentScroll.current) * 0.05;
+  currentScroll.current += (targetScroll.current - currentScroll.current) * 0.025;
   
   if (imageRef.current && containerRef.current) {
     // Calculate maximum scrollable percentage
