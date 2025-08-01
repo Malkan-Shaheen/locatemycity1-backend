@@ -19,6 +19,12 @@ body, html {
   font-style: normal;
 }
 
+.heading-container {
+  position: relative;
+  display: inline-block;
+  margin: 0 auto;
+}
+
 .heading {
   font-family: 'LexendDeca', sans-serif;
   font-size: clamp(48px, 8vw, 128.25px);
@@ -27,38 +33,34 @@ body, html {
   letter-spacing: 12px;
   text-align: center;
   white-space: nowrap;
-  overflow: visible; /* Changed from hidden to visible */
-  text-overflow: clip; /* Changed from ellipsis to clip */
+  overflow: visible;
+  text-overflow: clip;
   padding: 0;
   position: relative;
   z-index: 3;
-  margin-top: 0; 
-  top: 0;
+  margin: 0;
 }
 
 .img-frame {
   position: absolute;
-  top: 20%;
+  bottom: -10px;
   left: 49%;
-   transform: translateX(-50%) translateY(-50%);
-  height: 70px;
-  width: fit-content;
-  min-width: 80vh;
-  padding: 0 0;
-  display: flex;
-  justify-content: center;
-  margin-top: 0;
-  align-items: center;
+  transform: translateX(-50%);
+  height: auto;
+  width: 105%;
+  min-width: 105%;
+  padding: 0;
+  z-index: 2;
 }
 
 .subtitle {
-  margin-top: 25px; /* Adjusted spacing */
+  margin-top: 40px;
   font-size: 0.9rem;
   letter-spacing: 0.75em;
   text-transform: uppercase;
   color: #ddd;
   position: relative;
-  top: -5px; /* Fine-tuned positioning */
+  top: -5px;
 }
 
 .hero-container {
@@ -73,7 +75,6 @@ body, html {
   background-repeat: no-repeat;
 }
 
-/* Rest of your CSS remains exactly the same */
 .background-image {
   position: absolute;
   width: 100vh;
@@ -120,8 +121,6 @@ body, html {
 .angle {
   transform: rotate(45deg);
 }
-
-
 
 .description {
   font-family: 'Inter', sans-serif;
@@ -171,88 +170,11 @@ body, html {
   text-align: center;
 }
 
-.timer-colon {
-  color: white;
-  font-size: 2.5rem;
-  font-weight: bold;
-  margin: 0 0px;
-  align-self: center;
-  font-family: 'Orbitron', sans-serif;
-  z-index: 1;
-}
-
-.countdown-line {
-  position: absolute;
-  width: 333.42px;
-  height: 8.14px;
-  top: 50.39px;
-  left: 50%; /* Center horizontally */
-  transform: translateX(-50%) rotate(0deg); /* Center adjustment + rotation */
-  background-color: #0096FF;
-  border-radius: 4px;
-  z-index: 9999; /* Single high z-index declaration */
-  opacity: 1;
-  pointer-events: none;
-}
-
-
-.countdown {
-  position: relative;
-  display: flex;
-  gap: 5px;
-  justify-content: center;
-  align-items: center;
-  z-index: 2;
-}
-
-.timer-box {
-  width: 75.28px;
-  height: 100;
-  position: relative;
-  top: 21.91px;
-  /* left: 266.17px; */
-  border-radius: 4.57px;
-  background: linear-gradient(248.62deg, #946318 0%, #B48424 23.06%, #E4C658 51.93%, #9E6A17 85.55%, #85560F 100%);
-  padding: 3px 3px;
-  text-align: center;
-  color: white;
-  font-family: 'Orbitron', sans-serif;
-  font-weight: lighter;
-  z-index: 2;
-  font-size: 40px;
-}
-
-.timer-value {
-  font-family: 'Share Tech';
-  font-size: 64px;
-  font-weight: 400;
-  color: white;
-  transform: scaleX(0.85);
-  font-variant-numeric: tabular-nums;
-  line-height: 100%;
-  margin: 0;
-  padding: 0;
-  text-align: right;
-}
-
-.timer-label {
-  font-size: 0.65rem;
-  font-weight: 300;
-  margin-top: 4px;
-  letter-spacing: 1px;
-  display: block;
-  text-transform: capitalize;
-}
+/* Responsive */
 @media (max-width: 768px) {
   .heading {
-    white-space: normal; /* Allow text wrapping on mobile */
+    white-space: normal;
     line-height: 1.2;
     letter-spacing: min(8px, 0.8vw);
-  }
-  
-  .countdown-line {
-    width: 90vw;
-    height: 0.3vh;
-    top: 12%;
   }
 }

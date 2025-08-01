@@ -1,38 +1,33 @@
 import React from 'react';
 import './empower.css';
 
-const Empower = () => {
+const empower = () => {
   return (
-    <div className="empower-page">
-      <div className="container">
-        <div className="vision-section">
-          <h1>The Vision: <span>Empower</span></h1>
-          <h2>Black Excellence</h2>
-          <h3>Together</h3>
+    <div className="vision-container">
+      <div className="vision-images">
+        <div className="vision-grid">
+          <img src="/images/empower.png" alt="Group" />
           
-          <div className="content-section">
-            <p className="stats">Carpeter Gombe-Acaya Ria 1 million annually 12 The</p>
-            <p className="main-text">
-              Ria Economy has experienced a huge impact on tech-
-              tumors using improvements.Project Based is then
-              completed, and Governments unite to both
-              areas building a digital mediums where culture,
-              regulatory, strategic opportunity, and those areas
-              and services have been met. This has now the
-              continues, and it has been the first possible
-              resilience the transition-Together.
-            </p>
-          </div>
         </div>
-
-        <div className="join-section">
-          <h4>Join The Movement</h4>
-          <p>During The Future of Black</p>
-          <p className="footer-note">In detail - Printed in the Directory</p>
-        </div>
+      </div>
+      <div className="vision-text">
+        <h2>
+          <span className="highlight-bar" /> The Vision: Empower<br />
+          Black Excellence<br />
+          Together
+        </h2>
+        <p className="vision-sub">
+          Despite contributing $1.6 trillion annually to the U.S. economy, Black creators and businesses
+          remain underrepresented. Project Black is here to change that.
+        </p>
+        <p className="vision-body">
+          We're building a digital platform where culture, commerce, and community unite to shift
+          narratives, multiply opportunity, and make Black excellence the rule—not the exception.<br /><br />
+          Built for us. Backed by us. This is how we redefine the standard—together.
+        </p>
       </div>
     </div>
   );
 };
 
-export default Empower;
+export default empower;
