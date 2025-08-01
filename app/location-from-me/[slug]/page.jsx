@@ -433,74 +433,7 @@ export default function DistanceResult() {
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-        <style jsx>{`
-          .my-location-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 10px 15px;
-            background-color: #4a6bff;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-          }
-          
-          .my-location-btn:hover {
-            background-color: #3a5bef;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-          }
-          
-          .my-location-btn:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 3px rgba(0,0,0,0.1);
-          }
-          
-          .calculate-btn {
-            padding: 10px 15px;
-            background-color: #f0f0f0;
-            color: #333;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-          }
-          
-          .calculate-btn:hover {
-            background-color: #e0e0e0;
-          }
-          
-          .source-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-          }
-          
-          .source-input-box {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            max-width: 600px;
-          }
-          
-          .source-input {
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-          }
-          
-          .source-input-container {
-            display: flex;
-            justify-content: center;
-            margin: 20px 0;
-          }
-        `}</style>
+        
       </Head>
 
       <div className="distance-page">
