@@ -53,8 +53,8 @@ body, html {
   transform: translateX(-50%);
   height: auto;
   width: auto; /* Changed from 100% to auto */
-  min-width: 115%; /* This ensures it doesn't shrink smaller than the heading */
-  max-width: 115%; /* Allows it to grow slightly beyond the heading */
+  min-width: 100%; /* This ensures it doesn't shrink smaller than the heading */
+  max-width: 100%; /* Allows it to grow slightly beyond the heading */
   padding: 0;
   z-index: 2;
 
