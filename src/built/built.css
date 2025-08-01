@@ -84,7 +84,7 @@ transition: transform 0.3s ease-out; /* Changed from 'none' to smooth transition
   font-weight: 700;
   margin-bottom: 1rem;
   line-height: 1.5;
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
 
 }
 
@@ -96,13 +96,13 @@ transition: transform 0.3s ease-out; /* Changed from 'none' to smooth transition
   font-weight: 700;
   margin-bottom: 1rem;
   line-height: 1.2;
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
   margin-bottom: 30px;
 }
 
 .bp-text-content p {
   font-size: 18px;
-  line-height: 0.5;
+  line-height: 1.5;
   margin-bottom: 1.25rem;
   font-family: 'Poppins', sans-serif;
   font-weight: 400;
@@ -114,7 +114,6 @@ font-family: 'Poppins';
 font-weight: 700;
 font-style: Italic;
 font-size: 18px;
-text-emphasis-style: bold;
 line-height: 1;
 letter-spacing: 6%;
 text-align: center;

@@ -42,28 +42,26 @@ body, html {
   z-index: 3;
   white-space: nowrap; /* Keep the heading on a single line */
   overflow: visible;
+ /* margin-bottom: 60px; */
 }
-
-
-
 .img-frame {
   position: absolute;
-  bottom: -10px;
+  bottom: -60px; /* Or whatever vertical spacing you prefer */
   left: 50%;
   transform: translateX(-50%);
   height: auto;
-  width: auto; /* Changed from 100% to auto */
-  min-width: 90%; /* This ensures it doesn't shrink smaller than the heading */
-  max-width: 90%; /* Allows it to grow slightly beyond the heading */
+  width: 120%; /* Makes the frame significantly larger */
+  min-width: 150%;
+  max-width: 150%;
   padding: 0;
-  z-index: 2;
-
+  z-index: 4;
 }
+
 
 @media (min-width: 1200px) {
   .img-frame {
-    min-width: 110%; /* Slightly wider than the heading */
-    max-width: 130%; /* Allows more growth on very large screens */
+    min-width: 90%; /* Slightly wider than the heading */
+    max-width: 110%; /* Allows more growth on very large screens */
     bottom: -15px; /* Adjust position for larger heading */
   }
 }

@@ -1,18 +1,24 @@
 .custom-header {
+  position: fixed;           /* 💡 This fixes it to the top */
+  top: 0;                    /* Align it to the top of the page */
+  left: 0;
+  right: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px 50px;
   background-image: url('./../images/header-bg.png');
   background-repeat: no-repeat;
-  background-size: cover; /* Optional: make it fit nicely */
+  background-size: cover;
   background-position: center;
   font-family: 'Roboto', sans-serif;
   border-top: 1px solid white;
   border-bottom: 1px solid white;
   height: 60px;
   box-sizing: border-box;
+  z-index: 999;
 }
+
 
 
 
