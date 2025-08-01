@@ -13,10 +13,10 @@ export default function Map({ sourceCoords, destinationCoords, distance }) {
   useEffect(() => {
     if (!mapRef.current || mapInstance.current) return;
 
-    // Create map instance
+    // Create map instance with a more appropriate initial view
     mapInstance.current = L.map(mapRef.current, {
       zoomControl: false
-    }).setView([20, 0], 2);
+    });
 
     // Add tile layer
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -44,6 +44,22 @@ export default function Map({ sourceCoords, destinationCoords, distance }) {
       polylineRef.current.remove();
     }
 
+    // Add destination marker (always shown when available)
+    if (destinationCoords) {
+      const destMarker = L.marker([destinationCoords.lat, destinationCoords.lng], {
+        icon: L.divIcon({
+          className: 'custom-icon destination',
+          html: '<div class="marker-pin"></div>',
+          iconSize: [30, 42],
+          iconAnchor: [15, 42]
+        })
+      })
+      .addTo(mapInstance.current)
+      .bindPopup("Destination");
+      
+      markersRef.current.push(destMarker);
+    }
+
     // Add source marker if available
     if (sourceCoords) {
       const sourceMarker = L.marker([sourceCoords.lat, sourceCoords.lng], {
@@ -60,24 +76,9 @@ export default function Map({ sourceCoords, destinationCoords, distance }) {
       markersRef.current.push(sourceMarker);
     }
 
-    // Add destination marker if available
-    if (destinationCoords) {
-      const destMarker = L.marker([destinationCoords.lat, destinationCoords.lng], {
-        icon: L.divIcon({
-          className: 'custom-icon destination',
-          html: '<div class="marker-pin"></div>',
-          iconSize: [30, 42],
-          iconAnchor: [15, 42]
-        })
-      })
-      .addTo(mapInstance.current)
-      .bindPopup("Destination");
-      
-      markersRef.current.push(destMarker);
-    }
-
-    // Add polyline if both points exist
-    if (sourceCoords && destinationCoords) {
+    // Set appropriate view based on available coordinates
+    if (destinationCoords && sourceCoords) {
+      // If both points exist, show both with polyline
       polylineRef.current = L.polyline([
         [sourceCoords.lat, sourceCoords.lng],
         [destinationCoords.lat, destinationCoords.lng]
@@ -87,11 +88,19 @@ export default function Map({ sourceCoords, destinationCoords, distance }) {
         dashArray: '5, 5'
       }).addTo(mapInstance.current);
 
-      // Fit bounds to show both points
       mapInstance.current.fitBounds([
         [sourceCoords.lat, sourceCoords.lng],
         [destinationCoords.lat, destinationCoords.lng]
       ], { padding: [50, 50] });
+    } else if (destinationCoords) {
+      // If only destination exists, center on it
+      mapInstance.current.setView(
+        [destinationCoords.lat, destinationCoords.lng], 
+        12 // Zoom level for city-level view
+      );
+    } else {
+      // Default view if no coordinates
+      mapInstance.current.setView([20, 0], 2);
     }
   }, [sourceCoords, destinationCoords, distance]);
 
@@ -101,7 +110,8 @@ export default function Map({ sourceCoords, destinationCoords, distance }) {
       style={{ 
         height: '100%', 
         width: '100%',
-        borderRadius: '10px'
+        borderRadius: '10px',
+        minHeight: '400px'
       }} 
     />
   );

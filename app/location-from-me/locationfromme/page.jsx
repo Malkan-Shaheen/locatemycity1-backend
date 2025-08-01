@@ -7,10 +7,6 @@ import Header from '../../../components/Header';
 import Footer from '../../../components/Footer'
 
 export default function DistanceCalculator() {
-  const [userLatitude, setUserLatitude] = useState(null);
-  const [userLongitude, setUserLongitude] = useState(null);
-  const [showLocationPopup, setShowLocationPopup] = useState(false);
-  const [currentLocationText, setCurrentLocationText] = useState('Click to detect your location');
   const [destinationInput, setDestinationInput] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -19,95 +15,39 @@ export default function DistanceCalculator() {
   const destinationInputRef = useRef(null);
   const router = useRouter();
 
-  useEffect(() => {
-    const permission = localStorage.getItem('locationPermission');
-    if (permission === 'always') {
-      getLocation();
-    } else if (!permission) {
-      setShowLocationPopup(true);
+  const fetchSuggestions = async (query) => {
+    if (query.length < 2) {
+      setSuggestions([]);
+      return;
     }
-  }, []);
 
-  const getLocation = () => {
-    if (navigator.geolocation) {
-      setCurrentLocationText('Detecting your location...');
-      
-      navigator.geolocation.getCurrentPosition(
-        position => {
-          const lat = position.coords.latitude;
-          const lng = position.coords.longitude;
-          setUserLatitude(lat);
-          setUserLongitude(lng);
-          setCurrentLocationText('Location detected!');
-          reverseGeocode(lat, lng);
-        },
-        error => {
-          console.error('Error getting location:', error);
-          setCurrentLocationText('Could not detect location. Using default.');
-          setUserLatitude(40.7128);
-          setUserLongitude(-74.0060);
-        },
-        { enableHighAccuracy: true, timeout: 10000 }
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=10&addressdetails=1`
       );
-    } else {
-      setCurrentLocationText('Geolocation not supported. Using default.');
-      setUserLatitude(40.7128);
-      setUserLongitude(-74.0060);
+      const data = await response.json();
+
+      const filtered = data.map(item => {
+        let name = item.display_name.split(',')[0];
+        if (item.address) {
+          name = item.address.city || item.address.town || 
+                 item.address.village || item.address.county || 
+                 item.address.state || item.address.country || 
+                 name;
+        }
+
+        return {
+          ...item,
+          short_name: name.length > 30 ? `${name.substring(0, 30)}...` : name
+        };
+      });
+
+      setSuggestions(filtered);
+    } catch (error) {
+      console.error('Error fetching suggestions:', error);
+      setSuggestions([]);
     }
   };
-
-  const reverseGeocode = (lat, lng) => {
-    const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`;
-    
-    fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        if (data.display_name) {
-          setCurrentLocationText(data.display_name);
-        }
-      })
-      .catch(error => {
-        console.error('Reverse geocoding error:', error);
-      });
-  };
-
-const fetchSuggestions = async (query) => {
-  if (query.length < 2) {
-    setSuggestions([]);
-    return;
-  }
-
-  try {
-    const response = await fetch(
-      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=10&addressdetails=1`
-    );
-    const data = await response.json();
-
-    const filtered = data.map(item => {
-      // Use display_name as fallback if no better name is found
-      let name = item.display_name.split(',')[0]; // Take first part of display name
-      
-      // Try to find a better name in address details
-      if (item.address) {
-        name = item.address.city || item.address.town || 
-               item.address.village || item.address.county || 
-               item.address.state || item.address.country || 
-               name;
-      }
-
-      return {
-        ...item,
-        short_name: name.length > 30 ? `${name.substring(0, 30)}...` : name
-      };
-    });
-
-    setSuggestions(filtered);
-  } catch (error) {
-    console.error('Error fetching suggestions:', error);
-    setSuggestions([]);
-  }
-};
-
 
   const handleInputChange = (e) => {
     const value = e.target.value;
@@ -115,42 +55,26 @@ const fetchSuggestions = async (query) => {
     fetchSuggestions(value);
     setShowSuggestions(true);
   };
-const handleSuggestionClick = (suggestion) => {
-  setDestinationInput(suggestion.short_name);
-  setShowSuggestions(false);
-};
 
-
-
-  const handleLocationPermission = (permission) => {
-    if (permission === 'always') {
-      localStorage.setItem('locationPermission', 'always');
-    }
-    setShowLocationPopup(false);
-    getLocation();
+  const handleSuggestionClick = (suggestion) => {
+    setDestinationInput(suggestion.short_name);
+    setShowSuggestions(false);
   };
 
-const handleCalculate = () => {
-  if (!destinationInput.trim()) {
-    alert('Please enter a destination first');
-    return;
-  }
+  const handleCalculate = () => {
+    if (!destinationInput.trim()) {
+      alert('Please enter a destination first');
+      return;
+    }
 
-  if (!userLatitude || !userLongitude) {
-    alert('Please allow location access first');
-    return;
-  }
+    // Create URL-friendly destination string
+    const destinationSlug = destinationInput
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
 
-  // Create URL-friendly destination string
-  const destinationSlug = destinationInput
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-
-  // Navigate to the new URL structure (but keep the same displayed URL)
-  router.push(`/location-from-me/how-far-is-${destinationSlug}-from-me`);
-};
-
+    router.push(`/location-from-me/how-far-is-${destinationSlug}-from-me`);
+  };
 
   return (
     <>
@@ -163,26 +87,12 @@ const handleCalculate = () => {
       </Head>
 
       <div className="distance-page">
-        {/* Floating background elements */}
         <div className="floating-elements">
           <div className="floating-element" style={{ width: '100px', height: '100px', top: '20%', left: '10%', animationDelay: '0s' }}></div>
           <div className="floating-element" style={{ width: '150px', height: '150px', top: '60%', left: '70%', animationDelay: '2s' }}></div>
           <div className="floating-element" style={{ width: '80px', height: '80px', top: '30%', left: '80%', animationDelay: '4s' }}></div>
           <div className="floating-element" style={{ width: '120px', height: '120px', top: '70%', left: '15%', animationDelay: '6s' }}></div>
         </div>
-
-        {/* Location Permission Popup */}
-        {showLocationPopup && (
-          <div className="location-popup">
-            <div className="popup-content">
-              <h2>Allow Location Access</h2>
-              <p>We need your location to calculate distances accurately. Your data remains private and secure.</p>
-              <button className="popup-btn primary" onClick={() => handleLocationPermission('always')}>Allow Always</button>
-              <button className="popup-btn secondary" onClick={() => handleLocationPermission('once')}>Allow This Time</button>
-              <button className="popup-btn secondary" onClick={() => setShowLocationPopup(false)}>Deny</button>
-            </div>
-          </div>
-        )}
 
         <div className="page-title">
           <h1>Distance Calculator</h1>
@@ -191,26 +101,6 @@ const handleCalculate = () => {
 
         <div className="distance-container">
           <div className="distance-form">
-            <div className="current-location" onClick={getLocation}>
-              <FaMapMarkerAlt className="info-icon" />
-              <div className="info-content">
-                <h4>Current Location</h4>
-                <p>{currentLocationText}</p>
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="source">Source Coordinates</label>
-              <input 
-                type="text" 
-                id="source" 
-                className="form-control"
-                placeholder="Your current location will appear here"
-                readOnly
-                value={userLatitude && userLongitude ? `${userLatitude.toFixed(6)}, ${userLongitude.toFixed(6)}` : ''}
-              />
-            </div>
-
             <div className="form-group">
               <label htmlFor="destination">Destination</label>
               <div style={{ position: 'relative' }}>
@@ -246,15 +136,14 @@ const handleCalculate = () => {
                 {showSuggestions && suggestions.length > 0 && (
                   <ul className="suggestions-list">
                     {suggestions.map((suggestion, index) => (
-  <li
-    key={index}
-    onClick={() => handleSuggestionClick(suggestion)}
-    className="suggestion-item"
-  >
-    {suggestion.short_name}
-  </li>
-))}
-
+                      <li
+                        key={index}
+                        onClick={() => handleSuggestionClick(suggestion)}
+                        className="suggestion-item"
+                      >
+                        {suggestion.short_name}
+                      </li>
+                    ))}
                   </ul>
                 )}
               </div>
@@ -265,10 +154,8 @@ const handleCalculate = () => {
             </button>
           </div>
         </div>
-       
       </div>
- <Footer />
-      
+      <Footer />
     </>
   );
 }

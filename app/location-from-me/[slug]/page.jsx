@@ -62,11 +62,11 @@ export default function DistanceResult() {
   const [destinationPlace, setDestinationPlace] = useState(null);
   const [distanceInKm, setDistanceInKm] = useState(0);
   const [unit, setUnit] = useState('km');
-  const [currentLocationText, setCurrentLocationText] = useState('Click to detect your location');
+  const [currentLocationText, setCurrentLocationText] = useState('');
   const [destinationCoords, setDestinationCoords] = useState('--');
   const [destinationCountry, setDestinationCountry] = useState('--');
   const [destinationName, setDestinationName] = useState('--');
-  const [isCalculating, setIsCalculating] = useState(true);
+  const [isCalculating, setIsCalculating] = useState(false);
   const [travelTime, setTravelTime] = useState({
     driving: null,
     flying: null,
@@ -95,49 +95,42 @@ export default function DistanceResult() {
   const router = useRouter();
   const pathname = usePathname();
 
-
-const getDestinationFromPath = (pathname) => {
-  // First try to get from pathname parameter
-  if (pathname) {
-    const pathMatch = pathname.match(/how-far-is-(.+?)(-from-me)?$/);
-    if (pathMatch) {
-      const rawName = pathMatch[1];
-      return decodeURIComponent(rawName).replace(/-/g, ' ').trim();
+  const getDestinationFromPath = (pathname) => {
+    if (pathname) {
+      const pathMatch = pathname.match(/how-far-is-(.+?)(-from-me)?$/);
+      if (pathMatch) {
+        const rawName = pathMatch[1];
+        return decodeURIComponent(rawName).replace(/-/g, ' ').trim();
+      }
     }
-  }
-  
-  // Fallback to checking window.location only on client side
-  if (typeof window !== 'undefined') {
-    const urlMatch = window.location.pathname.match(/how-far-is-(.+?)(-from-me)?$/);
-    return urlMatch ? decodeURIComponent(urlMatch[1]).replace(/-/g, ' ').trim() : null;
-  }
-  
-  return null;
-};
-
- const [destination, setDestination] = useState(null);
-
-
-  // Add this useEffect hook near the top of your component
- useEffect(() => {
-  // Client-side only check
-  if (typeof window !== 'undefined') {
-    // Check if the URL has the parameterized format
-    const pathSegments = window.location.pathname.split('/');
-    if (pathSegments.length > 3 && pathSegments[1] === 'how-far-is-:destination-from-me') {
-      const cleanPath = `/${pathSegments[1]}/${pathSegments[2]}`;
-      window.history.replaceState(null, '', cleanPath);
+    
+    if (typeof window !== 'undefined') {
+      const urlMatch = window.location.pathname.match(/how-far-is-(.+?)(-from-me)?$/);
+      return urlMatch ? decodeURIComponent(urlMatch[1]).replace(/-/g, ' ').trim() : null;
     }
-  }
-}, []);
-useEffect(() => {
-  const dest = getDestinationFromPath(pathname);
-  if (dest) {
-    setDestination(dest);
-    setDestinationName(dest); // optional, so heading updates immediately
-  }
-}, [pathname]);
+    
+    return null;
+  };
 
+  const [destination, setDestination] = useState(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const pathSegments = window.location.pathname.split('/');
+      if (pathSegments.length > 3 && pathSegments[1] === 'how-far-is-:destination-from-me') {
+        const cleanPath = `/${pathSegments[1]}/${pathSegments[2]}`;
+        window.history.replaceState(null, '', cleanPath);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    const dest = getDestinationFromPath(pathname);
+    if (dest) {
+      setDestination(dest);
+      setDestinationName(dest);
+    }
+  }, [pathname]);
 
   // Clean up URL if needed
   useEffect(() => {
@@ -146,12 +139,6 @@ useEffect(() => {
       window.history.replaceState(null, '', cleanPath);
     }
   }, [pathname]);
-
-  // Get user location on mount
-  useEffect(() => {
-    const permission = localStorage.getItem('locationPermission');
-    getLocation();
-  }, []);
 
   // Fetch place details when destination changes
   useEffect(() => {
@@ -194,7 +181,6 @@ useEffect(() => {
             timezone: country.timezones?.[0] ? formatTimezone(country.timezones[0]) : '--'
           });
 
-          // Fetch neighboring countries if borders exist
           if (country.borders && country.borders.length > 0) {
             fetchNeighboringCountries(country.borders);
           }
@@ -212,7 +198,6 @@ useEffect(() => {
     fetchCountryData();
   }, [destinationCountry]);
 
-  // Function to fetch neighboring countries
   const fetchNeighboringCountries = async (borderCodes) => {
     setLoadingNeighbors(true);
     try {
@@ -232,7 +217,6 @@ useEffect(() => {
     }
   };
 
-  // API call functions
   const fetchWeatherData = async (lat, lon) => {
     try {
       setWeather(prev => ({ ...prev, loading: true }));
@@ -281,16 +265,14 @@ useEffect(() => {
           reverseGeocode(lat, lng);
         },
         error => {
-          setCurrentLocationText('Could not detect location. Using default.');
-          setUserLatitude(40.7128);
-          setUserLongitude(-74.0060);
+          setCurrentLocationText('Could not detect location');
+          alert('Could not detect your location. Please enter it manually.');
         },
         { enableHighAccuracy: true, timeout: 10000 }
       );
     } else {
-      setCurrentLocationText('Geolocation not supported. Using default.');
-      setUserLatitude(40.7128);
-      setUserLongitude(-74.0060);
+      setCurrentLocationText('Geolocation not supported');
+      alert('Geolocation is not supported by your browser. Please enter your location manually.');
     }
   };
 
@@ -307,30 +289,53 @@ useEffect(() => {
     }
   };
 
-const getPlaceDetails = async (address) => {
-  if (!address.trim()) return;
+  const getPlaceDetails = async (address) => {
+    if (!address.trim()) return;
 
-  try {
-    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1`;
-    const response = await fetch(url);
-    const data = await response.json();
-    
-    if (data && data.length > 0) {
-      const place = data[0];
-      setDestinationPlace(place);
-      const lat = parseFloat(place.lat);
-      const lon = parseFloat(place.lon);
+    try {
+      const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1`;
+      const response = await fetch(url);
+      const data = await response.json();
       
-      setDestinationCoords(`${lat.toFixed(6)}, ${lon.toFixed(6)}`);
-      setDestinationCountry(place.display_name.split(',').pop().trim() || '--');
-      
-      // Keep the short name from the URL, not the full display name
-      setDestinationName(address);
+      if (data && data.length > 0) {
+        const place = data[0];
+        setDestinationPlace(place);
+        const lat = parseFloat(place.lat);
+        const lon = parseFloat(place.lon);
+        
+        setDestinationCoords(`${lat.toFixed(6)}, ${lon.toFixed(6)}`);
+        setDestinationCountry(place.display_name.split(',').pop().trim() || '--');
+        setDestinationName(address);
+      }
+    } catch (error) {
+      console.error('Geocoding error:', error);
     }
-  } catch (error) {
-    console.error('Geocoding error:', error);
-  }
-};
+  };
+
+  const handleManualLocation = async (address) => {
+    if (!address.trim()) {
+      alert('Please enter a location');
+      return;
+    }
+
+    try {
+      const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1`;
+      const response = await fetch(url);
+      const data = await response.json();
+      
+      if (data && data.length > 0) {
+        const place = data[0];
+        setUserLatitude(parseFloat(place.lat));
+        setUserLongitude(parseFloat(place.lon));
+        setCurrentLocationText(place.display_name);
+      } else {
+        alert('Location not found. Please try a different address.');
+      }
+    } catch (error) {
+      console.error('Geocoding error:', error);
+      alert('Error finding location. Please try again.');
+    }
+  };
 
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
     setIsCalculating(true);
@@ -363,13 +368,12 @@ const getPlaceDetails = async (address) => {
   const handleUnitChange = (newUnit) => setUnit(newUnit);
   
   const capitalizeWords = (str) => {
-  if (!str) return '';
-  return str.split(' ').map(word => 
-    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-  ).join(' ');
-};
+    if (!str) return '';
+    return str.split(' ').map(word => 
+      word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+    ).join(' ');
+  };
 
-  // Weather icon component
   const getWeatherIcon = () => {
     if (weather.loading) return <div className="spinner small"></div>;
     if (weather.error) return <div className="weather-error">{weather.error}</div>;
@@ -413,66 +417,114 @@ const getPlaceDetails = async (address) => {
       </Head>
 
       <div className="distance-page">
-     <div className="page-header">
-  <h1>How far is {capitalizeWords(destinationName)} from me?</h1>
-  <p className="description">
-    Find out exactly how far {capitalizeWords(destinationName)} is from your current location. 
-    Use our interactive tool to calculate the distance in miles, kilometers, 
-    or nautical miles. Includes weather, nearby places, and travel insights.
-  </p>
-</div>
-        <div className="map-container">
-          {sourceCoords && destCoords && (
-            <Map 
-              sourceCoords={sourceCoords}
-              destinationCoords={destCoords}
-              distance={distanceInKm}
-            />
-          )}
+        <div className="page-header">
+          <h1>How far is {capitalizeWords(destinationName)} from me?</h1>
+          <p className="description">
+            Find out exactly how far {capitalizeWords(destinationName)} is from your current location. 
+            Use our interactive tool to calculate the distance in miles, kilometers, 
+            or nautical miles. Includes weather, nearby places, and travel insights.
+          </p>
         </div>
 
-        <div className="cards-container">
-          {/* Distance Card */}
-          <div className="info-card">
-            <h3>Distance to Destination</h3>
-            <div className="distance-value">
-              {!isCalculating && distanceInKm > 0 ? (
-                unit === 'km' ? `${distanceInKm.toFixed(1)} km` : `${kmToMiles(distanceInKm).toFixed(1)} mi`
-              ) : (
-                <div className="spinner"></div>
-              )}
-            </div>
-            <div className="unit-toggle">
+        {/* Source Location Input Box */}
+        <div className="source-input-container">
+          <div className="source-input-box">
+            <input
+              type="text"
+              placeholder="Enter your location"
+              value={currentLocationText}
+              onChange={(e) => setCurrentLocationText(e.target.value)}
+              className="source-input"
+            />
+            <div className="source-buttons">
               <button 
-                className={`unit-btn ${unit === 'km' ? 'active' : ''}`}
-                onClick={() => handleUnitChange('km')}
+                className="my-location-btn"
+                onClick={getLocation}
               >
-                Kilometers
+                My Location
               </button>
               <button 
-                className={`unit-btn ${unit === 'mi' ? 'active' : ''}`}
-                onClick={() => handleUnitChange('mi')}
+                className="calculate-btn"
+                onClick={() => handleManualLocation(currentLocationText)}
               >
-                Miles
+                Set Location
               </button>
-            </div>
-            <div className="travel-times">
-              <h4>Estimated Travel Times</h4>
-              <div className="travel-method">
-                <FaRoad className="method-icon" />
-                <span>Driving: {travelTime.driving || '--'}</span>
-              </div>
-              <div className="travel-method">
-                <FaPlane className="method-icon" />
-                <span>Flying: {travelTime.flying || '--'}</span>
-              </div>
-              <div className="travel-method">
-                <FaWalking className="method-icon" />
-                <span>Walking: {travelTime.walking || '--'}</span>
-              </div>
             </div>
           </div>
+        </div>
 
+      
+{/* Map Container - Always shown with at least destination marker */}
+<div className="map-container">
+  <Map 
+    sourceCoords={sourceCoords} // Will be null when not set
+    destinationCoords={destCoords}
+    distance={sourceCoords ? distanceInKm : null}
+  />
+  {!sourceCoords && (
+    <div className="map-overlay-message">
+      <FaMapMarkerAlt className="marker-icon" />
+      <p> calculating...</p>
+    </div>
+  )}
+</div>
+
+{/* Distance Card - Always shown but empty when source not set */}
+<div className="cards-container">
+  <div className="info-card">
+    <h3>Distance to Destination</h3>
+    
+    <div className="distance-value">
+      {sourceCoords ? (
+        !isCalculating && distanceInKm > 0 ? (
+          unit === 'km' 
+            ? `${distanceInKm.toFixed(1)} km` 
+            : `${kmToMiles(distanceInKm).toFixed(1)} mi`
+        ) : (
+          <div className="spinner"></div>
+        )
+      ) : (
+        <div className="empty-distance">
+          <span className="empty-value">-- {unit === 'km' ? 'km' : 'mi'}</span>
+          <span className="unit-hint"> </span>
+        </div>
+      )}
+    </div>
+
+    <div className="unit-toggle">
+      <button 
+        className={`unit-btn ${unit === 'km' ? 'active' : ''}`}
+        onClick={() => handleUnitChange('km')}
+      >
+        Kilometers
+      </button>
+      <button 
+        className={`unit-btn ${unit === 'mi' ? 'active' : ''}`}
+        onClick={() => handleUnitChange('mi')}
+      >
+        Miles
+      </button>
+    </div>
+
+    <div className="travel-times">
+      <h4>Estimated Travel Times</h4>
+      <div className="travel-method">
+        <FaRoad className="method-icon" />
+        <span>Driving: {sourceCoords ? (travelTime.driving || 'Calculating...') : '--'}</span>
+      </div>
+      <div className="travel-method">
+        <FaPlane className="method-icon" />
+        <span>Flying: {sourceCoords ? (travelTime.flying || 'Calculating...') : '--'}</span>
+      </div>
+      <div className="travel-method">
+        <FaWalking className="method-icon" />
+        <span>Walking: {sourceCoords ? (travelTime.walking || 'Calculating...') : '--'}</span>
+      </div>
+    </div>
+  </div>
+</div>
+        {/* Always show destination info cards */}
+        <div className="cards-container">
           {/* Weather Card */}
           <div className="info-card weather-card">
             <h3>Current Weather</h3>
@@ -578,74 +630,73 @@ const getPlaceDetails = async (address) => {
         </div>
 
         <footer className="page-footer">
-  <div className="footer-section">
-    <h4>How far is {destinationName} from neighboring countries?</h4>
-    {loadingNeighbors ? (
-      <div className="spinner small"></div>
-    ) : neighboringCountries.length > 0 ? (
-     <ul className="routes-list"> {/* Changed from neighbors-list to routes-list */}
-  {neighboringCountries.map((country, index) => {
-    // Create URL-friendly slugs
-    const destSlug = destinationName
-      .split(',')[0]
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-|-$/g, '');
-      
-    const countrySlug = country.name
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-|-$/g, '');
+          <div className="footer-section">
+            <h4>How far is {destinationName} from neighboring countries?</h4>
+            {loadingNeighbors ? (
+              <div className="spinner small"></div>
+            ) : neighboringCountries.length > 0 ? (
+              <ul className="routes-list">
+                {neighboringCountries.map((country, index) => {
+                  const destSlug = destinationName
+                    .split(',')[0]
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]+/g, '-')
+                    .replace(/^-|-$/g, '');
+                    
+                  const countrySlug = country.name
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]+/g, '-')
+                    .replace(/^-|-$/g, '');
 
-    return (
-      <li key={index} className="route-item"> {/* Added route-item class */}
-        <Link 
-          href={`/location-from-location/how-far-is-${countrySlug}-from-${destSlug}`}
-          className="route-link" /* Added route-link class */
-        >
-          How far is {country.name} from {destinationName.split(',')[0]}?
-        </Link>
-      </li>
-    );
-  })}
-</ul>
-    ) : (
-      <p>No neighboring countries found or data unavailable.</p>
-    )}
-  </div>
-  <div className="footer-section">
-    <h4>Popular Routes to {destinationName.split(',')[0]}</h4>
-    <ul className="routes-list">
-      {[
-        'New York',
-        'London',
-        'Tokyo',
-        'Los Angeles'
-      ].map((city, index) => {
-        const destSlug = destinationName
-          .split(',')[0]
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, '-')
-          .replace(/^-|-$/g, '');
-          
-        const citySlug = city
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, '-')
-          .replace(/^-|-$/g, '');
+                  return (
+                    <li key={index} className="route-item">
+                      <Link 
+                        href={`/location-from-location/how-far-is-${countrySlug}-from-${destSlug}`}
+                        className="route-link"
+                      >
+                        How far is {country.name} from {destinationName.split(',')[0]}?
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            ) : (
+              <p>No neighboring countries found or data unavailable.</p>
+            )}
+          </div>
+          <div className="footer-section">
+            <h4>Popular Routes to {destinationName.split(',')[0]}</h4>
+            <ul className="routes-list">
+              {[
+                'New York',
+                'London',
+                'Tokyo',
+                'Los Angeles'
+              ].map((city, index) => {
+                const destSlug = destinationName
+                  .split(',')[0]
+                  .toLowerCase()
+                  .replace(/[^a-z0-9]+/g, '-')
+                  .replace(/^-|-$/g, '');
+                  
+                const citySlug = city
+                  .toLowerCase()
+                  .replace(/[^a-z0-9]+/g, '-')
+                  .replace(/^-|-$/g, '');
 
-        return (
-          <li key={index}>
-            <Link href={`/location-from-location/how-far-is-${citySlug}-from-${destSlug}`}>
-              {city} to {destinationName.split(',')[0]}
-            </Link>
-          </li>
-        );
-      })}
-    </ul>
-  </div>
-</footer>
-
-      </div><Footer />
+                return (
+                  <li key={index}>
+                    <Link href={`/location-from-location/how-far-is-${citySlug}-from-${destSlug}`}>
+                      {city} to {destinationName.split(',')[0]}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        </footer>
+      </div>
+      <Footer />
     </>
   );
 }
