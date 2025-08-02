@@ -6,45 +6,56 @@ const Built = () => {
   const containerRef = useRef();
   const imageRef = useRef();
   const isHovered = useRef(false);
-  const scrollOffset = useRef(0); // track scroll state manually
-  
-  
+  const scrollOffset = useRef(0);
+  const isAnimating = useRef(false);
 
   const handleScroll = (e) => {
-  if (!containerRef.current || !isHovered.current) return;
+    if (!containerRef.current || !isHovered.current || isAnimating.current) return;
 
-  e.preventDefault();
+    const containerHeight = containerRef.current.clientHeight;
+    const imageHeight = imageRef.current.scrollHeight;
+    const maxScroll = Math.max(imageRef.current.scrollHeight - containerRef.current.clientHeight + 1, 0);
+    
+    if (maxScroll <= 0) return;
 
-  const delta = e.deltaY || e.detail || -e.wheelDelta;
+    // Check boundaries
+    const atTop = scrollOffset.current <= 0;
+    const atBottom = scrollOffset.current >= maxScroll;
 
-  scrollOffset.current = Math.max(scrollOffset.current + delta, 0);
+    // Allow normal scroll at boundaries
+    if ((atTop && e.deltaY < 0) || (atBottom && e.deltaY > 0)) {
+      return;
+    }
 
-  const containerHeight = containerRef.current.clientHeight;
-  const imageHeight = imageRef.current.clientHeight;
+    e.preventDefault();
+    isAnimating.current = true;
 
-const maxScroll = Math.max(imageHeight - containerHeight, 0); // 🛡️ prevent negative
-if (maxScroll === 0) return;
+    // Slow scroll speed (30% of normal)
+    const delta = e.deltaY * 0.3;
+    
+    // Calculate new position with clamping
+    let newOffset = scrollOffset.current + delta;
+    newOffset = Math.max(0, Math.min(newOffset, maxScroll));
 
-  scrollOffset.current = Math.min(scrollOffset.current, maxScroll);
+    // Only update if position changed
+    if (Math.abs(newOffset - scrollOffset.current) > 0.5) {
+      scrollOffset.current = newOffset;
+      imageRef.current.style.transform = `translateY(-${scrollOffset.current}px)`;
+    }
 
-  const percent = (scrollOffset.current / imageHeight) * 100;
-  imageRef.current.style.transform = `translateY(-${percent}%)`;
-
-  // Auto-scroll behavior
-  if (scrollOffset.current <= 0) {
-    window.scrollBy({ top: -100, behavior: 'smooth' });
-  } else if (scrollOffset.current >= maxScroll - 5) {
-    window.scrollBy({ top: 100, behavior: 'smooth' });
-  }
-};
-
+    requestAnimationFrame(() => {
+      isAnimating.current = false;
+    });
+  };
 
   useEffect(() => {
+    const container = containerRef.current;
     const options = { passive: false };
-    window.addEventListener('wheel', handleScroll, options);
+    
+    container.addEventListener('wheel', handleScroll, options);
 
     return () => {
-      window.removeEventListener('wheel', handleScroll, options);
+      container.removeEventListener('wheel', handleScroll, options);
     };
   }, []);
 
@@ -61,7 +72,7 @@ if (maxScroll === 0) return;
           src={blackProjectImage}
           alt="Project Black"
           className="bp-main-image"
-          style={{ transform: 'translateY(0%)' }}
+          style={{ transform: 'translateY(0)' }}
         />
       </div>
 
@@ -69,12 +80,10 @@ if (maxScroll === 0) return;
         <h1>Built For Us. Powered By Us</h1>
         <h2>For Everyone Who Believes In Us</h2>
         <p>Project Black is on the map to be THE premium ecosystem for connection, education,
-ownership, and legacy.
-We’re building the future of culture, for the culture— 
-through media, tech, commerce, and
-community.
-A space where creativity meets capital. 
-Where ideas are elevated. Where the culture owns the
+ownership, and legacy.</p>
+        <p>We're building the future of culture, for the culture—through media, tech, commerce, and
+community.</p>
+        <p>A space where creativity meets capital. Where ideas are elevated. Where the culture owns the
 room.</p>
         <p className="bp-tagline-text">The Revolution Is Premium ™</p>
       </div>
