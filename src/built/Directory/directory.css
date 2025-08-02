@@ -160,7 +160,10 @@
   align-items: center;
   justify-content: center;
   margin-top: 200px;
+padding-right: 100px;
+
 }
+
 
 .image-stack {
   position: relative;
@@ -191,6 +194,7 @@
   height: 435px;
   overflow: hidden;
   perspective: 1000px; /* Adds depth for better animation */
+  
 }
 
 .image-carousel {
@@ -200,14 +204,17 @@
   top: 0;
   left: 0;
   will-change: transform; /* Optimizes animation performance */
+  gap: 20px;
 }
 
 .carousel-image-wrapper {
   width: 582px;
   height: 435px;
-  margin-bottom: 30px; /* Increased spacing between images */
   transition: opacity 0.5s ease, transform 0.5s ease;
   transform-origin: center;
+
+
+
 }
 
 .carousel-image-wrapper:hover {
@@ -222,24 +229,8 @@
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
 }
 
-.directory-right {
-  width: 669.84px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 200px;
-  overflow: hidden;
-  position: relative;
-}
 
-.image-carousel {
-  position: relative;
-  width: 582px;
-  height: 435px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+
 
 .image-container {
   position: absolute;

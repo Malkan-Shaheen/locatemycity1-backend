@@ -162,10 +162,10 @@ const Directory = () => {
           <motion.div 
             className="image-carousel"
             animate={{
-              y: [0, -435], // Moves up by one image height
+              y: [0, -2175], // Moves up by one image height
             }}
             transition={{
-              duration: 4,
+              duration: 16,
               ease: "linear",
               repeat: Infinity,
             }}
