@@ -3,7 +3,6 @@
 .bp-wrapper {
   position: relative;
   background: #121212;
-
   color: #ffffff;
   padding: 4rem 2rem;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
@@ -36,23 +35,21 @@
 /* Left Mega Glow */
 /* Smaller Left Mega Glow */
 .bp-wrapper::before {
-  width: min(140vw, 600px); /* reduced size */
+  width: min(200vw, 600px); /* reduced size */
   height: min(40vw, 600px); /* keep aspect ratio manually defined */
-  top: 10%; /* moved down */
+  top: 13%; /* moved down */
   left: -13%;
- background: radial-gradient(
-  circle,
-  rgba(255, 132, 12, 0.35) 0%,
-  rgba(255, 132, 12, 0) 65%
-);
-
+  background: radial-gradient(
+    circle,
+    rgba(205, 158, 60, 0.35) 0%,  /* #CD9E3C with 35% opacity */
+    rgba(189, 138, 45, 0) 65%     /* #BD8A2D with 0% opacity */
+  );
   filter: blur(100px);
-
 }
 
 /* Smaller Right Mega Glow */
 .bp-wrapper::after {
-  width: min(140vw, 600px); /* reduced size */
+  width: min(200vw, 700px); /* reduced size */
   height: min(40vw, 600px); /* keep aspect ratio manually defined */
   top: -10%; /* moved down */
   right: -13%;
