@@ -183,3 +183,73 @@
 .fade-container {
   position: relative;
 }
+
+/* Update these styles in directory.css */
+.image-carousel-container {
+  position: relative;
+  width: 582px;
+  height: 435px;
+  overflow: hidden;
+  perspective: 1000px; /* Adds depth for better animation */
+}
+
+.image-carousel {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: transform; /* Optimizes animation performance */
+}
+
+.carousel-image-wrapper {
+  width: 582px;
+  height: 435px;
+  margin-bottom: 30px; /* Increased spacing between images */
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  transform-origin: center;
+}
+
+.carousel-image-wrapper:hover {
+  opacity: 0.8 !important; /* Slight highlight on hover */
+}
+
+.carousel-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 7px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+}
+
+.directory-right {
+  width: 669.84px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 200px;
+  overflow: hidden;
+  position: relative;
+}
+
+.image-carousel {
+  position: relative;
+  width: 582px;
+  height: 435px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-container {
+  position: absolute;
+  width: 582px;
+  height: 435px;
+}
+
+.directory-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 7px;
+}

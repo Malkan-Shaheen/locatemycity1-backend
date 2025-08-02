@@ -79,39 +79,36 @@ Early Bird Rate: $50 (50% off, will increase to $100 after launch)`
 const Directory = () => {
   const [current, setCurrent] = useState(0);
   const [isInView, setIsInView] = useState(false);
-const sectionRef = useRef(null);
+  const sectionRef = useRef(null);
 
   useEffect(() => {
-  if (!isInView) return;
+    if (!isInView) return;
 
-  const timer = setInterval(() => {
-    setCurrent((prev) => (prev + 1) % contentList.length);
-  }, 4000);
+    const timer = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % contentList.length);
+    }, 4000);
 
-  return () => clearInterval(timer);
-}, [isInView]);
-
+    return () => clearInterval(timer);
+  }, [isInView, contentList.length]);
 
   useEffect(() => {
-  const observer = new IntersectionObserver(
-    ([entry]) => {
-      const isVisible = entry.isIntersecting && entry.boundingClientRect.top >= 0;
-      setIsInView(isVisible);
-    },
-    { threshold: 0.5 }
-  );
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+      },
+      { threshold: 0.5 }
+    );
 
-  if (sectionRef.current) {
-    observer.observe(sectionRef.current);
-  }
-
-  return () => {
     if (sectionRef.current) {
-      observer.unobserve(sectionRef.current);
+      observer.observe(sectionRef.current);
     }
-  };
-}, []);
 
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="directory-section" ref={sectionRef}>
@@ -135,46 +132,58 @@ const sectionRef = useRef(null);
 
         <div className="directory-content">
           <AnimatePresence mode="wait">
-           <motion.div
-  key={current + '-text'}
-  initial={{ opacity: 0 }}
-  animate={{ opacity: 1 }}
-  exit={{ opacity: 0 }}
-  transition={{ duration: 1 }}
-  className="fade-container"
->
-  <div className="directory-title-price-wrapper">
-    <h2 className="directory-title">{contentList[current].title}</h2>
-    <div className="directory-price">{contentList[current].price}</div>
-  </div>
-  <p className="directory-text">
-    {contentList[current].text.split('\n').map((line, i) => (
-      <span key={i}>
-        {line}
-        <br />
-      </span>
-    ))}
-  </p>
-  <button className="join-btn">Join Now</button>
-</motion.div>
-
+            <motion.div
+              key={current}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <div className="directory-title-price-wrapper">
+                <h2 className="directory-title">{contentList[current].title}</h2>
+                <div className="directory-price">{contentList[current].price}</div>
+              </div>
+              <p className="directory-text">
+                {contentList[current].text.split('\n').map((line, i) => (
+                  <span key={i}>
+                    {line}
+                    <br />
+                  </span>
+                ))}
+              </p>
+              <button className="join-btn">Join Now</button>
+            </motion.div>
           </AnimatePresence>
         </div>
       </div>
 
       <div className="directory-right">
-        <div className="image-stack">
-          {contentList.map((item, index) => (
-            <motion.img
-              key={index}
-              src={item.image}
-              alt="Visual"
-              className="directory-image"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: current === index ? 1 : 0 }}
-              transition={{ duration: 1 }}
-            />
-          ))}
+        <div className="image-carousel-container">
+          <motion.div 
+            className="image-carousel"
+            animate={{
+              y: [0, -435], // Moves up by one image height
+            }}
+            transition={{
+              duration: 4,
+              ease: "linear",
+              repeat: Infinity,
+            }}
+          >
+            {[...contentList, contentList[0]].map((item, index) => (
+              <motion.div 
+                key={index} 
+                className="carousel-image-wrapper"
+                style={{ opacity: index === current ? 1 : 0.7 }}
+              >
+                <img 
+                  src={item.image} 
+                  alt="Visual" 
+                  className="carousel-image" 
+                />
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
       </div>
     </div>
