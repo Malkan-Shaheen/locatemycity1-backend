@@ -21,7 +21,9 @@ const Built = () => {
 
   const containerHeight = containerRef.current.clientHeight;
   const imageHeight = imageRef.current.clientHeight;
-  const maxScroll = imageHeight - containerHeight;
+
+const maxScroll = Math.max(imageHeight - containerHeight, 0); // 🛡️ prevent negative
+if (maxScroll === 0) return;
 
   scrollOffset.current = Math.min(scrollOffset.current, maxScroll);
 
@@ -42,7 +44,7 @@ const Built = () => {
     window.addEventListener('wheel', handleScroll, options);
 
     return () => {
-      window.removeEventListener('wheel', handleScroll);
+      window.removeEventListener('wheel', handleScroll, options);
     };
   }, []);
 
