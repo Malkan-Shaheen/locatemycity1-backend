@@ -1,0 +1,135 @@
+/* MerchSection.css */
+
+.merch-section {
+  background-color: transparent;
+  padding: 120px 20px 120px 20px;
+  position: relative;
+  color: white;
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+  overflow: hidden;
+}
+
+.merch-heading h2 {
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 145%;
+  letter-spacing: 6%;
+  text-transform: capitalize;
+  margin-bottom: 10px;
+}
+
+.merch-heading p {
+  font-size: 18px;
+  font-weight: 700;
+  font-style: italic;
+  line-height: 145%;
+  letter-spacing: 6%;
+  margin-bottom: 10px;
+}
+
+.merch-heading span {
+  font-size: 18px;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.merch-grid {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 60px;
+  flex-wrap: wrap;
+}
+
+.merch-card {
+  width: 364.44px;
+  height: 435.97px;
+  transition: all 0.4s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.merch-image {
+  width: 364.44px;
+  height: 363.97px;
+  border-radius: 20px;
+  object-fit: cover;
+  transition: all 0.4s ease;
+}
+
+.merch-info {
+  margin-top: 12px;
+  text-align: left;
+  transition: all 0.3s ease;
+}
+
+.merch-info h3 {
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -4%;
+  margin-bottom: 4px;
+}
+
+.merch-desc {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -4%;
+  transition: all 0.3s ease;
+}
+
+.arrow-icon {
+  font-size: 20px;
+  transition: opacity 0.3s ease;
+}
+
+/* Hover Effects */
+.merch-card.hovered .merch-desc {
+  background: linear-gradient(90deg, #CD9E3C 0%, #BD8A2D 100%);
+  color: #000;
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-size: 25px;
+  justify-content: space-between;
+}
+
+.merch-card.hovered .arrow-icon {
+  opacity: 0;
+}
+
+.merch-card.hovered .merch-info h3 {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.merch-card.hovered .merch-image {
+  transform: translateY(12px);
+}
+
+/* Background ellipse (blurred shade effect) */
+.merch-section::before,
+.merch-section::after {
+  content: '';
+  position: absolute;
+  width: 440.25px;
+  height: 440.25px;
+  opacity: 0.25;
+  filter: blur(120px);
+  mix-blend-mode: screen;
+  background: linear-gradient(90deg, #CD9E3C 0%, #BD8A2D 100%);
+  border-radius: 50%;
+  z-index: 0;
+}
+
+.merch-section::before {
+  top: 100px;
+  left: -150px;
+}
+
+.merch-section::after {
+  bottom: 100px;
+  right: -150px;
+}

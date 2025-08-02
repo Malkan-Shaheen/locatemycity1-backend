@@ -5,6 +5,7 @@ import Built from './built/built';
 import NextSection from './blackprintEcosystem/blackprintEcosystem';
 import Vision from './vision/vision';
 import Directory from './built/Directory/directory';
+import Mission from './mission/mission';
 import Footer from './Footer/footer';
 import FAQs from './faqs/faqs';
 import './App.css';
@@ -34,8 +35,10 @@ function App() {
       </div>
 
    <Vision />
+  
+     
    <Directory />
-   
+  <Mission />
    <FAQs />
    <Footer />
    

@@ -54,8 +54,9 @@
 .side-icons {
   display: flex;
   flex-direction: column;
-  gap: 6.15px;
+  gap: 15px;
   margin-right: 20px;
+  margin-bottom: 20px;
 }
 
 .icon {
@@ -118,6 +119,7 @@
   line-height: 150%;
   color: #CD9E3C;
   margin: 0;
+  text-align: right !important;
 }
 
 .directory-text {

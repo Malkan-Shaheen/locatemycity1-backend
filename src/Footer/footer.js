@@ -5,6 +5,9 @@ import logo from './../images/Logoo.png'; // Replace with your actual logo path
 const Footer = () => {
   return (
     <footer className="footer">
+      {/* Eclipse Blur Effect */}
+      <div className="footer-eclipse"></div>
+
       <div className="footer-content">
         <img src={logo} alt="Project Black Logo" className="footer-logo" />
 

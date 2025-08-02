@@ -2,14 +2,32 @@
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
 
 .footer {
+  position: relative;
   width: 100%;
   padding: 70px 10px 10px 10px;
-   background: radial-gradient(120% 120% at top right, #2d1c00, #000000 80%);
+  background: radial-gradient(120% 120% at top right, #2d1c00, #000000 80%);
   border-top: 1px solid;
   border-image: linear-gradient(90deg, #CD9E3C 0%, #BD8A2D 100%) 1;
   display: flex;
   justify-content: center;
+  overflow: hidden;
+  z-index: 1;
 }
+
+.footer-eclipse {
+  position: absolute;
+  width: 698.77px;
+  height: 440.25px;
+  top: 150.63px;
+  left: 262.58px;
+  background: #FF840C;
+  opacity: 0.5;
+  mix-blend-mode: screen;
+  filter: blur(600px);
+  z-index: 0;
+  pointer-events: none;
+}
+
 
 .footer-content {
   max-width: 1203.5px;
