@@ -1,54 +1,46 @@
-/* directory.css */
 .directory-section {
   display: flex;
-  width: 1389.84px;
-  height: 758.36px;
-  margin: auto;
+  width: 100%;
+  height: auto;           /* Allow dynamic height */
+  min-height: 100vh;      /* At least full screen */
+  overflow: visible;      /* Let content flow out if needed */
   background: #121212;
   color: white;
   font-family: 'Poppins', sans-serif;
   position: relative;
 }
 
+
 .directory-heading {
   position: absolute;
-  top: -100px;
+  top: 0;
   width: 100%;
   text-align: center;
+  padding-top: 40px;
+  padding-bottom: 100px; /* Move it here instead of h3 */
 }
 
+
 .directory-heading h1 {
-  font-family: 'Poppins';
-  font-weight: 700;
   font-size: 34px;
-  line-height: 145%;
-  letter-spacing: 6%;
-  text-transform: capitalize;
-  margin: 0;
-  padding-top: 100px;
+  font-weight: 700;
+  /* margin-bottom: 100px; */
 }
 
 .directory-heading h3 {
-  font-family: 'Poppins';
-  font-weight: 400;
   font-size: 18px;
-  line-height: 145%;
-  letter-spacing: 6%;
+  font-weight: 400;
   margin-top: 10px;
-  padding-bottom: 100px;
-  max-width: 300px;
-  margin: auto;
+  padding-bottom: 100px !important;
 }
 
 .directory-left {
-  width: 720px;
+  width: 50%;
+  padding: 30px;
   display: flex;
-  flex-direction: row;
   align-items: center;
-  padding: 40px;
-  margin-top: 200px;
-  background: #121212;
-  box-sizing: border-box;
+  margin-top: 300px;
+  overflow: visible !important;
 }
 
 .side-icons {
@@ -56,190 +48,150 @@
   flex-direction: column;
   gap: 15px;
   margin-right: 20px;
-  margin-bottom: 20px;
 }
 
 .icon {
-  width: 33.84px;
-  height: 33.84px;
-  padding: 6.15px;
-  border-radius: 117.53px;
-  border: 0.62px solid #CD9E3C;
-  background: #121212;
+  width: 35px;
+  height: 35px;
+  border-radius: 100%;
+  border: 1px solid #CD9E3C;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.5s ease;
   cursor: pointer;
-}
-
-.icon-img {
-  width: 12.18px;
-  height: 15.38px;
+  transition: transform 0.3s ease;
 }
 
 .icon:hover {
   transform: scale(1.1);
 }
 
-.icon.active-icon {
+.active-icon {
   background: linear-gradient(90deg, #CD9E3C 0%, #BD8A2D 100%);
-  color: white;
   transform: scale(1.2);
+}
+
+.icon-img {
+  width: 15px;
+  height: auto;
 }
 
 .directory-content {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.directory-title-price-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-bottom: 20px;
 }
 
 .directory-title {
-  font-family: 'Satoshi', sans-serif;
-  font-weight: 700;
-  font-size: 17px;
-  line-height: 150%;
-  text-transform: capitalize;
-  margin: 0;
+  font-weight: bold;
+  font-size: 18px;
 }
 
 .directory-price {
-  font-family: 'Satoshi', sans-serif;
-  font-weight: 700;
-  font-size: 17px;
-  line-height: 150%;
+  font-size: 16px;
   color: #CD9E3C;
-  margin: 0;
-  text-align: right !important;
+  margin-top: 4px;
 }
 
 .directory-text {
-  font-family: 'Poppins', sans-serif;
-  font-weight: 400;
   font-size: 14px;
-  line-height: 150%;
-  text-align: justify;
+  margin-top: 10px;
   white-space: pre-line;
-  margin-bottom: 20px;
 }
 
 .join-btn {
-  background-color: white;
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  background: white;
   color: black;
-  font-family: 'Satoshi', sans-serif;
-  font-weight: 700;
-  font-size: 18px;
-  line-height: 100%;
   border: none;
-  border-radius: 10px;
-  padding: 16px 24px;
-  width: 127px;
-  height: 56px;
-  gap: 8px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background 0.3s ease;
-  white-space: nowrap;
-}
-
-.join-btn:hover {
-  background-color: #f0f0f0;
 }
 
 .directory-right {
-  width: 669.84px;
+  width: 50%;
   display: flex;
-  align-items: center;
   justify-content: center;
-  margin-top: 200px;
-padding-right: 100px;
+  align-items: center;
+  margin-top: 300px;
 
 }
 
-
-.image-stack {
-  position: relative;
-  width: 582px;
-  height: 435px;
-}
-
-.directory-image {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 582px;
-  height: 435px;
-  object-fit: cover;
-  border-radius: 7px;
-  transition: opacity 1s ease-in-out;
-  z-index: 1;
-}
-
-.fade-container {
-  position: relative;
-}
-
-/* Update these styles in directory.css */
 .image-carousel-container {
+  width: 652px;
+  height: 485px;
+  overflow: hidden;
   position: relative;
-  width: 582px;
-  height: 435px;
-  overflow: auto;
-  perspective: 1000px; /* Adds depth for better animation */
-    scrollbar-width: none;    /* Firefox */
-  -ms-overflow-style: none; /* IE/Edge */
 }
 
 .image-carousel {
+  height: 100%;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  position: absolute;
-  top: 0;
-  left: 0;
-  will-change: transform; /* Optimizes animation performance */
   gap: 20px;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+
+.image-carousel::-webkit-scrollbar {
+  display: none;
 }
 
 .carousel-image-wrapper {
-  width: 582px;
+  width: 100%;
   height: 435px;
-  transition: opacity 0.5s ease, transform 0.5s ease;
-  transform-origin: center;
-
-
-
-}
-
-.carousel-image-wrapper:hover {
-  opacity: 0.8 !important; /* Slight highlight on hover */
+  scroll-snap-align: center;
+  flex-shrink: 0;
 }
 
 .carousel-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 7px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 
+.directory-section {
+  display: flex;
+  width: 100%;
+  height: 100vh; /* fills full viewport */
+  background: #121212;
+  /* overflow: hidden; important to stop native scroll */
+  color: white;
+  font-family: 'Poppins', sans-serif;
+  position: relative;
+}
 
-
-.image-container {
-  position: absolute;
+.image-carousel-container {
+  position: relative;
   width: 582px;
   height: 435px;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
 }
 
-.directory-image {
+.image-carousel-container::-webkit-scrollbar {
+  display: none;
+}
+
+.image-carousel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.carousel-image-wrapper {
+  width: 582px;
+  height: 435px;
+  scroll-snap-align: center;
+}
+
+.carousel-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
