@@ -87,6 +87,8 @@ body, html {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  max-width: 100%; /* limit max size */
+  margin: 0 auto; 
 }
 
 .background-image {
