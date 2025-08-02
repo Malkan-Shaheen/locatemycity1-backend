@@ -37,13 +37,10 @@
 .bp-wrapper::before {
   width: min(200vw, 600px); /* reduced size */
   height: min(40vw, 600px); /* keep aspect ratio manually defined */
-  top: 13%; /* moved down */
+  top: 25%; /* moved down */
   left: -13%;
-  background: radial-gradient(
-    circle,
-    rgba(205, 158, 60, 0.35) 0%,  /* #CD9E3C with 35% opacity */
-    rgba(189, 138, 45, 0) 65%     /* #BD8A2D with 0% opacity */
-  );
+  background: linear-gradient(90deg, #CD9E3C 0%, #BD8A2D 100%);
+  opacity: 0.5;
   filter: blur(100px);
 }
 
@@ -51,16 +48,17 @@
 .bp-wrapper::after {
   width: min(200vw, 700px); /* reduced size */
   height: min(40vw, 600px); /* keep aspect ratio manually defined */
-  top: -10%; /* moved down */
+  top: 10%; /* moved down */
   right: -13%;
-  background: radial-gradient(
-    circle,
-    rgba(255, 132, 12, 0.35) 0%,
-    rgba(255, 132, 12, 0) 65%
-  );
+  background: #FF840C;
+  opacity: 0.5;
+  mix-blend-mode: screen;
   filter: blur(100px);
-
+  content: "";
+  position: absolute;
+  z-index: 0;
 }
+
 
 
 /* Subtle floating animation */
