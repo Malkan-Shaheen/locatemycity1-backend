@@ -9,6 +9,12 @@
   scroll-snap-align: start;
 }
 
+.directory-section {
+  scroll-margin-top: 0px;
+  padding-top: 0;
+  margin-top: 0;
+}
+
 .directory-heading {
   position: absolute;
   top: 0;
@@ -33,6 +39,7 @@
 .directory-left {
   width: 50%;
   padding: 30px;
+  margin-left: 50px;
   display: flex;
   align-items: center;
   margin-top: 200px; /* reduced from 300px */
@@ -42,7 +49,8 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
-  margin-right: 20px;
+  margin-right: 50px;
+  margin-bottom: 30px;
 }
 
 .icon {

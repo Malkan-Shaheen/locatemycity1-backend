@@ -9,7 +9,16 @@ const contentList = [
     icon: require('./../../images/icon1.png'),
     title: "The Seed: Planted in the Directory",
     price: "$50 (Limited Time) / Annum",
-    text: `The entry-level tier designed for businesses looking to establish their presence and gain early access to Project Black's growing network.\n\nBenefits:\n• Business listing in the Directory on GoProjectBlack.com\n• Exposure to an engaged audience and exclusive early access opportunities\n• Social media highlights to drive traffic to your business\n• Recognition in the Founders Circle as an early supporter\n\nWelcome package: The Trailblazer Innovator Edition\n\nEarly Bird Rate: $50 (50% off, will increase to $100 after launch)`
+    text: `Your First Step Into the Ecosystem 
+The Seed is  how you claim your place in the culture. 
+Whether you’re a brand, creative, or supporter, this entry-level listing gives you visibility, access, 
+and community. 
+
+What You Get 
+Verified spot in the ProjectBlack Directory (The Black Book)  
+Exposure to a culture-driven audience 
+Early supporter recognition (Digital badge for social media) 
+Member-only updates, events and opportunities`
   },
   {
     image: require('./../../images/man.png'),
@@ -111,21 +120,17 @@ const Directory = () => {
 
 
 useEffect(() => {
+  const section = sectionRef.current;
+
   const handleScrollLock = () => {
-    const section = sectionRef.current;
     if (!section) return;
 
-    const sectionTop = section.offsetTop;
-    const sectionBottom = sectionTop + section.offsetHeight;
-    const scrollY = window.scrollY;
-    const viewportHeight = window.innerHeight;
+    const rect = section.getBoundingClientRect();
 
-    // Lock only when the section is fully visible at the top
-    const isFullyInView =
-      scrollY >= sectionTop &&
-      scrollY < sectionBottom - viewportHeight / 2;
+    // Lock only when section top aligns exactly with top of viewport
+    const isAtTop = Math.abs(rect.top) < 1;
 
-    if (isFullyInView) {
+    if (isAtTop) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'auto';
@@ -133,13 +138,14 @@ useEffect(() => {
   };
 
   window.addEventListener('scroll', handleScrollLock);
-  handleScrollLock(); // run once on mount
+  handleScrollLock(); // Run once on mount
 
   return () => {
     window.removeEventListener('scroll', handleScrollLock);
     document.body.style.overflow = 'auto';
   };
 }, []);
+
 
 
 
