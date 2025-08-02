@@ -192,9 +192,10 @@ padding-right: 100px;
   position: relative;
   width: 582px;
   height: 435px;
-  overflow: hidden;
+  overflow: auto;
   perspective: 1000px; /* Adds depth for better animation */
-  
+    scrollbar-width: none;    /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
 }
 
 .image-carousel {

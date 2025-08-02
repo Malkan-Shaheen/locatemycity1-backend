@@ -78,35 +78,28 @@ Early Bird Rate: $50 (50% off, will increase to $100 after launch)`
 
 const Directory = () => {
   const [current, setCurrent] = useState(0);
-  const [isInView, setIsInView] = useState(false);
   const sectionRef = useRef(null);
 
   useEffect(() => {
-    if (!isInView) return;
+    const options = {
+      root: document.querySelector('.image-carousel-container'),
+      threshold: 0.6,
+    };
 
-    const timer = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % contentList.length);
-    }, 4000);
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const index = parseInt(entry.target.dataset.index);
+          setCurrent(index);
+        }
+      });
+    }, options);
 
-    return () => clearInterval(timer);
-  }, [isInView, contentList.length]);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsInView(entry.isIntersecting);
-      },
-      { threshold: 0.5 }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
+    const imageElements = document.querySelectorAll('.carousel-image-wrapper');
+    imageElements.forEach((el) => observer.observe(el));
 
     return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
-      }
+      imageElements.forEach((el) => observer.unobserve(el));
     };
   }, []);
 
@@ -123,7 +116,10 @@ const Directory = () => {
             <div
               key={index}
               className={`icon ${index === current ? 'active-icon' : ''}`}
-              onClick={() => setCurrent(index)}
+              onClick={() => {
+                const el = document.querySelector(`[data-index='${index}']`);
+                el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              }}
             >
               <img src={item.icon} alt={`icon-${index}`} className="icon-img" />
             </div>
@@ -159,31 +155,17 @@ const Directory = () => {
 
       <div className="directory-right">
         <div className="image-carousel-container">
-          <motion.div 
-            className="image-carousel"
-            animate={{
-              y: [0, -2175], // Moves up by one image height
-            }}
-            transition={{
-              duration: 16,
-              ease: "linear",
-              repeat: Infinity,
-            }}
-          >
-            {[...contentList, contentList[0]].map((item, index) => (
-              <motion.div 
-                key={index} 
+          <div className="image-carousel">
+            {contentList.map((item, index) => (
+              <div
+                key={index}
                 className="carousel-image-wrapper"
-                style={{ opacity: index === current ? 1 : 0.7 }}
+                data-index={index}
               >
-                <img 
-                  src={item.image} 
-                  alt="Visual" 
-                  className="carousel-image" 
-                />
-              </motion.div>
+                <img src={item.image} alt="Visual" className="carousel-image" />
+              </div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </div>
     </div>
