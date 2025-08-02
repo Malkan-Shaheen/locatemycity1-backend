@@ -14,7 +14,7 @@ const Built = () => {
 
     const containerHeight = containerRef.current.clientHeight;
     const imageHeight = imageRef.current.scrollHeight;
-    const maxScroll = Math.max(imageRef.current.scrollHeight - containerRef.current.clientHeight + 1, 0);
+    const maxScroll = Math.max(imageHeight - containerHeight, 0);
     
     if (maxScroll <= 0) return;
 

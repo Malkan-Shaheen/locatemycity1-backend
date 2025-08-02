@@ -8,7 +8,11 @@ background: #121212;
   scroll-behavior: smooth;
   width: 100%;
 }
+html, body {
 
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+}
 html, body {
   overflow-x: hidden !important;
 }

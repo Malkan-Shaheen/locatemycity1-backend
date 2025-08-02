@@ -39,7 +39,7 @@ export default function Mission() {
   return (
     <section className="merch-section">
       <div className="merch-heading">
-         <div class="merch-text-wrapper">
+         <div className="merch-text-wrapper">
         <h2>Wear The Mission. Fuel The Movement</h2>
         <p>
           This isn't just merch — it's a message. Every hoodie, journal, and tee

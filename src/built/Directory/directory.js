@@ -66,17 +66,15 @@ const Directory = () => {
     let newIndex = current + direction;
 
     // --- Allow scroll to previous section from first image
-    if (newIndex < 0) {
-      if (!isAtBoundaryRef.current) {
-        isAtBoundaryRef.current = true;
-        document.body.style.overflow = 'auto'; // unlock scroll
-        window.scrollBy({ top: -window.innerHeight, behavior: 'smooth' });
-        setTimeout(() => {
-          document.body.style.overflow = 'hidden'; // relock after scroll
-        }, 1000);
-      }
-      return;
-    }
+   if (newIndex >= contentList.length) {
+  if (!isAtBoundaryRef.current) {
+    isAtBoundaryRef.current = true;
+    document.body.style.overflow = 'auto'; // unlock scroll permanently
+    window.scrollBy({ top: window.innerHeight, behavior: 'smooth' });
+  }
+  return;
+}
+
 
     // --- Allow scroll to next section from last image
     if (newIndex >= contentList.length) {
@@ -120,35 +118,63 @@ const Directory = () => {
 }, [current]);
 
 
-useEffect(() => {
-  const section = sectionRef.current;
+ useEffect(() => {
+    const section = sectionRef.current;
+    const carousel = carouselRef.current;
 
-  const handleScrollLock = () => {
-    if (!section) return;
+    if (!section || !carousel) return;
 
-    const rect = section.getBoundingClientRect();
+    const handleScroll = (e) => {
+      e.preventDefault();
+      if (isScrollingRef.current) return;
 
-    // Lock only when section top aligns exactly with top of viewport
-    const isAtTop = Math.abs(rect.top) < 1;
+      const direction = e.deltaY > 0 ? 1 : -1;
+      const newIndex = current + direction;
 
-    if (isAtTop) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'auto';
-    }
-  };
+      // Allow scroll to previous section from first image
+      if (newIndex < 0) {
+        document.body.style.overflow = 'auto';
+        window.scrollBy({ top: -window.innerHeight, behavior: 'smooth' });
+        setTimeout(() => {
+          document.body.style.overflow = 'hidden';
+        }, 1000);
+        return;
+      }
 
-  window.addEventListener('scroll', handleScrollLock);
-  handleScrollLock(); // Run once on mount
+      // Allow scroll to next section from last image
+      if (newIndex >= contentList.length) {
+        document.body.style.overflow = 'auto';
+        window.scrollBy({ top: window.innerHeight, behavior: 'smooth' });
+        setTimeout(() => {
+          document.body.style.overflow = 'hidden';
+        }, 1000);
+        return;
+      }
 
-  return () => {
-    window.removeEventListener('scroll', handleScrollLock);
-    document.body.style.overflow = 'auto';
-  };
-}, []);
+      isScrollingRef.current = true;
+      setCurrent(newIndex);
 
+      // Scroll carousel
+      const scrollStep = 435 + 20;
+      carousel.scrollTo({
+        top: newIndex * scrollStep,
+        behavior: 'smooth'
+      });
 
+      setTimeout(() => {
+        isScrollingRef.current = false;
+      }, 1000);
+    };
 
+    // Lock scroll when component mounts
+    document.body.style.overflow = 'hidden';
+    section.addEventListener('wheel', handleScroll, { passive: false });
+
+    return () => {
+      section.removeEventListener('wheel', handleScroll);
+      document.body.style.overflow = 'auto'; // reset on unmount
+    };
+  }, [current]);
 
   // Handle carousel scroll to update current index
   useEffect(() => {
@@ -163,18 +189,50 @@ useEffect(() => {
       }
     };
 
+    
+
     carousel.addEventListener('scroll', handleCarouselScroll);
     return () => {
       carousel.removeEventListener('scroll', handleCarouselScroll);
     };
   }, [current]);
 
-  // Reset boundary flag when not at boundaries
-  useEffect(() => {
-    if (current > 0 && current < contentList.length - 1) {
-      isAtBoundaryRef.current = false;
+
+
+
+ useEffect(() => {
+  const section = sectionRef.current;
+
+  const handleScrollLock = () => {
+    if (!section) return;
+
+    const rect = section.getBoundingClientRect();
+    const isFullyVisible = rect.top <= 0 && rect.bottom >= window.innerHeight;
+
+    // ✅ UNLOCK permanently after 4th image (index 3)
+    if (current >= contentList.length - 1) {
+      document.body.style.overflow = 'auto';
+      return;
     }
-  }, [current]);
+
+    // ✅ Lock scroll only while inside section and not on last image
+    const shouldLock =
+      isFullyVisible && current >= 0 && current < contentList.length - 1;
+
+    document.body.style.overflow = shouldLock ? 'hidden' : 'auto';
+  };
+
+  window.addEventListener('scroll', handleScrollLock);
+  handleScrollLock();
+
+  return () => {
+    window.removeEventListener('scroll', handleScrollLock);
+    document.body.style.overflow = 'auto';
+  };
+}, [current]);
+
+
+
 
   return (
     <div className="directory-section" ref={sectionRef}>

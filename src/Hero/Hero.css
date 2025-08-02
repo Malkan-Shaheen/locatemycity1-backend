@@ -172,123 +172,57 @@ body, html {
   text-align: center;
 }
 
-/* Flip Clock Styles */
-/* Container for the entire countdown */
+
 .flipClock {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 15px; /* Space between units */
+  justify-content: space-between;
+  width: 500px;
 }
 
-/* Wrapper for each flip unit (day/hour/minute/second) */
-.flipUnitWrapper {
-  position: relative;
-  width: 83.42px; /* Width to contain the flip unit and decorations */
-  height: 110px; /* Height to contain all elements */
-}
-
-/* The actual flip container - now matches Figma specs */
 .flipUnitContainer {
+  display: block;
   position: relative;
-  width: 75.28px;
-  height: 80px;
+  width: 140px;
+  height: 120px;
+  perspective-origin: 50% 50%;
   perspective: 300px;
-  border-radius: 12px;
-  background: linear-gradient(180deg, #b07c1b 0%, #eac75a 40%, #c28920 100%);
-  overflow: hidden;
-  border: 2px solid white;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+  background-color: white;
+  border-radius: 3px;
+  box-shadow: 0px 10px 10px -10px grey;
 }
 
-
-/* Colon separator between units */
-.flipUnitWrapper:not(:last-child)::after {
-  content: "";
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  background: white;
-  border-radius: 50%;
-  right: -10px;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-/* Flip cards inside - maintaining animation */
 .upperCard, .lowerCard {
-  position: absolute;
+  display: flex;
+  position: relative;
+  justify-content: center;
   width: 100%;
   height: 50%;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  padding-right: 8px;
   overflow: hidden;
+  border: 1px solid whitesmoke;
 }
-
-.upperCard {
-  top: 0;
-  align-items: flex-end;
-  border-top-left-radius: 4.57px;
-  border-top-right-radius: 4.57px;
-}
-
-.lowerCard {
-  bottom: 0;
-  align-items: flex-start;
-  border-bottom-left-radius: 4.57px;
-  border-bottom-right-radius: 4.57px;
-}
-
-.flipUnitContainer::before,
-.flipUnitContainer::after {
-  content: '';
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  background-color: #003344;
-  border-radius: 50%;
-  z-index: 100;
-}
-
-.flipUnitContainer::before {
-  top: 46%;
-  left: -6px;
-}
-
-.flipUnitContainer::after {
-  top: 46%;
-  right: -6px;
-}
-
-
 .upperCard span, .lowerCard span {
-  font-size: 2.5em;
-  font-family: 'Droid Sans Mono', monospace;
-  font-weight: bold;
-  color: white;
-  display: block;
-  width: 100%;
-  text-align: center;
+  font-size: 5em;
+  font-family: "Droid Sans Mono", monospace;
+  font-weight: lighter;
+  color: #333333;
 }
 
 .upperCard {
   align-items: flex-end;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
+  border-bottom: 0.5px solid whitesmoke;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
 }
-
 .upperCard span {
   transform: translateY(50%);
 }
 
 .lowerCard {
   align-items: flex-start;
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
+  border-top: 0.5px solid whitesmoke;
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
 }
-
 .lowerCard span {
   transform: translateY(-50%);
 }
@@ -301,57 +235,63 @@ body, html {
   width: 100%;
   height: 50%;
   overflow: hidden;
-  backface-visibility: hidden;
-  background: linear-gradient(135deg, #d4af37, #b8860b);
-  z-index: 2;
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
 }
-
 .flipCard span {
-  font-size: 2.5em;
-  font-family: 'Droid Sans Mono', monospace;
-  font-weight: bold;
-  color: white;
-  display: block;
-  width: 100%;
-  text-align: center;
+  font-family: "Droid Sans Mono", monospace;
+  font-size: 5em;
+  font-weight: lighter;
+  color: #333333;
 }
-
 .flipCard.unfold {
   top: 50%;
   align-items: flex-start;
-  transform-origin: top;
+  transform-origin: 50% 0%;
   transform: rotateX(180deg);
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
-  border-top: 0.5px solid #003344;
+  background-color: white;
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+  border: 0.5px solid whitesmoke;
+  border-top: 0.5px solid whitesmoke;
 }
-
 .flipCard.unfold span {
   transform: translateY(-50%);
 }
-
 .flipCard.fold {
-  top: 0;
+  top: 0%;
   align-items: flex-end;
-  transform-origin: bottom;
+  transform-origin: 50% 100%;
   transform: rotateX(0deg);
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-  border-bottom: 0.5px solid #003344;
+  background-color: white;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  border: 0.5px solid whitesmoke;
+  border-bottom: 0.5px solid whitesmoke;
 }
-
 .flipCard.fold span {
   transform: translateY(50%);
 }
 
 .fold {
-  animation: fold 0.6s cubic-bezier(0.455, 0.03, 0.515, 0.955) forwards;
+  -webkit-animation: fold 0.6s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0s 1 normal forwards;
+          animation: fold 0.6s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0s 1 normal forwards;
   transform-style: preserve-3d;
 }
 
 .unfold {
-  animation: unfold 0.6s cubic-bezier(0.455, 0.03, 0.515, 0.955) forwards;
+  -webkit-animation: unfold 0.6s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0s 1 normal forwards;
+          animation: unfold 0.6s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0s 1 normal forwards;
   transform-style: preserve-3d;
+}
+
+@-webkit-keyframes fold {
+  0% {
+    transform: rotateX(0deg);
+  }
+  100% {
+    transform: rotateX(-180deg);
+  }
 }
 
 @keyframes fold {
@@ -362,8 +302,7 @@ body, html {
     transform: rotateX(-180deg);
   }
 }
-
-@keyframes unfold {
+@-webkit-keyframes unfold {
   0% {
     transform: rotateX(180deg);
   }
@@ -371,61 +310,11 @@ body, html {
     transform: rotateX(0deg);
   }
 }
-
-/* Responsive */
-@media (max-width: 768px) {
-    .heading {
-    /* Remove white-space: normal if it exists */
-    letter-spacing: min(8px, 1vw); /* More aggressive reduction on small screens */
-    font-size: clamp(32px, 8vw, 48px); /* Adjusted for small screens */
+@keyframes unfold {
+  0% {
+    transform: rotateX(180deg);
   }
-  
-  /* Adjust the frame to match smaller heading */
-  .img-frame {
-    bottom: -8px; /* Slightly closer to text */
-    min-width: auto; /* Don't force minimum width */
-    width: 110%; /* Slightly wider than text */
-  }
-
- 
-
-  .flipUnitContainer {
-    width: 60px;
-    height: 80px;
-  }
-
-  .upperCard span, .lowerCard span, .flipCard span {
-    font-size: 1.8em;
-  }
-}
-
-@media (max-width: 480px) {
-  .flipUnitContainer {
-    width: 50px;
-    height: 70px;
-  }
-
-  .upperCard span, .lowerCard span, .flipCard span {
-    font-size: 1.5em;
-  }
-}
-@media (max-width: 480px) {
-  .heading {
-    letter-spacing: min(4px, 1vw);
-    font-size: clamp(28px, 7vw, 36px);
-  }
-}
-@media (min-width: 1919px) and (max-width: 1921px) and (min-height: 1079px) and (max-height: 1081px) {
-  .img-frame {
-    position: absolute;
-    bottom: -13px;
-    left: 50%;
-    transform: translateX(-50%);
-    height: auto;
-    width: 80%;
-    min-width: 87%;
-    max-width: 120%;
-    padding: 0;
-    z-index: 4;
+  100% {
+    transform: rotateX(0deg);
   }
 }
