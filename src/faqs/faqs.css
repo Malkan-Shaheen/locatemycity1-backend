@@ -3,7 +3,7 @@
 
 .faq-wrapper {
   padding: 80px 20px;
-  background: #121212;
+  background: transparent;
   color: white;
   text-align: center;
 }
@@ -50,7 +50,7 @@
   height: 80px;
   padding-left: 20px;
   padding-right: 0;
-  background: #1a1a1a;
+  background: transparent;
 }
 
 .faq-number {
@@ -63,7 +63,7 @@
 .faq-question-text {
   flex: 1;
   text-align: left;
-  font-family: 'Helvetica Neue';
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-weight: 500;
   font-size: 24px;
   padding: 0 10px;
@@ -88,7 +88,7 @@
 }
 
 .faq-answer {
-  background-color: #121212;
+  background-color: transparent;
   padding: 20px 10px 20px 67px;
   font-family: 'Helvetica Neue', sans-serif;
   font-weight: 300;

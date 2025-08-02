@@ -192,14 +192,15 @@ body, html {
 .flipUnitContainer {
   position: relative;
   width: 75.28px;
-  height: 31.81px;
+  height: 80px;
   perspective: 300px;
-  top: 21.91px;
-  left: 4.07px;
-  border-radius: 4.57px;
-  background: linear-gradient(248.62deg, #946318 0%, #B48424 23.06%, #E4C658 51.93%, #9E6A17 85.55%, #85560F 100%);
+  border-radius: 12px;
+  background: linear-gradient(180deg, #b07c1b 0%, #eac75a 40%, #c28920 100%);
   overflow: hidden;
+  border: 2px solid white;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
 }
+
 
 /* Colon separator between units */
 .flipUnitWrapper:not(:last-child)::after {

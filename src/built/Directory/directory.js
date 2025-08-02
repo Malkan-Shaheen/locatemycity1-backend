@@ -39,87 +39,135 @@ const Directory = () => {
   const [current, setCurrent] = useState(0);
   const sectionRef = useRef(null);
   const carouselRef = useRef(null);
+  const isScrollingRef = useRef(false);
+  const isAtBoundaryRef = useRef(false);
 
-  // Scroll sync: whenever mouse wheel in section → scroll image
-useEffect(() => {
+  useEffect(() => {
   const section = sectionRef.current;
   const carousel = carouselRef.current;
 
   if (!section || !carousel) return;
 
-  let isScrolling = false;
-  let lastScrollTime = 0;
-  let isHovering = false;
+  const handleScroll = (e) => {
+    e.preventDefault(); // Prevent default global scroll
+    if (isScrollingRef.current) return;
 
-  const handleMouseEnter = () => {
-    isHovering = true;
-  };
-
-  const handleMouseLeave = () => {
-    isHovering = false;
-  };
-
-  const handleWheel = (e) => {
-    if (!isHovering) return; // ignore scrolls outside the section
-
-    const now = Date.now();
-    const timeDiff = now - lastScrollTime;
-
-    e.preventDefault(); // stop global scroll
-
-    if (isScrolling && timeDiff < 400) return;
-    isScrolling = true;
-    lastScrollTime = now;
-
-    const scrollStep = 435 + 20;
     const direction = e.deltaY > 0 ? 1 : -1;
+    let newIndex = current + direction;
 
-    const newScrollTop = carousel.scrollTop + direction * scrollStep;
+    // --- Allow scroll to previous section from first image
+    if (newIndex < 0) {
+      if (!isAtBoundaryRef.current) {
+        isAtBoundaryRef.current = true;
+        document.body.style.overflow = 'auto'; // unlock scroll
+        window.scrollBy({ top: -window.innerHeight, behavior: 'smooth' });
+        setTimeout(() => {
+          document.body.style.overflow = 'hidden'; // relock after scroll
+        }, 1000);
+      }
+      return;
+    }
+
+    // --- Allow scroll to next section from last image
+    if (newIndex >= contentList.length) {
+      if (!isAtBoundaryRef.current) {
+        isAtBoundaryRef.current = true;
+        document.body.style.overflow = 'auto'; // unlock scroll
+        window.scrollBy({ top: window.innerHeight, behavior: 'smooth' });
+        setTimeout(() => {
+          document.body.style.overflow = 'hidden'; // relock after scroll
+        }, 1000);
+      }
+      return;
+    }
+
+    isScrollingRef.current = true;
+    isAtBoundaryRef.current = false;
+
+    // Update index
+    setCurrent(newIndex);
+
+    // Scroll carousel
+    const scrollStep = 435 + 20;
     carousel.scrollTo({
-      top: newScrollTop,
+      top: newIndex * scrollStep,
       behavior: 'smooth'
     });
 
     setTimeout(() => {
-      isScrolling = false;
-    }, 400);
+      isScrollingRef.current = false;
+    }, 1000);
   };
 
-  section.addEventListener('mouseenter', handleMouseEnter);
-  section.addEventListener('mouseleave', handleMouseLeave);
-  window.addEventListener('wheel', handleWheel, { passive: false });
+  // Lock scroll globally
+  document.body.style.overflow = 'hidden';
+  section.addEventListener('wheel', handleScroll, { passive: false });
 
   return () => {
-    section.removeEventListener('mouseenter', handleMouseEnter);
-    section.removeEventListener('mouseleave', handleMouseLeave);
-    window.removeEventListener('wheel', handleWheel);
+    section.removeEventListener('wheel', handleScroll);
+    document.body.style.overflow = 'auto'; // reset on unmount
+  };
+}, [current]);
+
+
+useEffect(() => {
+  const handleScrollLock = () => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const sectionTop = section.offsetTop;
+    const sectionBottom = sectionTop + section.offsetHeight;
+    const scrollY = window.scrollY;
+    const viewportHeight = window.innerHeight;
+
+    // Lock only when the section is fully visible at the top
+    const isFullyInView =
+      scrollY >= sectionTop &&
+      scrollY < sectionBottom - viewportHeight / 2;
+
+    if (isFullyInView) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+  };
+
+  window.addEventListener('scroll', handleScrollLock);
+  handleScrollLock(); // run once on mount
+
+  return () => {
+    window.removeEventListener('scroll', handleScrollLock);
+    document.body.style.overflow = 'auto';
   };
 }, []);
 
 
-  // Current image highlight observer
+
+  // Handle carousel scroll to update current index
   useEffect(() => {
-    const options = {
-      root: document.querySelector('.image-carousel-container'),
-      threshold: 0.6,
+    const carousel = carouselRef.current;
+    if (!carousel) return;
+
+    const handleCarouselScroll = () => {
+      const scrollStep = 435 + 20;
+      const newIndex = Math.round(carousel.scrollTop / scrollStep);
+      if (newIndex !== current) {
+        setCurrent(newIndex);
+      }
     };
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const index = parseInt(entry.target.dataset.index);
-          setCurrent(index);
-        }
-      });
-    }, options);
-
-    const imageElements = document.querySelectorAll('.carousel-image-wrapper');
-    imageElements.forEach((el) => observer.observe(el));
-
+    carousel.addEventListener('scroll', handleCarouselScroll);
     return () => {
-      imageElements.forEach((el) => observer.unobserve(el));
+      carousel.removeEventListener('scroll', handleCarouselScroll);
     };
-  }, []);
+  }, [current]);
+
+  // Reset boundary flag when not at boundaries
+  useEffect(() => {
+    if (current > 0 && current < contentList.length - 1) {
+      isAtBoundaryRef.current = false;
+    }
+  }, [current]);
 
   return (
     <div className="directory-section" ref={sectionRef}>
@@ -174,14 +222,6 @@ useEffect(() => {
       <div className="directory-right">
         <div className="image-carousel-container">
           <div className="image-carousel" ref={carouselRef}>
-            {/* Clone last for infinite scroll loop */}
-            <div 
-              className="carousel-image-wrapper" 
-              data-index={contentList.length - 1}
-            >
-              <img src={contentList[contentList.length - 1].image} alt="Visual" className="carousel-image" />
-            </div>
-
             {contentList.map((item, index) => (
               <div
                 key={index}
@@ -191,14 +231,6 @@ useEffect(() => {
                 <img src={item.image} alt="Visual" className="carousel-image" />
               </div>
             ))}
-
-            {/* Clone first */}
-            <div 
-              className="carousel-image-wrapper" 
-              data-index={0}
-            >
-              <img src={contentList[0].image} alt="Visual" className="carousel-image" />
-            </div>
           </div>
         </div>
       </div>
