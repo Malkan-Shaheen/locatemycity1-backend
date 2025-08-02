@@ -63,7 +63,7 @@ body, html {
 @media (min-width: 1200px) {
   .img-frame {
     min-width: 120%; /* Slightly wider than the heading */
-    max-width: 130%; /* Allows more growth on very large screens */
+    max-width: 100%; /* Allows more growth on very large screens */
     bottom: -15px; /* Adjust position for larger heading */
   }
 }
@@ -80,7 +80,7 @@ body, html {
 .hero-container {
   position: relative;
   height: 100vh;
-  width: 130%;
+  width: 100%;
   overflow: hidden;
   color: white;
   background-image: url('/src/images/hero-bg1.png');

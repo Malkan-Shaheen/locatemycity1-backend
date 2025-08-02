@@ -123,6 +123,7 @@ const FlipClock = () => {
 const ProjectBlackLanding = () => {
   return (
     <div className="hero-container">
+       <div className="section-container">
       <div className="overlay" />
 
       <div className="content">
@@ -142,6 +143,7 @@ const ProjectBlackLanding = () => {
           <FlipClock />
         </div>
       </div>
+   </div>
    </div>
   );
 };

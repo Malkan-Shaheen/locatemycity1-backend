@@ -6,10 +6,46 @@ html, body {
 background: #121212;
   color: white;
   scroll-behavior: smooth;
+  width: 100%;
 }
 
-.app-container {
+html, body {
+  overflow-x: hidden !important;
+}
+
+
+/* .app-container {
   min-height: 100%;
 background: #121212;
 
+} */
+/* .container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 40px;
+  box-sizing: border-box;
+} */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
+
+body {
+  overflow-x: hidden; /* Prevent horizontal scroll */
+}
+.app-container {
+  padding-top: var(--header-height); /* Push content down below header */
+}
+/* Add this to your global styles */
+.section-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--header-padding-x);
+}
+body {
+  overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+

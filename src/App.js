@@ -23,7 +23,9 @@ function App() {
 
   return (
     <div className="app-container">
+
       <Header />
+      
       <HeroSection />
       
       <div ref={builtRef}>

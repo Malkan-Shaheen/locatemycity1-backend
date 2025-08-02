@@ -50,6 +50,7 @@ const Directory = () => {
   const carouselRef = useRef(null);
   const isScrollingRef = useRef(false);
   const isAtBoundaryRef = useRef(false);
+  
 
   useEffect(() => {
   const section = sectionRef.current;
