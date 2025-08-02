@@ -3,12 +3,13 @@ html, body {
   padding: 0;
   height: 100%;
   font-family: 'Poppins', sans-serif;
-  background: radial-gradient(120% 120% at top right, #2d1c00, #000000 80%);
+background: #121212;
   color: white;
   scroll-behavior: smooth;
 }
 
 .app-container {
   min-height: 100%;
-  background: radial-gradient(120% 120% at top right, #2d1c00, #000000 80%);
+background: #121212;
+
 }
