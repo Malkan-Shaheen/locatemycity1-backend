@@ -11,6 +11,10 @@
 body, html {
   height: 100vh;
   font-family: 'Orbitron', sans-serif;
+  
+  overflow-x: hidden; /* Prevents sideways scroll */
+
+
 }
 
 @font-face {
@@ -185,13 +189,19 @@ body, html {
   text-align: center;
 }
 
+
 .flipClock {
   display: flex;
   justify-content: center; /* Changed to center the clock */
   width: 100%;
-  max-width: 480px;
   gap: 15px;
   margin: 0 auto; /* Center the clock horizontally */
+
+
+  flex-wrap: nowrap; /* ✅ allows multiple lines on small screens */
+  width: 100%;
+  padding: 0 10px; /* Optional */
+
 }
 
 .flipUnitContainer {
@@ -203,10 +213,12 @@ body, html {
   border-radius: 3px;
   box-shadow: 0px 10px 10px -10px grey;
   color: #fdb913 !important;
-  width: 85px;
+  width: clamp(60px, 20vw, 85px);
   height: 70px;
   border-radius: 4.57px;
   opacity: 1;
+   flex-shrink: 0; /* 🚫 Prevents shrinking */
+  flex-grow: 0;
 }
 
 .upperCard, .lowerCard {
@@ -279,6 +291,7 @@ body, html {
   color: whitesmoke;
 }
 
+
 .flipCard.unfold {
   top: 50%;
   align-items: flex-start;
@@ -287,7 +300,7 @@ body, html {
   background-color: #fdb913;
   border-bottom-left-radius: 3px;
   border-bottom-right-radius: 3px;
-  border: 0.5px solid transparent;
+  border: 1px solid transparent;
   border-top: 2px solid #24475B;
   background: linear-gradient(248.62deg, #946318 0%, #B48424 23.06%, #E4C658 51.93%, #9E6A17 85.55%, #85560F 100%);
 }
@@ -295,6 +308,11 @@ body, html {
 .flipCard.unfold span {
   transform: translateY(-50%);
 }
+
+.upperCard, .lowerCard, .flipUnitContainer {
+  overflow: hidden;
+}
+
 
 .flipCard.fold {
   top: 0%;
@@ -305,7 +323,7 @@ body, html {
   border-top-left-radius: 4.57px;
   border-top-right-radius: 4.57px;
   border: 0.5px solid transparent;
-  border-bottom: 0.5px solid transparent;
+  border-bottom:  2px solid #24475B;
    z-index: 2; /* Higher z-index for active animation */
 
 }
