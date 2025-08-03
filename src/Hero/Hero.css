@@ -313,6 +313,27 @@ body, html {
   overflow: hidden;
 }
 
+.flipUnitContainer::before,
+.flipUnitContainer::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 10px;
+  height: 10px;
+  background-color: #24475B; /* Same blue as your middle border */
+  border-radius: 50%;
+  z-index: 10;
+}
+
+.flipUnitContainer::before {
+  left: -6px; /* slightly outside the container */
+}
+
+.flipUnitContainer::after {
+  right: -6px;
+}
+
 
 .flipCard.fold {
   top: 0%;
