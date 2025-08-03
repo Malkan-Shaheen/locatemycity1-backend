@@ -7,23 +7,7 @@ html {
   width: 100%;
   height: 100vh;
   overflow: hidden;
-  /* background-color: #000; */
-}
-
-
-
-.bp-main-image {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: auto;
-  min-height: calc(100% + 1px); /* This is the key change */
-  object-fit: cover;
-  object-position: center top;
-  transform: translateY(0);
-  will-change: transform;
-  margin-bottom: -1px; /* Removes any potential gap */
+  z-index: 1;
 }
 
 .bp-image-container {
@@ -33,9 +17,27 @@ html {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background-color: #000; /* Match your image's background */
 }
 
+.bp-main-image {
+  position: relative; /* Changed from absolute */
+  width: 100%;
+  height: auto;
+  min-height: 100vh; /* Ensure it's at least viewport height */
+  object-fit: cover;
+  object-position: center top;
+  will-change: transform;
+  display: block; /* Removes any potential inline spacing */
+}
+
+/* This ensures the image has scrollable height */
+.bp-image-scrollable {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+}
 
 .bp-text-content {
   position: absolute;
@@ -49,9 +51,10 @@ html {
   color: white;
   text-align: center;
   pointer-events: none;
+  z-index: 3; 
 }
 
-/* Typography styles remain the same as your original */
+/* Typography styles remain the same */
 .bp-text-content h1 {
   font-size: 34px;
   font-family: 'Poppins', sans-serif;
@@ -93,7 +96,7 @@ html {
   text-transform: capitalize;
 }
 
-/* Responsive adjustments remain the same */
+/* Responsive adjustments */
 @media (max-width: 768px) {
   .bp-text-content {
     padding: 1.75rem;
@@ -128,18 +131,3 @@ html {
     margin-bottom: 1rem;
   }
 }
-
-
-
-
-/* Ensure image fills container without gaps */
-.bp-main-image::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: inherit;
-}
-

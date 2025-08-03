@@ -6,6 +6,7 @@
   background: transparent;
   color: white;
   text-align: center;
+  z-index: 1;
 }
 
 .faq-heading {
@@ -16,6 +17,7 @@
   letter-spacing: 6%;
   text-transform: capitalize;
   margin-bottom: 10px;
+  z-index: 2;
 }
 
 .faq-subheading {
@@ -34,6 +36,7 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  z-index: 2;
 }
 
 .faq-item {
@@ -41,6 +44,7 @@
   border-radius: 8px;
   overflow: hidden;
   transition: all 0.3s ease;
+  z-index: 1;
 }
 
 .faq-question-row {
@@ -51,6 +55,7 @@
   padding-left: 20px;
   padding-right: 0;
   background: transparent;
+  z-index: 2;
 }
 
 .faq-number {
@@ -73,6 +78,7 @@
 /* faqs.css */
 .faq-answer {
   overflow: hidden;
+  z-index: 1;
 }
 
 
@@ -90,6 +96,7 @@
   cursor: pointer;
   user-select: none;
   transition: background 0.3s ease;
+  z-index: 3;
 }
 
 .faq-answer {

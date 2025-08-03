@@ -17,6 +17,7 @@
   gap: 0px; /* We'll control spacing with margins now */
   align-items: center;
   justify-content: center;
+  z-index: 2;
 }
 
 /* Hide vertical line on smaller screens */
@@ -161,6 +162,7 @@
   width: 4.5px;
   background: linear-gradient(180deg, #CD9E3C 0%, #BD8A2D 100%);
   border-radius: 2px;
+  z-index: 1;
 }
 
 /* Adjusted left lines closer to text */
