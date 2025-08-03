@@ -202,7 +202,7 @@ body, html {
   background-color: #fdb913;
   border-radius: 3px;
   box-shadow: 0px 10px 10px -10px grey;
-  color: white !important;
+  color: #fdb913 !important;
   width: 85px;
   height: 70px;
   border-radius: 4.57px;
@@ -231,6 +231,9 @@ body, html {
   letter-spacing: -8.5%;
   text-align: right;
   color: whitesmoke;
+    background: linear-gradient(248.62deg, #946318 0%, #B48424 23.06%, #E4C658 51.93%, #9E6A17 85.55%, #85560F 100%);
+
+
 }
 
 .upperCard {
@@ -298,11 +301,11 @@ body, html {
   align-items: flex-end;
   transform-origin: 50% 100%;
   transform: rotateX(0deg);
-  background-color: white;
+  background: linear-gradient(248.62deg, #946318 0%, #B48424 23.06%, #E4C658 51.93%, #9E6A17 85.55%, #85560F 100%);
   border-top-left-radius: 4.57px;
   border-top-right-radius: 4.57px;
-  border: 0.5px solid whitesmoke;
-  border-bottom: 0.5px solid whitesmoke;
+  border: 0.5px solid transparent;
+  border-bottom: 0.5px solid transparent;
    z-index: 2; /* Higher z-index for active animation */
 
 }
