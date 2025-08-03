@@ -5,7 +5,7 @@ body {
 .directory-section {
   display: flex;
   width: 100%;
-  min-height: 150vh;
+  min-height: 120vh;
   background: #121212;
   color: white;
   font-family: 'Poppins', sans-serif;
@@ -44,7 +44,7 @@ body {
   margin-left: 50px;
   display: flex;
   align-items: center;
-  margin-top: 200px;
+  margin-top: 10px;
 }
 
 .side-icons {
@@ -134,7 +134,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 200px;
+  margin-top: 10px;
 }
 
 .image-carousel-container {
@@ -174,4 +174,118 @@ body {
   object-fit: cover;
   border-radius: 7px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 1024px) {
+  .directory-heading h1 {
+    font-size: 28px;
+  }
+
+  .directory-heading h3 {
+    font-size: 18px;
+  }
+
+  .directory-left, .directory-right {
+    margin-top: 150px;
+  }
+
+  .image-carousel-container {
+    max-width: 500px;
+    height: 400px;
+  }
+
+  .carousel-image-wrapper {
+    height: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .directory-section {
+    flex-direction: column;
+    align-items: center;
+    min-height: auto;
+    padding: 40px 20px;
+  }
+
+  .directory-left,
+  .directory-right {
+    width: 100%;
+    margin: 0;
+    padding: 20px;
+  }
+
+  .directory-left {
+    flex-direction: column;
+    margin-top: 50px;
+  }
+
+  .side-icons {
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 20px;
+    gap: 10px;
+  }
+
+  .icon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .icon-img {
+    width: 14px;
+  }
+
+  .directory-title {
+    font-size: 18px;
+  }
+
+  .directory-price {
+    font-size: 14px;
+  }
+
+  .directory-text {
+    font-size: 13px;
+  }
+
+  .join-btn {
+    font-size: 15px;
+    padding: 8px 16px;
+  }
+
+  .image-carousel-container,
+  .carousel-image-wrapper {
+    max-width: 100%;
+    height: 300px;
+  }
+
+  .carousel-image {
+    height: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .directory-heading h1 {
+    font-size: 22px;
+  }
+
+  .directory-heading h3 {
+    font-size: 16px;
+  }
+
+  .directory-title {
+    font-size: 16px;
+  }
+
+  .directory-price {
+    font-size: 13px;
+  }
+
+  .directory-text {
+    font-size: 12px;
+  }
+
+  .join-btn {
+    font-size: 14px;
+    padding: 8px 14px;
+  }
 }

@@ -34,6 +34,7 @@ body, html {
   width: 100%;
 }
 
+
 .heading {
   font-family: 'LexendDeca', sans-serif;
   font-size: clamp(48px, 8vw, 128.25px);
@@ -211,7 +212,7 @@ body, html {
   perspective: 300px;
 background: linear-gradient(to bottom, #E4C658 0%, #9E6A17 100%);
   border-radius: 3px;
-  box-shadow: 0px 10px 10px -10px grey;
+  /* box-shadow: 0px 10px 10px -10px grey; */
   /* color: #fdb913 !important; */
   width: clamp(60px, 20vw, 85px);
   height: 70px;
@@ -230,8 +231,6 @@ background: linear-gradient(to bottom, #E4C658 0%, #9E6A17 100%);
   overflow: hidden;
   /* border: 1px solid transparent; */
   background: linear-gradient(to bottom, #E4C658 0%, #9E6A17 100%);
- 
-
   border-radius: 4.57px;
 }
 
@@ -244,13 +243,11 @@ background: linear-gradient(to bottom, #E4C658 0%, #9E6A17 100%);
   letter-spacing: -8.5%;
   text-align: right;
   color: whitesmoke;
-
-
 }
 
 .upperCard {
   align-items: flex-end;
-  border-bottom: 2px solid #24475B;
+  /* border-bottom: 2px solid #24475B; */
   border-top-left-radius: 4.57px;
   border-top-right-radius: 4.57px;
   /* border-top: 2px solid #24475B; */
@@ -263,10 +260,9 @@ background: linear-gradient(to bottom, #E4C658 0%, #9E6A17 100%);
 
 .lowerCard {
   align-items: flex-start;
-  border-top: 2px solid #24475B;
+  border-top: 1px solid #24475B;
   border-bottom-left-radius: 4.57px;
   border-bottom-right-radius: 4.57px;
-  border-bottom: 2px solid #24475B;
   /* border: 4px solid red; */
 }
 .lowerCard span {
@@ -283,7 +279,7 @@ background: linear-gradient(to bottom, #E4C658 0%, #9E6A17 100%);
   overflow: hidden;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  border-bottom: 2px solid #24475B;
+  /* border-bottom: 2px solid #24475B; */
   z-index: 1;
 }
 .flipCard span {
@@ -303,15 +299,26 @@ background: linear-gradient(to bottom, #E4C658 0%, #9E6A17 100%);
   align-items: flex-start;
   transform-origin: 50% 0%;
   transform: rotateX(180deg);
-  border-bottom-left-radius: 3px;
-  border-bottom-right-radius: 3px;
-  border: 2px solid linear-gradient(to bottom, #E4C658 0%, #9E6A17 100%);
-  border-top: 2px solid #24475B;
+  /* border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px; */
+  border: 2px solid transparent;
+  border-top: 1px solid #24475B;
   background: linear-gradient(to bottom, #E4C658 0%, #9E6A17 100%);
-
   
 
 }
+.upperCard {
+  border-bottom: 1px solid #24475B !important;
+}
+.lowerCard {
+  border-top: 1px solid #24475B !important;
+  border-bottom: 1px solid #24475B !important;
+}
+.lowerCard {
+  background: linear-gradient(to bottom, #E4C658 0%, #9E6A17 100%) !important;
+}
+
+
 
 .flipCard.unfold span {
   transform: translateY(-50%);
@@ -351,8 +358,8 @@ background: linear-gradient(to bottom, #E4C658 0%, #9E6A17 100%);
 background: linear-gradient(to bottom, #E4C658 0%, #9E6A17 100%);
   border-top-left-radius: 4.57px;
   border-top-right-radius: 4.57px;
-  border: 2px solid transparent;
-  border-bottom:  2px solid #24475B;
+  border-bottom: 1px solid #24475B;
+  /* border-bottom:  2px solid #24475B; */
    z-index: 2; /* Higher z-index for active animation */
 
    
@@ -442,8 +449,13 @@ background: linear-gradient(to bottom, #E4C658 0%, #9E6A17 100%);
   text-align: center;
   margin: 10px 0 0 0; /* Simplified margin */
 }
-.no-flip .fold,
-.no-flip .unfold {
-  animation: none !important;
-  -webkit-animation: none !important;
+
+.flipUnitContainer .lowerCard {
+  height: 54px !important; /* set to match upperCard */
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+    background: linear-gradient(to bottom, #E4C658 0%, #9E6A17 100%);
+
 }
