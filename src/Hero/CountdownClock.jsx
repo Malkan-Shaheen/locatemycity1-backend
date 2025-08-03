@@ -80,12 +80,25 @@ const CountdownClock = () => {
   }, [timeLeft]);
 
   return (
-    <div className="flipClock">
-      <FlipUnitContainer unit="days" digit={timeLeft.days} shuffle={shuffle.days} />
-      <FlipUnitContainer unit="hours" digit={timeLeft.hours} shuffle={shuffle.hours} />
-      <FlipUnitContainer unit="minutes" digit={timeLeft.minutes} shuffle={shuffle.minutes} />
-      <FlipUnitContainer unit="seconds" digit={timeLeft.seconds} shuffle={shuffle.seconds} />
+   <div className="flipClock">
+  {[
+    { unit: 'days', label: 'Days' },
+    { unit: 'hours', label: 'Hours' },
+    { unit: 'minutes', label: 'Minutes' },
+    { unit: 'seconds', label: 'Seconds' },
+  ].map(({ unit, label }, index, arr) => (
+    <div key={unit} className="flipUnitWrapper">
+      <FlipUnitContainer
+        unit={unit}
+        digit={timeLeft[unit]}
+        shuffle={shuffle[unit]}
+      />
+      {index !== arr.length - 1 && <span className="colon">:</span>}
+      <div className="unitLabel">{label}</div>
     </div>
+  ))}
+</div>
+
   );
 };
 

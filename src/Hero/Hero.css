@@ -198,14 +198,21 @@ body, html {
 .flipUnitContainer {
   display: block;
   position: relative;
-  width: 140px;
-  height: 130px;
+  /* width: 140px;
+  height: 130px; */
   perspective-origin: 50% 50%;
   perspective: 300px;
   background-color: #fdb913;
   border-radius: 3px;
   box-shadow: 0px 10px 10px -10px grey;
   color: white !important;
+  width: 85px;
+height: 70px;
+border-radius: 4.57px;
+opacity: 1;
+top: 35.91px;
+left: 23.07px;
+
 }
 
 
@@ -216,23 +223,32 @@ body, html {
   width: 100%;
   height: 50%;
   overflow: hidden;
-  border: 1px solid whitesmoke;
+  border: 1px solid transparent;
+  border-radius: 4.57px;
   background-color: #fdb913;
   background: linear-gradient(248.62deg, #946318 0%, #B48424 23.06%, #E4C658 51.93%, #9E6A17 85.55%, #85560F 100%);
 
 }
 .upperCard span, .lowerCard span {
   font-size: 5em;
-  font-family: "Droid Sans Mono", monospace;
   font-weight: lighter;
-  color: #333333;
+  color: whitesmoke;
+
+
+  font-family: 'Share Tech';
+font-weight: 400;
+font-style: Regular;
+font-size: 64.02px;
+line-height: 100%;
+letter-spacing: -8.5%;
+text-align: right;
 }
 
 .upperCard {
   align-items: flex-end;
-  border-bottom: 0.5px solid whitesmoke;
-  border-top-left-radius: 3px;
-  border-top-right-radius: 3px;
+  border-bottom: 0.5px solid transparent;
+  border-top-left-radius: 4.57px;
+  border-top-right-radius: 4.57px;
 }
 .upperCard span {
   transform: translateY(50%);
@@ -240,9 +256,9 @@ body, html {
 
 .lowerCard {
   align-items: flex-start;
-  border-top: 0.5px solid whitesmoke;
-  border-bottom-left-radius: 3px;
-  border-bottom-right-radius: 3px;
+  border-top: 0.5px solid transparent;
+  border-bottom-left-radius: 4.57px;
+  border-bottom-right-radius: 4.57px;
 }
 .lowerCard span {
   transform: translateY(-50%);
@@ -260,10 +276,19 @@ body, html {
           backface-visibility: hidden;
 }
 .flipCard span {
-  font-family: "Droid Sans Mono", monospace;
   font-size: 5em;
   font-weight: lighter;
-  color: #333333;
+  color: whitesmoke;
+
+
+  font-family: 'Share Tech';
+font-weight: 400;
+font-style: Regular;
+font-size: 64.02px;
+line-height: 100%;
+letter-spacing: -8.5%;
+text-align: right;
+
 }
 .flipCard.unfold {
   top: 50%;
@@ -273,10 +298,11 @@ body, html {
   background-color: white;
   background-color: #fdb913;  border-bottom-left-radius: 3px;
   border-bottom-right-radius: 3px;
-  border: 0.5px solid whitesmoke;
-  border-top: 0.5px solid whitesmoke;
+  border: 0.5px solid transparent;
+  border-top: 2px solid  #24475B;
   background: linear-gradient(248.62deg, #946318 0%, #B48424 23.06%, #E4C658 51.93%, #9E6A17 85.55%, #85560F 100%);
 }
+
 .flipCard.unfold span {
   transform: translateY(-50%);
 }
@@ -286,8 +312,8 @@ body, html {
   transform-origin: 50% 100%;
   transform: rotateX(0deg);
   background-color: white;
-  border-top-left-radius: 3px;
-  border-top-right-radius: 3px;
+  border-top-left-radius: 4.57px;
+  border-top-right-radius: 4.57px;
   border: 0.5px solid whitesmoke;
   border-bottom: 0.5px solid whitesmoke;
 }
@@ -353,3 +379,45 @@ body, html {
 }
 
 
+.flipClock {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.flipUnitWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.colon {
+  position: absolute;
+  right: -32px;
+  top: 50%;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  pointer-events: none;
+}
+
+.unitLabel {
+  margin-top: 6px;
+  text-transform: uppercase;
+  color: #eee;
+  letter-spacing: 0.5px;
+left: 20px;
+top: 33px;
+position: relative;
+  font-family: 'Poppins';
+font-weight: 400;
+font-style: Regular;
+font-size: 11.76px;
+line-height: 100%;
+margin: 10px;
+letter-spacing: 0%;
+text-align: center;
+align-items: center;
+
+}
