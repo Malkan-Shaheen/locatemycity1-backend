@@ -56,3 +56,50 @@ body {
 }
 
 
+/* Countdown Clock Fixed Positioning */
+.flipClock1 {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 15px 25px;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.flipUnitWrapper1 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.unitLabel1 {
+  color: white;
+  font-size: 12px;
+  margin-top: 5px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.colon1 {
+  color: white;
+  font-size: 24px;
+  margin: 0 5px;
+  align-self: flex-end;
+  margin-bottom: 15px;
+}
+
+.hero-container:first-child:not(:last-child) ~ .flipClock1 {
+  display: none;
+}
+/* This will hide clock when it would overlap footer */
+.footer:target ~ .flipClock1,
+.footer:hover ~ .flipClock1 {
+  display: none !important;
+}

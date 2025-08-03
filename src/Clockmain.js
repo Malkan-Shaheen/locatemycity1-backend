@@ -1,19 +1,18 @@
 // CountdownClock.jsx
 import React, { useEffect, useState } from 'react';
-import './Hero.css'; // Your CSS styles
+import './Clockmain.css'; // Your CSS styles
 
 const AnimatedCard = ({ animation, digit }) => (
-  <div className={`flipCard ${animation}`}>
+  <div className={`flipCard1 ${animation}1`}>
     <span>{digit}</span>
   </div>
 );
 
 const StaticCard = ({ position, digit }) => (
-  <div className={position}>
+  <div className={`${position}1`}>
     <span>{digit}</span>
   </div>
 );
-
 
 const FlipUnitContainer = ({ digit, shuffle, unit }) => {
   const [disableFlip, setDisableFlip] = useState(false);
@@ -46,17 +45,16 @@ const FlipUnitContainer = ({ digit, shuffle, unit }) => {
   const animation2 = !shuffle ? 'fold' : 'unfold';
 
   return (
-    <div className="flipUnitContainer">
+    <div className="flipUnitContainer1">
       <StaticCard position="upperCard" digit={currentDigit} />
       <StaticCard position="lowerCard" digit={previousDigit} />
-      <div className={disableFlip ? 'no-flip' : ''}>
+      <div className={disableFlip ? 'no-flip1' : ''}>
         <AnimatedCard digit={digit1} animation={animation1} />
         <AnimatedCard digit={digit2} animation={animation2} />
       </div>
     </div>
   );
 };
-
 
 const CountdownClock = () => {
   const calculateTimeLeft = () => {
@@ -75,7 +73,7 @@ const CountdownClock = () => {
 
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
   const [shuffle, setShuffle] = useState({
-    days:true,
+    days: true,
     hours: true,
     minutes: true,
     seconds: true,
@@ -96,25 +94,24 @@ const CountdownClock = () => {
   }, [timeLeft]);
 
   return (
-   <div className="flipClock">
-  {[
-    { unit: 'days', label: 'Days' },
-    { unit: 'hours', label: 'Hours' },
-    { unit: 'minutes', label: 'Minutes' },
-    { unit: 'seconds', label: 'Seconds' },
-  ].map(({ unit, label }, index, arr) => (
-    <div key={unit} className="flipUnitWrapper">
-      <FlipUnitContainer
-        unit={unit}
-        digit={timeLeft[unit]}
-        shuffle={shuffle[unit]}
-      />
-      {index !== arr.length - 1 && <span className="colon">:</span>}
-      <div className="unitLabel">{label}</div>
+    <div className="flipClock1">
+      {[
+        { unit: 'days', label: 'Days' },
+        { unit: 'hours', label: 'Hours' },
+        { unit: 'minutes', label: 'Minutes' },
+        { unit: 'seconds', label: 'Seconds' },
+      ].map(({ unit, label }, index, arr) => (
+        <div key={unit} className="flipUnitWrapper1">
+          <FlipUnitContainer
+            unit={unit}
+            digit={timeLeft[unit]}
+            shuffle={shuffle[unit]}
+          />
+          {index !== arr.length - 1 && <span className="colon1">:</span>}
+          <div className="unitLabel1">{label}</div>
+        </div>
+      ))}
     </div>
-  ))}
-</div>
-
   );
 };
 

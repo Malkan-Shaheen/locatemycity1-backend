@@ -1,0 +1,227 @@
+.countdown-wrapper1 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 50px;
+  position: relative;
+}
+.coming-soon1 {
+  font-family: 'Poppins';
+  font-size: 12.96px;
+  font-weight: 700;
+  color: white;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.flipClock1 {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 480px;
+  gap: 15px;
+  margin: 0 auto;
+}
+
+.flipUnitContainer1 {
+  display: block;
+  position: relative;
+  perspective-origin: 50% 50%;
+  perspective: 300px;
+  background-color: #fdb913;
+  border-radius: 3px;
+  box-shadow: 0px 10px 10px -10px grey;
+  color: white !important;
+  width: 85px;
+  height: 70px;
+  border-radius: 4.57px;
+  opacity: 1;
+}
+
+.upperCard1, .lowerCard1 {
+  display: flex;
+  position: relative;
+  justify-content: center;
+  width: 100%;
+  height: 50%;
+  overflow: hidden;
+  border: 1px solid transparent;
+  border-radius: 4.57px;
+  background-color: #fdb913;
+  background: linear-gradient(248.62deg, #946318 0%, #B48424 23.06%, #E4C658 51.93%, #9E6A17 85.55%, #85560F 100%);
+}
+
+.upperCard1 span, .lowerCard1 span {
+  font-family: 'Share Tech';
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 64.02px;
+  line-height: 100%;
+  letter-spacing: -8.5%;
+  text-align: right;
+  color: whitesmoke;
+}
+
+.upperCard1 {
+  align-items: flex-end;
+  border-bottom: 0.5px solid transparent;
+  border-top-left-radius: 4.57px;
+  border-top-right-radius: 4.57px;
+}
+.upperCard1 span {
+  transform: translateY(50%);
+}
+
+.lowerCard1 {
+  align-items: flex-start;
+  border-top: 0.5px solid transparent;
+  border-bottom-left-radius: 4.57px;
+  border-bottom-right-radius: 4.57px;
+}
+.lowerCard1 span {
+  transform: translateY(-50%);
+}
+
+.flipCard1 {
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  z-index: 1;
+}
+.flipCard1 span {
+  font-family: 'Share Tech';
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 64.02px;
+  line-height: 100%;
+  letter-spacing: -8.5%;
+  text-align: right;
+  color: whitesmoke;
+}
+
+.flipCard1.unfold1 {
+  top: 50%;
+  align-items: flex-start;
+  transform-origin: 50% 0%;
+  transform: rotateX(180deg);
+  background-color: #fdb913;
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+  border: 0.5px solid transparent;
+  border-top: 2px solid #24475B;
+  background: linear-gradient(248.62deg, #946318 0%, #B48424 23.06%, #E4C658 51.93%, #9E6A17 85.55%, #85560F 100%);
+}
+
+.flipCard1.unfold1 span {
+  transform: translateY(-50%);
+}
+
+.flipCard1.fold1 {
+  top: 0%;
+  align-items: flex-end;
+  transform-origin: 50% 100%;
+  transform: rotateX(0deg);
+  background-color: white;
+  border-top-left-radius: 4.57px;
+  border-top-right-radius: 4.57px;
+  border: 0.5px solid whitesmoke;
+  border-bottom: 0.5px solid whitesmoke;
+  z-index: 2;
+}
+.flipCard1.fold1 span {
+  transform: translateY(50%);
+}
+
+.fold1 {
+  animation: fold1 0.6s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0s 1 normal forwards;
+  -webkit-animation: fold1 0.6s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0s 1 normal forwards;
+  transform-style: preserve-3d;
+}
+
+.unfold1 {
+  animation: unfold1 0.6s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0s 1 normal forwards;
+  -webkit-animation: unfold1 0.6s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0s 1 normal forwards;
+  transform-style: preserve-3d;
+}
+
+@keyframes fold1 {
+  0% {
+    transform: rotateX(0deg);
+  }
+  100% {
+    transform: rotateX(-180deg);
+  }
+}
+
+@-webkit-keyframes fold1 {
+  0% {
+    transform: rotateX(0deg);
+  }
+  100% {
+    transform: rotateX(-180deg);
+  }
+}
+
+@keyframes unfold1 {
+  0% {
+    transform: rotateX(180deg);
+  }
+  100% {
+    transform: rotateX(0deg);
+  }
+}
+
+@-webkit-keyframes unfold1 {
+  0% {
+    transform: rotateX(180deg);
+  }
+  100% {
+    transform: rotateX(0deg);
+  }
+}
+
+.flipUnitWrapper1 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.colon1 {
+  position: absolute;
+  right: -11px;
+  top: 20%;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  pointer-events: none;
+}
+
+.unitLabel1 {
+  margin-top: 6px;
+  text-transform: uppercase;
+  color: #eee;
+  letter-spacing: 0.5px;
+  font-family: 'Poppins';
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 11.76px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  text-align: center;
+  margin: 10px 0 0 0;
+}
+
+.no-flip1 .fold1,
+.no-flip1 .unfold1 {
+  animation: none !important;
+  -webkit-animation: none !important;
+}
