@@ -209,10 +209,10 @@ body, html {
   position: relative;
   perspective-origin: 50% 50%;
   perspective: 300px;
-  background-color: #fdb913;
+background: linear-gradient(to bottom, #E4C658 0%, #9E6A17 100%);
   border-radius: 3px;
   box-shadow: 0px 10px 10px -10px grey;
-  color: #fdb913 !important;
+  /* color: #fdb913 !important; */
   width: clamp(60px, 20vw, 85px);
   height: 70px;
   border-radius: 4.57px;
@@ -229,9 +229,9 @@ body, html {
   height: 50%;
   overflow: hidden;
   border: 1px solid transparent;
+  background: linear-gradient(to bottom, #E4C658 0%, #9E6A17 100%);
+
   border-radius: 4.57px;
-  background-color: #fdb913;
-  background: linear-gradient(248.62deg, #946318 0%, #B48424 23.06%, #E4C658 51.93%, #9E6A17 85.55%, #85560F 100%);
 }
 
 .upperCard span, .lowerCard span {
@@ -243,16 +243,16 @@ body, html {
   letter-spacing: -8.5%;
   text-align: right;
   color: whitesmoke;
-    background: linear-gradient(248.62deg, #946318 0%, #B48424 23.06%, #E4C658 51.93%, #9E6A17 85.55%, #85560F 100%);
 
 
 }
 
 .upperCard {
   align-items: flex-end;
-  border-bottom: 0.5px solid transparent;
+  border-bottom: 2px solid #24475B;
   border-top-left-radius: 4.57px;
   border-top-right-radius: 4.57px;
+
 }
 .upperCard span {
   transform: translateY(50%);
@@ -263,6 +263,7 @@ body, html {
   border-top: 0.5px solid transparent;
   border-bottom-left-radius: 4.57px;
   border-bottom-right-radius: 4.57px;
+  border-bottom: 2px solid #24475B;
 }
 .lowerCard span {
   transform: translateY(-50%);
@@ -278,6 +279,7 @@ body, html {
   overflow: hidden;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+  border-bottom: 2px solid #24475B;
   z-index: 1;
 }
 .flipCard span {
@@ -297,12 +299,12 @@ body, html {
   align-items: flex-start;
   transform-origin: 50% 0%;
   transform: rotateX(180deg);
-  background-color: #fdb913;
   border-bottom-left-radius: 3px;
   border-bottom-right-radius: 3px;
   border: 1px solid transparent;
   border-top: 2px solid #24475B;
-  background: linear-gradient(248.62deg, #946318 0%, #B48424 23.06%, #E4C658 51.93%, #9E6A17 85.55%, #85560F 100%);
+  background: linear-gradient(to bottom, #E4C658 0%, #9E6A17 100%);
+
 }
 
 .flipCard.unfold span {
@@ -340,7 +342,7 @@ body, html {
   align-items: flex-end;
   transform-origin: 50% 100%;
   transform: rotateX(0deg);
-  background: linear-gradient(248.62deg, #946318 0%, #B48424 23.06%, #E4C658 51.93%, #9E6A17 85.55%, #85560F 100%);
+background: linear-gradient(to bottom, #E4C658 0%, #9E6A17 100%);
   border-top-left-radius: 4.57px;
   border-top-right-radius: 4.57px;
   border: 0.5px solid transparent;
@@ -411,7 +413,7 @@ body, html {
 .colon {
   position: absolute;
   right: -11px;
-  top: 20%;
+  top: 15%;
   font-size: 1.5rem;
   font-weight: bold;
   color: white;

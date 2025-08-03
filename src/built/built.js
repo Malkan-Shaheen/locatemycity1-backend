@@ -13,139 +13,108 @@ const Built = () => {
   const rafId = useRef(null);
   const touchStartY = useRef(0);
   const lastScrollTime = useRef(0);
+useEffect(() => {
+  const container = containerRef.current;
+  const image = imageRef.current;
+  if (!container || !image || !textContentRef.current) return;
 
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container || !imageRef.current || !textContentRef.current) return;
+  const handleWheel = (e) => {
+    if (!isScrollLocked) return;
 
-    const handleWheel = (e) => {
-      if (!isScrollLocked) return;
+    const now = Date.now();
+    if (now - lastScrollTime.current < 16) return;
+    lastScrollTime.current = now;
 
-      const now = Date.now();
-      if (now - lastScrollTime.current < 16) return; // ~60fps throttle
-      lastScrollTime.current = now;
+    const containerHeight = container.clientHeight;
+    const imageHeight = image.scrollHeight;
+    const maxScroll = Math.max(imageHeight - containerHeight, 0);
 
-      const containerHeight = container.clientHeight;
-      const imageHeight = imageRef.current.scrollHeight;
-      const maxScroll = Math.max(imageHeight - containerHeight, 0);
-      const atBottom = scrollOffset.current >= maxScroll;
+    const delta = e.deltaY * 0.5;
+    let newOffset = scrollOffset.current + delta;
+    newOffset = Math.max(0, Math.min(newOffset, maxScroll));
 
-      // If we're at bottom and scrolling down, release lock
-      if (atBottom && e.deltaY > 0) {
-        setIsScrollLocked(false);
-        return;
-      }
+    scrollOffset.current = newOffset;
+    image.style.transform = `translateY(-${scrollOffset.current}px)`;
 
-      // Otherwise, handle the scroll ourselves
-      e.preventDefault();
-      e.stopPropagation();
+    checkUnlockCondition();
+    e.preventDefault();
+    e.stopPropagation();
+  };
 
-      const delta = e.deltaY * 0.5;
-      let newOffset = scrollOffset.current + delta;
-      newOffset = Math.max(0, Math.min(newOffset, maxScroll));
+  const handleTouchStart = (e) => {
+    touchStartY.current = e.touches[0].clientY;
+  };
 
-      scrollOffset.current = newOffset;
-      imageRef.current.style.transform = `translateY(-${scrollOffset.current}px)`;
+  const handleTouchMove = (e) => {
+    if (!isScrollLocked) return;
 
-      // If we reached bottom after this scroll, release lock on next frame
-      if (scrollOffset.current >= maxScroll && e.deltaY > 0) {
-        requestAnimationFrame(() => {
-          setIsScrollLocked(false);
-        });
-      }
-    };
+    const touchY = e.touches[0].clientY;
+    const deltaY = touchStartY.current - touchY;
+    touchStartY.current = touchY;
 
-    const handleTouchStart = (e) => {
-      touchStartY.current = e.touches[0].clientY;
-    };
+    const containerHeight = container.clientHeight;
+    const imageHeight = image.scrollHeight;
+    const maxScroll = Math.max(imageHeight - containerHeight, 0);
 
-    const handleTouchMove = (e) => {
-      if (!isScrollLocked) return;
+    let newOffset = scrollOffset.current + deltaY;
+    newOffset = Math.max(0, Math.min(newOffset, maxScroll));
 
-      const touchY = e.touches[0].clientY;
-      const deltaY = touchStartY.current - touchY;
-      touchStartY.current = touchY;
+    scrollOffset.current = newOffset;
+    image.style.transform = `translateY(-${scrollOffset.current}px)`;
 
-      const containerHeight = container.clientHeight;
-      const imageHeight = imageRef.current.scrollHeight;
-      const maxScroll = Math.max(imageHeight - containerHeight, 0);
-      const atBottom = scrollOffset.current >= maxScroll;
+    checkUnlockCondition();
+    e.preventDefault();
+    e.stopPropagation();
+  };
 
-      // If we're at bottom and scrolling down, release lock
-      if (atBottom && deltaY < 0) {
-        setIsScrollLocked(false);
-        return;
-      }
+  const checkUnlockCondition = () => {
+    const containerHeight = container.clientHeight;
+    const imageHeight = image.scrollHeight;
+    const maxScroll = Math.max(imageHeight - containerHeight, 0);
 
-      // Otherwise, handle the scroll ourselves
-      e.preventDefault();
-      e.stopPropagation();
+    const atTop = scrollOffset.current <= 0;
+    const atBottom = scrollOffset.current >= maxScroll;
 
-      let newOffset = scrollOffset.current + deltaY;
-      newOffset = Math.max(0, Math.min(newOffset, maxScroll));
+    if (atTop || atBottom) {
+  const rect = container.getBoundingClientRect();
+  const fullyVisible = rect.top >= 0 && rect.bottom <= window.innerHeight;
 
-      scrollOffset.current = newOffset;
-      imageRef.current.style.transform = `translateY(-${scrollOffset.current}px)`;
+  if (fullyVisible) {
+    setIsScrollLocked(false); // Allow global scroll only when section is fully in view and image reached limit
+  }
+} else {
+  // Lock global scroll when image is scrolling
+  if (!isScrollLocked) setIsScrollLocked(true);
+}
 
-      // If we reached bottom after this scroll, release lock on next frame
-      if (scrollOffset.current >= maxScroll && deltaY < 0) {
-        requestAnimationFrame(() => {
-          setIsScrollLocked(false);
-        });
-      }
-    };
+  };
 
-    const checkScrollLock = () => {
-      if (rafId.current) cancelAnimationFrame(rafId.current);
+  const checkVisibility = () => {
+    const rect = container.getBoundingClientRect();
+    const fullyVisible = rect.top >= 0 && rect.bottom <= window.innerHeight;
 
-      rafId.current = requestAnimationFrame(() => {
-        const containerHeight = container.clientHeight;
-        const imageHeight = imageRef.current.scrollHeight;
-        const maxScroll = Math.max(imageHeight - containerHeight, 0);
-        const atBottom = scrollOffset.current >= maxScroll;
-
-        // Always lock while image has scroll left
-        if (!atBottom && maxScroll > 0) {
-          setIsScrollLocked(true);
-        }
-      });
-    };
-
-    container.addEventListener('wheel', handleWheel, { passive: false });
-    container.addEventListener('touchstart', handleTouchStart, { passive: false });
-    container.addEventListener('touchmove', handleTouchMove, { passive: false });
-    window.addEventListener('scroll', checkScrollLock);
-    window.addEventListener('resize', checkScrollLock);
-
-    // Initial check
-    checkScrollLock();
-
-    return () => {
-      container.removeEventListener('wheel', handleWheel);
-      container.removeEventListener('touchstart', handleTouchStart);
-      container.removeEventListener('touchmove', handleTouchMove);
-      window.removeEventListener('scroll', checkScrollLock);
-      window.removeEventListener('resize', checkScrollLock);
-      if (rafId.current) {
-        cancelAnimationFrame(rafId.current);
-      }
-    };
-  }, [isScrollLocked]);
-
-  useEffect(() => {
-    if (isScrollLocked) {
-      document.body.style.overflow = 'hidden';
-      document.documentElement.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-      document.documentElement.style.overflow = '';
+    if (fullyVisible) {
+      setIsScrollLocked(true);
     }
+  };
 
-    return () => {
-      document.body.style.overflow = '';
-      document.documentElement.style.overflow = '';
-    };
-  }, [isScrollLocked]);
+  container.addEventListener('wheel', handleWheel, { passive: false });
+  container.addEventListener('touchstart', handleTouchStart, { passive: false });
+  container.addEventListener('touchmove', handleTouchMove, { passive: false });
+  window.addEventListener('scroll', checkVisibility);
+  window.addEventListener('resize', checkVisibility);
+
+  checkVisibility();
+
+  return () => {
+    container.removeEventListener('wheel', handleWheel);
+    container.removeEventListener('touchstart', handleTouchStart);
+    container.removeEventListener('touchmove', handleTouchMove);
+    window.removeEventListener('scroll', checkVisibility);
+    window.removeEventListener('resize', checkVisibility);
+  };
+}, [isScrollLocked]);
+
 
   return (
     <div
