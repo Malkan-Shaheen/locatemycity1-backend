@@ -1,3 +1,7 @@
+body {
+  overflow: auto !important;
+}
+
 .directory-section {
   display: flex;
   width: 100%;
@@ -7,19 +11,8 @@
   font-family: 'Poppins', sans-serif;
   position: relative;
   scroll-snap-align: start;
+  overflow: visible; /* Changed from hidden */
 }
-
-.directory-section {
-  scroll-margin-top: 0px;
-  padding-top: 0;
-  margin-top: 0;
-}
-.directory-section::after {
-  content: "";
-  display: block;
-  height: 100vh;
-}
-
 
 .directory-heading {
   position: absolute;
@@ -27,16 +20,16 @@
   width: 100%;
   text-align: center;
   padding-top: 30px;
-  padding-bottom: 40px; /* reduced space below heading */
+  padding-bottom: 40px;
 }
 
 .directory-heading h1 {
-  font-size: 36px; /* slightly larger */
+  font-size: 36px;
   font-weight: 700;
 }
 
 .directory-heading h3 {
-  font-size: 20px; /* slightly larger */
+  font-size: 20px;
   font-weight: 400;
   margin-top: 6px;
   padding-bottom: 40px;
@@ -48,7 +41,7 @@
   margin-left: 50px;
   display: flex;
   align-items: center;
-  margin-top: 200px; /* reduced from 300px */
+  margin-top: 200px;
 }
 
 .side-icons {
@@ -87,6 +80,15 @@
 
 .directory-content {
   flex: 1;
+  max-height: 500px;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  scroll-snap-align: center;
+  scrollbar-width: none;
+}
+
+.directory-content::-webkit-scrollbar {
+  display: none;
 }
 
 .directory-title {
@@ -122,15 +124,17 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 200px; /* reduced from 300px */
+  margin-top: 200px;
 }
 
 .image-carousel-container {
   width: 100%;
-  max-width: 640px; /* increased from 582px */
-  height: 500px;      /* increased from 435px */
+  max-width: 640px;
+  height: 500px;
   overflow: hidden;
   position: relative;
+  scroll-snap-type: y mandatory;
+  scroll-snap-align: center;
 }
 
 .image-carousel {
@@ -150,7 +154,7 @@
 .carousel-image-wrapper {
   scroll-snap-align: center;
   width: 100%;
-  height: 500px; /* increased to match container */
+  height: 500px;
 }
 
 .carousel-image {
