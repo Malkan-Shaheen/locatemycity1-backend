@@ -1,7 +1,7 @@
 import React from 'react';
 import './footer.css';
 import logo from './../images/Logoo.png'; // Replace with your actual logo path
-
+import twitterIcon from './../images/prime_twitter.png'; // or x.png depending on your asset
 const Footer = () => {
   return (
     <footer className="footer">
@@ -19,7 +19,9 @@ const Footer = () => {
           <div className="footer-links">
             <a href="#" className="footer-link">Privacy</a>
             <a href="#" className="footer-link">Terms</a>
-            <a href="#" className="footer-icon"><i className="fab fa-x-twitter"></i></a>
+            <a href="#" className="footer-icon">
+  <img src={twitterIcon} alt="Twitter" className="footer-icon" />
+</a>
             <a href="#" className="footer-icon"><i className="fab fa-facebook-f"></i></a>
             <a href="#" className="footer-icon"><i className="fab fa-instagram"></i></a>
           </div>

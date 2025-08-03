@@ -70,6 +70,11 @@
   line-height: 100%;
 
 }
+/* faqs.css */
+.faq-answer {
+  overflow: hidden;
+}
+
 
 .faq-toggle-button {
   width: 86px;
@@ -95,5 +100,6 @@
   font-size: 20px;
   line-height: 36px;
   text-align: left;
+  will-change: opacity, transform, height; 
   color: #ccc;
 }

@@ -66,19 +66,29 @@ const FAQs = () => {
               </div>
             </div>
 
-            <AnimatePresence initial={false}>
-              {activeIndex === index && (
-                <motion.div
-                  className="faq-answer"
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <p>{faq.answer}</p>
-                </motion.div>
-              )}
-            </AnimatePresence>
+          <AnimatePresence initial={false}>
+  {activeIndex === index && (
+    <motion.div
+      layout
+      className="faq-answer"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.4, ease: 'easeInOut' }}
+    >
+      <motion.p
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 10 }}
+        transition={{ duration: 0.3 }}
+      >
+        {faq.answer}
+      </motion.p>
+    </motion.div>
+  )}
+</AnimatePresence>
+
+
           </div>
         ))}
       </div>
