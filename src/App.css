@@ -7,6 +7,9 @@ background: #121212;
   color: white;
   scroll-behavior: smooth;
   width: 100%;
+  overflow: hidden;
+  overflow-x: hidden;
+
 }
 html, body {
 

@@ -22,7 +22,7 @@ const ProjectBlackLanding = () => {
 
           <div className="countdown-wrapper">
             <p className="coming-soon">Coming Soon (31 December 2025)</p>
-            <FlipClock /> {/* ✅ Inserted here */}
+            <FlipClock /> 
           </div>
         </div>
       </div>
