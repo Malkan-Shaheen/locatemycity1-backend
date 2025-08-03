@@ -9,16 +9,18 @@ const contentList = [
     icon: require('./../../images/icon1.png'),
     title: "The Seed: Planted in the Directory",
     price: "$50 (Limited Time) / Annum",
-    text: `Your First Step Into the Ecosystem 
-The Seed is  how you claim your place in the culture. 
-Whether you’re a brand, creative, or supporter, this entry-level listing gives you visibility, access, 
-and community. 
+    text: `The entry-level tier designed for businesses looking to establish their presence and gain early access to Project Black’s growing network.
 
-What You Get 
-Verified spot in the ProjectBlack Directory (The Black Book)  
-Exposure to a culture-driven audience 
-Early supporter recognition (Digital badge for social media) 
-Member-only updates, events and opportunities`
+Benefits:
+Business listing in the Directory on GoProjectBlack.com
+Exposure to an engaged audience and exclusive early access opportunities
+Social media highlights to drive traffic to your business
+Recognition in the Founders Circle as an early supporter
+
+Welcome package: The Trailblazer Innovator Edition
+
+Early Bird Rate: $50 (50% off, will increase to $100 after launch)
+`
   },
   {
     image: require('./../../images/man.png'),
@@ -39,6 +41,7 @@ Welcome package: The Black Box Innovator Edition
 
 Pay-in-Full Bonus:
 One additional social media feature (extra promotion across Project Black’s platforms)
+
 `
   },
   {
@@ -46,28 +49,24 @@ One additional social media feature (extra promotion across Project Black’s pl
     icon: require('./../../images/icon3.png'),
     title: "Established Root",
     price: "$50 (Limited Time) / Annum",
-    text: `For entrepreneurs and business leaders ready to scale and position themselves as industry trailblazers.
+    text: `For entrepreneurs scaling up and ready to lead the culture.
 
 Benefits:
-All Innovator perks included
-VIP platform feature with top-tier directory placement
-Dedicated business highlight feature and media exposure
-Speaking and interview opportunities within Project Black’s network
-Priority introductions to potential partners and investors
+	•	All Pillar perks included
+	•	VIP platform + directory feature
+	•	Business spotlight & media exposure
+	•	Speaking/interview opportunities
+	•	Priority brand/investor intros
+…and more
 
-Business Makeover Package:
-Directory listing with feature write-up
-Instagram highlight and social media boost
-Custom promotional reel creation for business marketing
+Extras:
+Business Makeover Package
+	•	Feature write-up & promo reel
+	•	IG highlight & social media boost
 
-Welcome package: The Black Box Visionary Edition
+Welcome Package:
+The Black Box — Flame Edition
 
-Payment Plan Option:
-2 Monthly Payments of $1,300 OR
-3 Monthly Payments of $875
-
-Pay-in-Full Bonus:
-Exclusive interview feature on Project Black’s blog and social media platforms
 `
   },
   {
@@ -75,29 +74,24 @@ Exclusive interview feature on Project Black’s blog and social media platforms
     icon: require('./../../images/icon4.png'),
     title: "Harvesting Change",
     price: "$50 (Limited Time) / Annum",
-    text: `An exclusive tier for pioneers committed to shaping the future of Black business, media, and culture.
+    text: `For pioneers shaping the future of Black business & media.
 
 Benefits:
-All Visionary perks included
-Official recognition as a Project Black Legend
-Personalized business strategy session with tailored growth recommendations
-Featured on Project Black’s media platforms for increased visibility
-Early access to international Black-owned business initiatives
+	•	All Flame perks included
+	•	Official “Legend” recognition
+	•	Strategy session + growth plan
+	•	Global initiative access
+	•	Featured across Project Black media
+…and more
 
-The Ultimate Business Makeover Package:
-Premium directory listing with front-page article and interview
-Permanent social media feature across multiple platforms
-One-on-one branding consultation
-High-quality professional video production for business promotion
+Extras:
+Ultimate Business Makeover Package
+	•	Premium front-page listing + interview
+	•	Permanent social spotlight
+	•	Pro video shoot + brand consult
 
-Welcome package: The Black Box  Legend Edition
-
-Payment Plan Option:
-3 Monthly Payments of $1,750 OR
-6 Monthly Payments of $900
-
-Pay-in-Full Bonus:
-Feature in Project Black’s Exclusive Business Spotlight Video Series (professionally curated and shared across platforms)`
+Welcome Package:
+The Black Box — Crown Edition`
 }
 ];
 
