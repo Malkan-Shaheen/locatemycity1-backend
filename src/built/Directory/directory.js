@@ -25,22 +25,80 @@ Member-only updates, events and opportunities`
     icon: require('./../../images/icon2.png'),
     title: "Growth Phase",
     price: "$50 (Limited Time) / Annum",
-    text: `Designed for business owners looking for a competitive edge and deeper engagement within Project Black.\n\nBenefits:\nAll Trailblazer perks included\nEarly access to platform launches and events\nExclusive discounts with partner brands\nFounders Circle recognition with permanent listing\nPrivate networking with Black 100 members\nPriority spotlights for your business on the platform\n\nWelcome package: The Black Box Innovator Edition\n\nPay-in-Full Bonus:\nOne additional social media feature (extra promotion across Project Black's platforms)`
+    text: `Designed for business owners looking for a competitive edge and deeper engagement within Project Black.
+
+Benefits:
+All Trailblazer perks included
+Early access to platform launches and events
+Exclusive discounts with partner brands
+Founders Circle recognition with permanent listing
+Private networking with Black 100 members
+Priority spotlights for your business on the platform
+
+Welcome package: The Black Box Innovator Edition
+
+Pay-in-Full Bonus:
+One additional social media feature (extra promotion across Project Black’s platforms)
+`
   },
   {
     image: require('./../../images/woman.png'),
     icon: require('./../../images/icon3.png'),
     title: "Established Root",
     price: "$50 (Limited Time) / Annum",
-    text: `For entrepreneurs and business leaders ready to scale and position themselves as industry trailblazers.\n\nBenefits:\nAll Innovator perks included\nVIP platform feature with top-tier directory placement\nDedicated business highlight feature and media exposure\nSpeaking and interview opportunities within Project Black's network\nPriority introductions to potential partners and investors\n\nBusiness Makeover Package:\nDirectory listing with feature write-up\nInstagram highlight and social media boost\nCustom promotional reel creation for business marketing\n\nWelcome package: The Black Box Visionary Edition\n\nPayment Plan Option:\n2 Monthly Payments of $1,300 OR\n3 Monthly Payments of $875\n\nPay-in-Full Bonus:\nExclusive interview feature on Project Black's blog and social media platforms`
+    text: `For entrepreneurs and business leaders ready to scale and position themselves as industry trailblazers.
+
+Benefits:
+All Innovator perks included
+VIP platform feature with top-tier directory placement
+Dedicated business highlight feature and media exposure
+Speaking and interview opportunities within Project Black’s network
+Priority introductions to potential partners and investors
+
+Business Makeover Package:
+Directory listing with feature write-up
+Instagram highlight and social media boost
+Custom promotional reel creation for business marketing
+
+Welcome package: The Black Box Visionary Edition
+
+Payment Plan Option:
+2 Monthly Payments of $1,300 OR
+3 Monthly Payments of $875
+
+Pay-in-Full Bonus:
+Exclusive interview feature on Project Black’s blog and social media platforms
+`
   },
   {
     image: require('./../../images/crown.png'),
     icon: require('./../../images/icon4.png'),
     title: "Harvesting Change",
     price: "$50 (Limited Time) / Annum",
-    text: `An exclusive tier for pioneers committed to shaping the future of Black business, media, and culture.\n\nBenefits:\nAll Visionary perks included\nOfficial recognition as a Project Black Legend\nPersonalized business strategy session with tailored growth recommendations\nFeatured on Project Black's media platforms for increased visibility\nEarly access to international Black-owned business initiatives\n\nThe Ultimate Business Makeover Package:\nPremium directory listing with front-page article and interview\nPermanent social media feature across multiple platforms\nOne-on-one branding consultation\nHigh-quality professional video production for business promotion\n\nWelcome package: The Black Box Legend Edition\n\nPayment Plan Option:\n3 Monthly Payments of $1,750 OR\n6 Monthly Payments of $900\n\nPay-in-Full Bonus:\nFeature in Project Black's Exclusive Business Spotlight Video Series (professionally curated and shared across platforms)`
-  }
+    text: `An exclusive tier for pioneers committed to shaping the future of Black business, media, and culture.
+
+Benefits:
+All Visionary perks included
+Official recognition as a Project Black Legend
+Personalized business strategy session with tailored growth recommendations
+Featured on Project Black’s media platforms for increased visibility
+Early access to international Black-owned business initiatives
+
+The Ultimate Business Makeover Package:
+Premium directory listing with front-page article and interview
+Permanent social media feature across multiple platforms
+One-on-one branding consultation
+High-quality professional video production for business promotion
+
+Welcome package: The Black Box  Legend Edition
+
+Payment Plan Option:
+3 Monthly Payments of $1,750 OR
+6 Monthly Payments of $900
+
+Pay-in-Full Bonus:
+Feature in Project Black’s Exclusive Business Spotlight Video Series (professionally curated and shared across platforms)`
+}
 ];
 
 const Directory = () => {
@@ -161,7 +219,7 @@ const Directory = () => {
             >
               <div className="directory-title-price-wrapper">
                 <h2 className="directory-title">{contentList[current].title}</h2>
-                <div className="directory-price">{contentList[current].price}</div>
+                {/* <div className="directory-price">{contentList[current].price}</div> */}
               </div>
               <p className="directory-text">
                 {contentList[current].text.split('\n').map((line, i) => (

@@ -137,6 +137,8 @@ line-height: 100%;
 .merch-section::before,
 .merch-section::after {
   content: '';
+  overflow: visible;
+  
   position: absolute;
   width: 440.25px;
   height: 440.25px;
@@ -150,9 +152,10 @@ line-height: 100%;
 }
 
 .merch-section::before {
-  top: 120px;
-  height: 550px !important;
+  top: 200px;
+  height: 400px !important;
   left: -150px;
+  
 }
 
 .merch-section::after {
