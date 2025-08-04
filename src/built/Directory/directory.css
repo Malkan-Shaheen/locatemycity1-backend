@@ -9,6 +9,7 @@ body {
   font-family: 'Poppins', sans-serif;
   position: relative;
   z-index: 1;
+ 
 }
 
 .directory-heading {
@@ -200,7 +201,7 @@ opacity: 1;
 
 .scroll-triggers {
   position: absolute;
-  top: 0;
+  top: -150;
   left: 0;
   width: 100%;
   height: 100%;

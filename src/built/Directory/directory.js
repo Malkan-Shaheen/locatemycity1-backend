@@ -95,6 +95,7 @@ const Directory = () => {
   const [previousPanel, setPreviousPanel] = useState(null);
   const [scrollDirection, setScrollDirection] = useState('up');
   const prevScrollY = useRef(0);
+  
 
   useEffect(() => {
     const handleScroll = (entries) => {
@@ -111,10 +112,11 @@ const Directory = () => {
       });
     };
 
-    const observer = new IntersectionObserver(handleScroll, {
-      root: null,
-      threshold: 0.5
-    });
+     const observer = new IntersectionObserver(handleScroll, {
+    root: null,
+    rootMargin: '-30% 0px -50% 0px', // Triggers 30% from top of viewport
+    threshold: 0
+  });
 
     triggersRef.current.forEach((trigger) => {
       if (trigger) observer.observe(trigger);
@@ -136,8 +138,40 @@ const Directory = () => {
   };
 
   return (
+    
     <div className="directory-section" ref={sectionRef}>
-      <div className="directory-heading">
+   
+
+       <div className="scroll-triggers">
+            {contentList.map((_, index) => (
+              <div
+                key={`trigger-${index}`}
+                className="scroll-trigger"
+                data-panel={`panel${index + 1}`}
+                ref={(el) => (triggersRef.current[index] = el)}
+              />
+            ))}
+          </div>
+
+      <div className="panel-section">
+           
+        <div className="logo-nav">
+          {contentList.map((item, index) => (
+            <div
+              key={`panel${index + 1}`}
+              className={`logo-item ${activePanel === `panel${index + 1}` ? 'active' : ''}`}
+              data-panel={`panel${index + 1}`}
+              onClick={() => handleLogoClick(`panel${index + 1}`)}
+            >
+              <img src={item.icon} alt={`Icon ${index + 1}`} />
+            </div>
+          ))}
+        </div>
+
+        <div className="content-area">
+
+          <div className="panel-display">
+            <div className="directory-heading">
         <motion.h1 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -153,23 +187,6 @@ const Directory = () => {
           Fueling the Future of Black Innovation
         </motion.h3>
       </div>
-
-      <div className="panel-section">
-        <div className="logo-nav">
-          {contentList.map((item, index) => (
-            <div
-              key={`panel${index + 1}`}
-              className={`logo-item ${activePanel === `panel${index + 1}` ? 'active' : ''}`}
-              data-panel={`panel${index + 1}`}
-              onClick={() => handleLogoClick(`panel${index + 1}`)}
-            >
-              <img src={item.icon} alt={`Icon ${index + 1}`} />
-            </div>
-          ))}
-        </div>
-
-        <div className="content-area">
-          <div className="panel-display">
             <div className="text-content-container">
               {contentList.map((item, index) => (
                 <div
@@ -226,16 +243,7 @@ const Directory = () => {
 </div>
       </div>
 
-          <div className="scroll-triggers">
-            {contentList.map((_, index) => (
-              <div
-                key={`trigger-${index}`}
-                className="scroll-trigger"
-                data-panel={`panel${index + 1}`}
-                ref={(el) => (triggersRef.current[index] = el)}
-              />
-            ))}
-          </div>
+         
         </div>
       </div>
     </div>
