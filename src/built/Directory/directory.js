@@ -1,7 +1,6 @@
-// Directory.jsx
 import React, { useState, useEffect, useRef } from 'react';
 import './directory.css';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 const contentList = [
   {
@@ -9,7 +8,7 @@ const contentList = [
     icon: require('./../../images/icon1.png'),
     title: "The Seed: Planted in the Directory",
     price: "$50 (Limited Time) / Annum",
-    text: `The entry-level tier designed for businesses looking to establish their presence and gain early access to Project Black's growing network.
+    text: `The entry-level tier designed for businesses looking to establish their presence and gain early access to Project Black’s growing network.
 
 Benefits:
 Business listing in the Directory on GoProjectBlack.com
@@ -20,6 +19,7 @@ Recognition in the Founders Circle as an early supporter
 Welcome package: The Trailblazer Innovator Edition
 
 Early Bird Rate: $50 (50% off, will increase to $100 after launch)
+
 `
   },
   {
@@ -40,9 +40,9 @@ Priority spotlights for your business on the platform
 Welcome package: The Black Box Innovator Edition
 
 Pay-in-Full Bonus:
-One additional social media feature (extra promotion across Project Black's platforms)
+One additional social media feature (extra promotion across Project Black’s platforms)
 
-`
+  `
   },
   {
     image: require('./../../images/woman.png'),
@@ -66,118 +66,74 @@ Business Makeover Package
 
 Welcome Package:
 The Black Box — Flame Edition
-
-`
+ `
   },
   {
     image: require('./../../images/crown.png'),
     icon: require('./../../images/icon4.png'),
     title: "Harvesting Change",
     price: "$50 (Limited Time) / Annum",
-    text: `For pioneers shaping the future of Black business & media.
+    text: `The entry-level tier designed for businesses looking to establish their presence and gain early access to Project Black’s growing network.
 
 Benefits:
-	•	All Flame perks included
-	•	Official "Legend" recognition
-	•	Strategy session + growth plan
-	•	Global initiative access
-	•	Featured across Project Black media
-…and more
+Business listing in the Directory on GoProjectBlack.com
+Exposure to an engaged audience and exclusive early access opportunities
+Social media highlights to drive traffic to your business
+Recognition in the Founders Circle as an early supporter
 
-Extras:
-Ultimate Business Makeover Package
-	•	Premium front-page listing + interview
-	•	Permanent social spotlight
-	•	Pro video shoot + brand consult
+Welcome package: The Trailblazer Innovator Edition
 
-Welcome Package:
-The Black Box — Crown Edition`
-}
+Early Bird Rate: $50 (50% off, will increase to $100 after launch)
+ `
+  },
 ];
 
 const Directory = () => {
-  const [current, setCurrent] = useState(0);
   const sectionRef = useRef(null);
-  const carouselRef = useRef(null);
-  const isScrollingRef = useRef(false);
+  const triggersRef = useRef([]);
+  const [activePanel, setActivePanel] = useState('panel1');
+  const [previousPanel, setPreviousPanel] = useState(null);
+  const [scrollDirection, setScrollDirection] = useState('up');
+  const prevScrollY = useRef(0);
 
   useEffect(() => {
-    const section = sectionRef.current;
-    const carousel = carouselRef.current;
-    if (!section || !carousel) return;
-
-    const scrollStep = 455;
-
-    const handleWheel = (e) => {
-      const sectionBounds = section.getBoundingClientRect();
-      const isInSection = sectionBounds.top <= 0 && sectionBounds.bottom >= window.innerHeight;
-
-      // Only control scroll if we're in the section
-      if (!isInSection) return;
-
-      const direction = e.deltaY > 0 ? 1 : -1;
-
-      // At first image and scrolling up → unlock global scroll
-      if (current === 0 && direction === -1) {
-        document.body.style.overflow = 'auto';
-        return;
-      }
-
-      // At last image and scrolling down → unlock global scroll
-      if (current === contentList.length - 1 && direction === 1) {
-        document.body.style.overflow = 'auto';
-        return;
-      }
-
-      // Inside Directory section: prevent global scroll
-      e.preventDefault();
-      document.body.style.overflow = 'hidden';
-
-      if (isScrollingRef.current) return;
-
-      const newIndex = current + direction;
-      if (newIndex < 0 || newIndex >= contentList.length) return;
-
-      isScrollingRef.current = true;
-
-      carousel.scrollTo({
-        top: newIndex * scrollStep,
-        behavior: 'smooth'
+    const handleScroll = (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const currentScrollY = window.scrollY;
+          const direction = currentScrollY > prevScrollY.current ? 'down' : 'up';
+          setScrollDirection(direction);
+          prevScrollY.current = currentScrollY;
+          
+          setPreviousPanel(activePanel);
+          setActivePanel(entry.target.dataset.panel);
+        }
       });
-
-      setCurrent(newIndex);
-
-      setTimeout(() => {
-        isScrollingRef.current = false;
-      }, 800);
     };
 
-    window.addEventListener('wheel', handleWheel, { passive: false });
+    const observer = new IntersectionObserver(handleScroll, {
+      root: null,
+      threshold: 0.5
+    });
+
+    triggersRef.current.forEach((trigger) => {
+      if (trigger) observer.observe(trigger);
+    });
 
     return () => {
-      window.removeEventListener('wheel', handleWheel);
-      document.body.style.overflow = 'auto';
+      triggersRef.current.forEach((trigger) => {
+        if (trigger) observer.unobserve(trigger);
+      });
     };
-  }, [current]);
+  }, [activePanel]);
 
-  useEffect(() => {
-    const carousel = carouselRef.current;
-    if (!carousel) return;
-
-    const scrollStep = 455;
-
-    const handleCarouselScroll = () => {
-      const newIndex = Math.round(carousel.scrollTop / scrollStep);
-      if (newIndex !== current) {
-        setCurrent(newIndex);
-      }
-    };
-
-    carousel.addEventListener('scroll', handleCarouselScroll);
-    return () => {
-      carousel.removeEventListener('scroll', handleCarouselScroll);
-    };
-  }, [current]);
+  const handleLogoClick = (panelId) => {
+    setActivePanel(panelId);
+    const trigger = triggersRef.current.find(el => el?.dataset.panel === panelId);
+    if (trigger) {
+      trigger.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
     <div className="directory-section" ref={sectionRef}>
@@ -198,60 +154,86 @@ const Directory = () => {
         </motion.h3>
       </div>
 
-      <div className="directory-left">
-        <div className="side-icons">
+      <div className="panel-section">
+        <div className="logo-nav">
           {contentList.map((item, index) => (
             <div
-              key={index}
-              className={`icon ${index === current ? 'active-icon' : ''}`}
-              onClick={() => {
-                const el = document.querySelector(`[data-index='${index}']`);
-                el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              }}
+              key={`panel${index + 1}`}
+              className={`logo-item ${activePanel === `panel${index + 1}` ? 'active' : ''}`}
+              data-panel={`panel${index + 1}`}
+              onClick={() => handleLogoClick(`panel${index + 1}`)}
             >
-              <img src={item.icon} alt={`icon-${index}`} className="icon-img" />
+              <img src={item.icon} alt={`Icon ${index + 1}`} />
             </div>
           ))}
         </div>
 
-        <div className="directory-content">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={current}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <div className="directory-title-price-wrapper">
-                <h2 className="directory-title">{contentList[current].title}</h2>
-                {/* <div className="directory-price">{contentList[current].price}</div> */}
-              </div>
-              <p className="directory-text">
-                {contentList[current].text.split('\n').map((line, i) => (
-                  <span key={i}>
-                    {line}
-                    <br />
-                  </span>
-                ))}
-              </p>
-              <button className="join-btn">Join Now</button>
-            </motion.div>
-          </AnimatePresence>
-        </div>
+        <div className="content-area">
+          <div className="panel-display">
+            <div className="text-content-container">
+              {contentList.map((item, index) => (
+                <div
+                  key={`text-panel${index + 1}`}
+                  className={`text-slide ${activePanel === `panel${index + 1}` ? 'active' : ''}`}
+                  data-panel={`panel${index + 1}`}
+                >
+                  <h2>{item.title}</h2>
+                  <p>
+                    {item.text.split('\n').map((line, i) => (
+                      <span key={i}>
+                        {line}
+                        <br />
+                      </span>
+                    ))}
+                  </p>
+                  <button className="join-btn">Join Now</button>
+                </div>
+              ))}
+            </div>
+
+         <div className="image-container">
+  {contentList.map((item, index) => {
+    const panelId = `panel${index + 1}`;
+    const isActive = activePanel === panelId;
+    const wasActive = previousPanel === panelId;
+    const currentIndex = parseInt(activePanel.replace('panel', '')) - 1;
+    
+    return (
+      <motion.div
+        key={`img-${panelId}`}
+        className={`image-slide ${isActive ? 'active' : ''}`}
+        data-panel={panelId}
+        initial={false}
+        animate={{
+          y: isActive ? '0%' : 
+             (index < currentIndex ? '-100%' : '100%'),
+          opacity: isActive ? 1 : 0,
+          transition: { 
+            duration: 0.5,
+            ease: [0.16, 1, 0.3, 1] // Smooth easing
+          }
+        }}
+        style={{
+          zIndex: isActive ? contentList.length : contentList.length - index - 1,
+          position: 'absolute'
+        }}
+      >
+        <img src={item.image} alt={`Slide ${index + 1}`} 
+          style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+      </motion.div>
+    );
+  })}
+</div>
       </div>
 
-      <div className="directory-right">
-        <div className="image-carousel-container">
-          <div className="image-carousel" ref={carouselRef}>
-            {contentList.map((item, index) => (
+          <div className="scroll-triggers">
+            {contentList.map((_, index) => (
               <div
-                key={index}
-                className="carousel-image-wrapper"
-                data-index={index}
-              >
-                <img src={item.image} alt="Visual" className="carousel-image" />
-              </div>
+                key={`trigger-${index}`}
+                className="scroll-trigger"
+                data-panel={`panel${index + 1}`}
+                ref={(el) => (triggersRef.current[index] = el)}
+              />
             ))}
           </div>
         </div>
