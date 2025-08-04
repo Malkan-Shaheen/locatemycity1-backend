@@ -209,6 +209,11 @@ opacity: 1;
   height: 100%;
   display: flex;
   flex-direction: column;
+  .scroll-trigger {
+  height: 100vh;
+  margin-top: -30vh;
+}
+
 }
 /* Add this at the top of your CSS file */
 html {

@@ -462,10 +462,6 @@ background: linear-gradient(to bottom, #E4C658 0%, #9E6A17 100%);
 
 }
 
-
-
-
-
 /* Specific fixes for lower card */
 .flipUnitContainer .lowerCard {
   height: 50% !important; /* Match upper card */

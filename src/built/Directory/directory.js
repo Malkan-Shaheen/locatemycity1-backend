@@ -8,7 +8,7 @@ const contentList = [
     icon: require('./../../images/icon1.png'),
     title: "The Seed: Planted in the Directory",
     price: "$50 (Limited Time) / Annum",
-    text: `The entry-level tier designed for businesses looking to establish their presence and gain early access to Project Black’s growing network.
+    text: `The entry-level tier designed for businesses looking to establish their presence and gain early access to Project Black's growing network.
 
 Benefits:
 Business listing in the Directory on GoProjectBlack.com
@@ -40,7 +40,7 @@ Priority spotlights for your business on the platform
 Welcome package: The Black Box Innovator Edition
 
 Pay-in-Full Bonus:
-One additional social media feature (extra promotion across Project Black’s platforms)
+One additional social media feature (extra promotion across Project Black's platforms)
 
   `
   },
@@ -73,7 +73,7 @@ The Black Box — Flame Edition
     icon: require('./../../images/icon4.png'),
     title: "Harvesting Change",
     price: "$50 (Limited Time) / Annum",
-    text: `The entry-level tier designed for businesses looking to establish their presence and gain early access to Project Black’s growing network.
+    text: `The entry-level tier designed for businesses looking to establish their presence and gain early access to Project Black's growing network.
 
 Benefits:
 Business listing in the Directory on GoProjectBlack.com
@@ -88,36 +88,75 @@ Early Bird Rate: $50 (50% off, will increase to $100 after launch)
   },
 ];
 
+
 const Directory = () => {
   const sectionRef = useRef(null);
   const triggersRef = useRef([]);
   const [activePanel, setActivePanel] = useState('panel1');
   const [previousPanel, setPreviousPanel] = useState(null);
   const [scrollDirection, setScrollDirection] = useState('up');
+  const [isScrolling, setIsScrolling] = useState(false);
   const prevScrollY = useRef(window.scrollY);
-
-  
+  const scrollTimeout = useRef(null);
 
   useEffect(() => {
     const handleScroll = (entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
+        if (entry.isIntersecting && !isScrolling) {
           const currentScrollY = window.scrollY;
           const direction = currentScrollY > prevScrollY.current ? 'down' : 'up';
           setScrollDirection(direction);
           prevScrollY.current = currentScrollY;
           
-          setPreviousPanel(activePanel);
-          setActivePanel(entry.target.dataset.panel);
+          const newPanel = entry.target.dataset.panel;
+          
+          // Prevent scrolling past panel1 when scrolling down
+          if (direction === 'down' && newPanel === 'panel1') {
+            // Allow natural scroll to continue
+            setPreviousPanel(activePanel);
+            setActivePanel(newPanel);
+          } 
+          // Prevent scrolling past panel4 when scrolling up
+          else if (direction === 'up' && newPanel === 'panel4') {
+            setPreviousPanel(activePanel);
+            setActivePanel(newPanel);
+          }
+          // For other cases, only allow scroll if not at boundary
+          else if ((direction === 'down' && activePanel !== 'panel1') || 
+                   (direction === 'up' && activePanel !== 'panel4')) {
+            setIsScrolling(true);
+            setPreviousPanel(activePanel);
+            setActivePanel(newPanel);
+            
+            // Clear any existing timeout
+            if (scrollTimeout.current) {
+              clearTimeout(scrollTimeout.current);
+            }
+            
+            // Set timeout to allow next scroll after animation completes
+            scrollTimeout.current = setTimeout(() => {
+              setIsScrolling(false);
+            }, 1000); // Match this with your animation duration
+          } else {
+            // If trying to scroll past boundary, snap back
+            const trigger = triggersRef.current.find(el => 
+              el?.dataset.panel === activePanel
+            );
+            if (trigger) {
+              window.scrollTo({
+                top: trigger.offsetTop,
+                behavior: 'smooth'
+              });
+            }
+          }
         }
       });
     };
 
-     const observer = new IntersectionObserver(handleScroll, {
-    root: null,
-    rootMargin: '0px 0px -50% 0px', // Triggers 30% from top of viewport
-    threshold: 0
-  });
+    const observer = new IntersectionObserver(handleScroll, {
+      root: null,
+      threshold: 0.5 // Use a higher threshold for more precise triggering
+    });
 
     triggersRef.current.forEach((trigger) => {
       if (trigger) observer.observe(trigger);
@@ -127,8 +166,11 @@ const Directory = () => {
       triggersRef.current.forEach((trigger) => {
         if (trigger) observer.unobserve(trigger);
       });
+      if (scrollTimeout.current) {
+        clearTimeout(scrollTimeout.current);
+      }
     };
-  }, [activePanel]);
+  }, [activePanel, isScrolling]);
 
   const handleLogoClick = (panelId) => {
     setActivePanel(panelId);
@@ -139,23 +181,19 @@ const Directory = () => {
   };
 
   return (
-    
     <div className="directory-section" ref={sectionRef}>
-   
-
-       <div className="scroll-triggers">
-            {contentList.map((_, index) => (
-              <div
-                key={`trigger-${index}`}
-                className="scroll-trigger"
-                data-panel={`panel${index + 1}`}
-                ref={(el) => (triggersRef.current[index] = el)}
-              />
-            ))}
-          </div>
+      <div className="scroll-triggers">
+        {contentList.map((_, index) => (
+          <div
+            key={`trigger-${index}`}
+            className="scroll-trigger"
+            data-panel={`panel${index + 1}`}
+            ref={(el) => (triggersRef.current[index] = el)}
+          />
+        ))}
+      </div>
 
       <div className="panel-section">
-           
         <div className="logo-nav">
           {contentList.map((item, index) => (
             <div
@@ -170,24 +208,23 @@ const Directory = () => {
         </div>
 
         <div className="content-area">
-
           <div className="panel-display">
             <div className="directory-heading">
-        <motion.h1 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          Join the movement
-        </motion.h1>
-        <motion.h3
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          Fueling the Future of Black Innovation
-        </motion.h3>
-      </div>
+              <motion.h1 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                Join the movement
+              </motion.h1>
+              <motion.h3
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              >
+                Fueling the Future of Black Innovation
+              </motion.h3>
+            </div>
             <div className="text-content-container">
               {contentList.map((item, index) => (
                 <div
@@ -209,51 +246,56 @@ const Directory = () => {
               ))}
             </div>
 
-        <div className="image-container">
-  {contentList.map((item, index) => {
-    const panelId = `panel${index + 1}`;
-    const isActive = activePanel === panelId;
-    const currentIndex = parseInt(activePanel.replace('panel', '')) - 1;
-    
-    return (
-      <motion.div
-        key={`img-${panelId}`}
-        className={`image-slide ${isActive ? 'active' : ''}`}
-        data-panel={panelId}
-        initial={false}
-        animate={{
-          y: isActive ? '0%' : 
-             (scrollDirection === 'down' 
-               ? (index < currentIndex ? '-100%' : '100%')
-               : (index > currentIndex ? '100%' : '-100%')),
-          opacity: isActive ? 1 : 0,
-        }}
-        transition={{
-          y: { duration: 0.8, ease: 'easeInOut' },
-          opacity: { duration: 0.3 }
-        }}
-        style={{
-          zIndex: isActive ? contentList.length : contentList.length - index - 1,
-          position: 'absolute',
-        }}
-      >
-        <motion.img
-          src={item.image}
-          alt={`Slide ${index + 1}`}
-          initial={{ y: 100 }}
-          animate={{ y: 0 }}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
-          style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-        />
-      </motion.div>
-    );
-  })}
-</div>
+            <div className="image-container">
+              {contentList.map((item, index) => {
+                const panelId = `panel${index + 1}`;
+                const isActive = activePanel === panelId;
+                const currentIndex = parseInt(activePanel.replace('panel', '')) - 1;
+                const isScrollingDown = scrollDirection === 'down';
+                const isBeforeCurrent = index < currentIndex;
+                const isAfterCurrent = index > currentIndex;
 
-
-      </div>
-
-         
+                return (
+                  <motion.div
+                    key={`img-${panelId}`}
+                    className={`image-slide ${isActive ? 'active' : ''}`}
+                    data-panel={panelId}
+                    initial={false}
+                    animate={{
+                      y: isActive ? '0%' : 
+                         (isScrollingDown 
+                           ? (isBeforeCurrent ? '-100%' : '100%')
+                           : (isAfterCurrent ? '100%' : '-100%')),
+                      opacity: isActive ? 1 : 0,
+                    }}
+                    transition={{
+                      y: { 
+                        duration: 0.7,
+                        ease: [0.22, 1, 0.36, 1]
+                      },
+                      opacity: { duration: 0.3 }
+                    }}
+                    style={{
+                      zIndex: isActive ? contentList.length : contentList.length - index - 1,
+                      position: 'absolute',
+                    }}
+                  >
+                    <motion.img
+                      src={item.image}
+                      alt={`Slide ${index + 1}`}
+                      initial={{ y: isScrollingDown ? -50 : 50 }}
+                      animate={{ y: 0 }}
+                      transition={{ 
+                        duration: 0.7,
+                        ease: [0.22, 1, 0.36, 1]
+                      }}
+                      style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                    />
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
     </div>
