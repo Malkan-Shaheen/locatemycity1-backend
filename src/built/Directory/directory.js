@@ -115,7 +115,7 @@ const Directory = () => {
 
      const observer = new IntersectionObserver(handleScroll, {
     root: null,
-    rootMargin: '0px 0px -70% 0px', // Triggers 30% from top of viewport
+    rootMargin: '0px 0px -50% 0px', // Triggers 30% from top of viewport
     threshold: 0
   });
 
@@ -209,49 +209,48 @@ const Directory = () => {
               ))}
             </div>
 
-         <div className="image-container">
+        <div className="image-container">
   {contentList.map((item, index) => {
     const panelId = `panel${index + 1}`;
     const isActive = activePanel === panelId;
-    const wasActive = previousPanel === panelId;
     const currentIndex = parseInt(activePanel.replace('panel', '')) - 1;
     
     return (
       <motion.div
-  key={`img-${panelId}`}
-  className={`image-slide ${isActive ? 'active' : ''}`}
-  data-panel={panelId}
-  initial={false}
-  animate={{
-    y: isActive ? '0%' : 
-       (index < currentIndex ? '-100%' : '100%'),
-    opacity: isActive ? 1 : 0,
-  }}
-  transition={{
-    y: { duration: 0.8, ease: 'easeInOut' },
-    opacity: { duration: 0.3 }
-  }}
-  style={{
-    zIndex: isActive ? contentList.length : contentList.length - index - 1,
-    position: 'absolute',
-  }}
->
-
-
-  
-  <motion.img
-    src={item.image}
-    alt={`Slide ${index + 1}`}
-    initial={{ y: 100 }}
-    animate={{ y: 0 }}
-    transition={{ duration: 0.8, ease: 'easeOut' }}
-    style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-  />
-</motion.div>
-
+        key={`img-${panelId}`}
+        className={`image-slide ${isActive ? 'active' : ''}`}
+        data-panel={panelId}
+        initial={false}
+        animate={{
+          y: isActive ? '0%' : 
+             (scrollDirection === 'down' 
+               ? (index < currentIndex ? '-100%' : '100%')
+               : (index > currentIndex ? '100%' : '-100%')),
+          opacity: isActive ? 1 : 0,
+        }}
+        transition={{
+          y: { duration: 0.8, ease: 'easeInOut' },
+          opacity: { duration: 0.3 }
+        }}
+        style={{
+          zIndex: isActive ? contentList.length : contentList.length - index - 1,
+          position: 'absolute',
+        }}
+      >
+        <motion.img
+          src={item.image}
+          alt={`Slide ${index + 1}`}
+          initial={{ y: 100 }}
+          animate={{ y: 0 }}
+          transition={{ duration: 0.8, ease: 'easeOut' }}
+          style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+        />
+      </motion.div>
     );
   })}
 </div>
+
+
       </div>
 
          
