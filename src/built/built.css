@@ -1,133 +1,52 @@
-html {
-  scroll-behavior: smooth;
-}
-
-.bp-container {
+.scroll-container {
   position: relative;
-  width: 100%;
-  height: 100vh;
-  overflow: hidden;
-  z-index: 1;
 }
 
+.scroll-section {
+  position: relative;
+  height: 360vh; /* This creates the scrollable space */
+  background-color: #000;
+}
+
+/* Background Image scrolls normally */
 .bp-image-container {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  overflow: hidden;
+  z-index: 0;
 }
 
 .bp-main-image {
-  position: relative; /* Changed from absolute */
   width: 100%;
-  height: auto;
-  min-height: 100vh; /* Ensure it's at least viewport height */
+  height: 100%;
   object-fit: cover;
-  object-position: center top;
-  will-change: transform;
-  display: block; /* Removes any potential inline spacing */
+  object-position: top;
 }
 
-/* This ensures the image has scrollable height */
-.bp-image-scrollable {
-  position: absolute;
+/* Container for sticky text */
+.text-sticky-container {
+  position: sticky;
   top: 0;
-  left: 0;
+  height: 100vh; /* Takes full viewport height */
   width: 100%;
-  height: auto;
-}
-
-.bp-text-content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 90%;
-  max-width: 800px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   z-index: 2;
-  padding: 2rem;
-  color: white;
-  text-align: center;
   pointer-events: none;
-  z-index: 3; 
 }
 
-/* Typography styles remain the same */
-.bp-text-content h1 {
-  font-size: 34px;
-  font-family: 'Poppins', sans-serif;
-  line-height: 145%;
-  letter-spacing: 6%;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  line-height: 1.5;
-}
-
-.bp-text-content h2 {
-  font-size: 34px;
-  font-family: 'Poppins', sans-serif;
-  line-height: 145%;
-  letter-spacing: 6%;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  line-height: 1.2;
-  margin-bottom: 30px;
-}
-
-.bp-text-content p {
-  font-size: 18px;
-  line-height: 1.5;
-  margin-bottom: 1.25rem;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 400;
-  letter-spacing: 3px;
-}
-
-.bp-tagline-text {
-  font-family: 'Poppins';
-  font-weight: 700;
-  font-style: Italic;
-  font-size: 18px;
-  line-height: 1;
-  letter-spacing: 6%;
+/* Text content */
+.scroll-text {
+  background: transparent;
+  padding: 2rem;
+  border-radius: 10px;
   text-align: center;
-  text-transform: capitalize;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .bp-text-content {
-    padding: 1.75rem;
-    width: 95%;
-  }
-  
-  .bp-text-content h1 {
-    font-size: 1.7rem;
-  }
-  
-  .bp-text-content h2 {
-    font-size: 1.3rem;
-  }
-  
-  .bp-text-content p {
-    font-size: 1rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .bp-text-content {
-    padding: 1.25rem;
-  }
-  
-  .bp-text-content h1 {
-    font-size: 1.4rem;
-    margin-bottom: 0.75rem;
-  }
-  
-  .bp-text-content h2 {
-    font-size: 1.1rem;
-    margin-bottom: 1rem;
-  }
+  color: white;
+  text-shadow: 1px 1px 5px black;
+  max-width: 800px;
+  width: 90%;
+  pointer-events: auto;
 }
