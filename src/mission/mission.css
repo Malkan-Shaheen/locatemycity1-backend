@@ -169,3 +169,12 @@ line-height: 100%;
   overflow: hidden;
   background: inherit; /* Match parent background */
 }
+@media screen and (max-width: 480px) {
+  .merch-heading h2 {
+    font-size: 18px;
+  }
+
+  .merch-heading p ,span {
+    display: none;
+  }
+}
