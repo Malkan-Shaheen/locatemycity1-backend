@@ -1,11 +1,13 @@
 .scroll-container {
   position: relative;
+
 }
 
 .scroll-section {
   position: relative;
   height: 360vh; /* This creates the scrollable space */
   background-color: #000;
+  z-index: 1001;
 }
 
 /* Background Image scrolls normally */
