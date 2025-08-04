@@ -236,6 +236,9 @@ const Directory = () => {
     position: 'absolute',
   }}
 >
+
+
+  
   <motion.img
     src={item.image}
     alt={`Slide ${index + 1}`}
