@@ -81,22 +81,27 @@ const CountdownClock = () => {
     seconds: true,
   });
 
- useEffect(() => {
+useEffect(() => {
   const interval = setInterval(() => {
-    const newTime = calculateTimeLeft();
+    setTimeLeft(prevTime => {
+      const newTime = calculateTimeLeft();
 
-    setShuffle(prev => ({
-      days: newTime.days !== timeLeft.days,
-      hours: newTime.hours !== timeLeft.hours,
-      minutes: newTime.minutes !== timeLeft.minutes,
-      seconds: !prev.seconds, // 💡 Toggle flip state on every tick
-    }));
+      setShuffle({
+        days: newTime.days !== prevTime.days,
+        hours: newTime.hours !== prevTime.hours,
+        minutes: newTime.minutes !== prevTime.minutes,
+        seconds: newTime.seconds !== prevTime.seconds, // Just compare directly
+      });
 
-    setTimeLeft(newTime);
+      return newTime;
+    });
   }, 1000);
 
   return () => clearInterval(interval);
-}, [timeLeft]);
+}, []);
+
+
+
 
 
   return (
