@@ -22,17 +22,16 @@
   perspective: 300px;
   background: linear-gradient(to bottom, #E4C658 0%, #9E6A17 100%);
   border-radius: 3px;
-  box-shadow: 0px 10px 10px -10px grey;
-  width: clamp(40px, 10vw, 60px);
+width: clamp(40px, 10vw, 60px);
   height: 48px;
   border-radius: 4.57px;
   opacity: 1;
   flex-shrink: 0;
   flex-grow: 0;
-  
 }
 
-.upperCard1, .lowerCard1 {
+.upperCard1,
+.lowerCard1 {
   display: flex;
   position: relative;
   justify-content: center;
@@ -43,7 +42,8 @@
   border-radius: 4.57px;
 }
 
-.upperCard1 span, .lowerCard1 span {
+.upperCard1 span,
+.lowerCard1 span {
   font-family: 'Share Tech';
   font-weight: 400;
   font-style: Regular;
@@ -56,22 +56,24 @@
 
 .upperCard1 {
   align-items: flex-end;
-  border-bottom: 2px solid #24475B;
   border-top-left-radius: 4.57px;
   border-top-right-radius: 4.57px;
-  border-top: none !important;
+  border-bottom: 1px solid #24475B !important;
 }
+
 .upperCard1 span {
   transform: translateY(50%);
 }
 
 .lowerCard1 {
   align-items: flex-start;
-  border-top: 2px solid #24475B;
+  border-top: 1px solid #24475B !important;
   border-bottom-left-radius: 4.57px;
   border-bottom-right-radius: 4.57px;
-  border-bottom: 2px solid #24475B;
+  border-bottom: 2px solid #E2C457 !important;
+  background: linear-gradient(to bottom, #E4C658 0%, #9E6A17 100%) !important;
 }
+
 .lowerCard1 span {
   transform: translateY(-50%);
 }
@@ -86,9 +88,9 @@
   overflow: hidden;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  border-bottom: 2px solid #24475B;
   z-index: 1;
 }
+
 .flipCard1 span {
   font-family: 'Share Tech';
   font-weight: 400;
@@ -105,19 +107,13 @@
   align-items: flex-start;
   transform-origin: 50% 0%;
   transform: rotateX(180deg);
-  border-bottom-left-radius: 3px;
-  border-bottom-right-radius: 3px;
   border: 2px solid transparent;
-  border-top: 2px solid #24475B;
+  border-top: 1px solid #24475B;
   background: linear-gradient(to bottom, #E4C658 0%, #9E6A17 100%);
 }
 
 .flipCard1.unfold1 span {
   transform: translateY(-50%);
-}
-
-.upperCard1, .lowerCard1, .flipUnitContainer1 {
-  overflow: hidden;
 }
 
 .flipUnitContainer1::before,
@@ -147,13 +143,12 @@
   transform-origin: 50% 100%;
   transform: rotateX(0deg);
   background: linear-gradient(to bottom, #E4C658 0%, #9E6A17 100%);
-  border-top: none !important;
   border-top-left-radius: 4.57px;
   border-top-right-radius: 4.57px;
-  border: 2px solid transparent;
-  border-bottom: 2px solid #24475B;
+  border-bottom: 1px solid #24475B;
   z-index: 2;
 }
+
 .flipCard1.fold1 span {
   transform: translateY(50%);
 }
@@ -215,8 +210,8 @@
 
 .colon1 {
   position: absolute;
-  right: -11px;
-  top: 15%;
+  right: -15px;
+  top: 9%;
   font-size: 1.5rem;
   font-weight: bold;
   color: white;
@@ -233,33 +228,24 @@
   font-style: Regular;
   font-size: 11.76px;
   line-height: 100%;
-  letter-spacing: 0%;
   text-align: center;
   margin: 10px 0 0 0;
 }
 
-.no-flip1 .fold1,
-.no-flip1 .unfold1 {
-  animation: none !important;
-  -webkit-animation: none !important;
-}
-
-/* Specific fixes for lower card */
 .flipUnitContainer1 .lowerCard1 {
-  height: 50% !important; /* Match upper card */
+  height: 50% !important;
   background: linear-gradient(to bottom, #E4C658 0%, #9E6A17 100%) !important;
   border-bottom: 2px solid #E2C457 !important;
   border-top: 1px solid #24475B !important;
-  /* overflow: vssisible !important; */
 }
 
-/* Remove conflicting borders */
 .lowerCard1 {
   border-top: none !important;
   border-bottom: 2px solid #E2C457 !important;
 }
+
 .upperCard1 {
-  left: 0 !important; /* Add this */
-  transform: translateZ(0) !important; /* Add this */
-  will-change: transform !important; /* Add this */
+  left: 0 !important;
+  transform: translateZ(0) !important;
+  will-change: transform !important;
 }
