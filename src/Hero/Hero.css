@@ -423,6 +423,8 @@ background: linear-gradient(to bottom, #E4C658 0%, #9E6A17 100%);
   flex-direction: column;
   align-items: center;
   position: relative;
+  
+  
 }
 
 .colon {
@@ -456,6 +458,33 @@ background: linear-gradient(to bottom, #E4C658 0%, #9E6A17 100%);
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-    background: linear-gradient(to bottom, #E4C658 0%, #9E6A17 100%);
+    background: linear-gradient(to bottom, #E4C658 0%, #9E6A17 100%) !important;
 
+}
+
+
+
+
+
+
+
+/* Specific fixes for lower card */
+.flipUnitContainer .lowerCard {
+  height: 50% !important; /* Match upper card */
+  background: linear-gradient(to bottom, #E4C658 0%, #9E6A17 100%) !important;
+  border-bottom: 2px solid #E2C457 !important;
+  border-top: 1px solid #24475B !important;
+  /* overflow: vssisible !important; */
+}
+
+/* Remove conflicting borders */
+.lowerCard {
+  border-top: none !important;
+  border-bottom: 2px solid #E2C457 !important;
+}
+
+.upperCard {
+  left: 0 !important; /* Add this */
+  transform: translateZ(0) !important; /* Add this */
+  will-change: transform !important; /* Add this */
 }

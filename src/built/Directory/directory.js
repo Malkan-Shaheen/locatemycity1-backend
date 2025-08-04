@@ -9,7 +9,7 @@ const contentList = [
     icon: require('./../../images/icon1.png'),
     title: "The Seed: Planted in the Directory",
     price: "$50 (Limited Time) / Annum",
-    text: `The entry-level tier designed for businesses looking to establish their presence and gain early access to Project Black’s growing network.
+    text: `The entry-level tier designed for businesses looking to establish their presence and gain early access to Project Black's growing network.
 
 Benefits:
 Business listing in the Directory on GoProjectBlack.com
@@ -40,7 +40,7 @@ Priority spotlights for your business on the platform
 Welcome package: The Black Box Innovator Edition
 
 Pay-in-Full Bonus:
-One additional social media feature (extra promotion across Project Black’s platforms)
+One additional social media feature (extra promotion across Project Black's platforms)
 
 `
   },
@@ -78,7 +78,7 @@ The Black Box — Flame Edition
 
 Benefits:
 	•	All Flame perks included
-	•	Official “Legend” recognition
+	•	Official "Legend" recognition
 	•	Strategy session + growth plan
 	•	Global initiative access
 	•	Featured across Project Black media
@@ -182,8 +182,20 @@ const Directory = () => {
   return (
     <div className="directory-section" ref={sectionRef}>
       <div className="directory-heading">
-        <h1>Join the movement</h1>
-        <h3>Fueling the Future of Black Innovation</h3>
+        <motion.h1 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          Join the movement
+        </motion.h1>
+        <motion.h3
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          Fueling the Future of Black Innovation
+        </motion.h3>
       </div>
 
       <div className="directory-left">
