@@ -1,8 +1,9 @@
-'use client';
-
 import React, { useState, useEffect, useRef } from 'react';
 import './directory.css';
 import { motion } from 'framer-motion';
+
+console.log('DEBUG: Component loading started - checking if motion is available:', motion ? 'YES' : 'NO');
+console.log('DEBUG: Checking if window is defined:', typeof window !== 'undefined' ? 'YES' : 'NO');
 
 
 const contentList = [
@@ -99,53 +100,81 @@ const Directory = () => {
   const [previousPanel, setPreviousPanel] = useState(null);
   const [scrollDirection, setScrollDirection] = useState('up');
   const [isScrolling, setIsScrolling] = useState(false);
-  const prevScrollY = useRef(window.scrollY);
+  const prevScrollY = useRef(typeof window !== 'undefined' ? window.scrollY : 0);
   const scrollTimeout = useRef(null);
 
+  console.log('DEBUG: Component mounted - initial state:', {
+    activePanel,
+    previousPanel,
+    scrollDirection,
+    isScrolling,
+    prevScrollY: prevScrollY.current
+  });
+
   useEffect(() => {
+    console.log('DEBUG: useEffect triggered - setting up scroll observer');
+    
     const handleScroll = (entries) => {
+      console.log('DEBUG: IntersectionObserver callback triggered with entries:', entries);
+      
       entries.forEach((entry) => {
+        console.log('DEBUG: Processing entry:', {
+          isIntersecting: entry.isIntersecting,
+          target: entry.target.dataset.panel,
+          isScrolling,
+          ratio: entry.intersectionRatio
+        });
+
         if (entry.isIntersecting && !isScrolling) {
           const currentScrollY = window.scrollY;
           const direction = currentScrollY > prevScrollY.current ? 'down' : 'up';
+          console.log('DEBUG: Scroll direction detected:', direction);
+          
           setScrollDirection(direction);
           prevScrollY.current = currentScrollY;
           
           const newPanel = entry.target.dataset.panel;
+          console.log('DEBUG: New panel detected:', newPanel);
           
           // Prevent scrolling past panel1 when scrolling down
           if (direction === 'down' && newPanel === 'panel1') {
-            // Allow natural scroll to continue
+            console.log('DEBUG: Case 1 - Scrolling down to panel1');
             setPreviousPanel(activePanel);
             setActivePanel(newPanel);
           } 
           // Prevent scrolling past panel4 when scrolling up
           else if (direction === 'up' && newPanel === 'panel4') {
+            console.log('DEBUG: Case 2 - Scrolling up to panel4');
             setPreviousPanel(activePanel);
             setActivePanel(newPanel);
           }
           // For other cases, only allow scroll if not at boundary
           else if ((direction === 'down' && activePanel !== 'panel1') || 
                    (direction === 'up' && activePanel !== 'panel4')) {
+            console.log('DEBUG: Case 3 - Normal scroll transition');
             setIsScrolling(true);
             setPreviousPanel(activePanel);
             setActivePanel(newPanel);
             
             // Clear any existing timeout
             if (scrollTimeout.current) {
+              console.log('DEBUG: Clearing existing scroll timeout');
               clearTimeout(scrollTimeout.current);
             }
             
             // Set timeout to allow next scroll after animation completes
             scrollTimeout.current = setTimeout(() => {
+              console.log('DEBUG: Scroll timeout completed - allowing new scrolls');
               setIsScrolling(false);
             }, 1000); // Match this with your animation duration
           } else {
+            console.log('DEBUG: Case 4 - Boundary reached, snapping back');
             // If trying to scroll past boundary, snap back
             const trigger = triggersRef.current.find(el => 
               el?.dataset.panel === activePanel
             );
             if (trigger) {
+              console.log('DEBUG: Snapping back to panel:', activePanel);
               window.scrollTo({
                 top: trigger.offsetTop,
                 behavior: 'smooth'
@@ -161,36 +190,42 @@ const Directory = () => {
       threshold: 0.5 // Use a higher threshold for more precise triggering
     });
 
+    console.log('DEBUG: Observing triggers:', triggersRef.current);
     triggersRef.current.forEach((trigger) => {
-      if (trigger) observer.observe(trigger);
+      if (trigger) {
+        console.log('DEBUG: Observing trigger:', trigger.dataset.panel);
+        observer.observe(trigger);
+      }
     });
 
     return () => {
+      console.log('DEBUG: Cleanup - unobserve all triggers');
       triggersRef.current.forEach((trigger) => {
         if (trigger) observer.unobserve(trigger);
       });
       if (scrollTimeout.current) {
+        console.log('DEBUG: Cleanup - clear scroll timeout');
         clearTimeout(scrollTimeout.current);
       }
     };
   }, [activePanel, isScrolling]);
 
   const handleLogoClick = (panelId) => {
+    console.log('DEBUG: Logo clicked - panel:', panelId);
     setActivePanel(panelId);
     const trigger = triggersRef.current.find(el => el?.dataset.panel === panelId);
     if (trigger) {
+      console.log('DEBUG: Scrolling to trigger for panel:', panelId);
       trigger.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
-  useEffect(() => {
-  console.log('Framer Motion Features:', {
-    animate: typeof motion.animate,
-    transform: typeof motion.transform,
-    useAnimation: typeof motion.useAnimation
+  console.log('DEBUG: Current render state:', {
+    activePanel,
+    previousPanel,
+    scrollDirection,
+    isScrolling
   });
-}, []);
-  
 
   return (
     <div className="directory-section" ref={sectionRef}>
@@ -200,7 +235,10 @@ const Directory = () => {
             key={`trigger-${index}`}
             className="scroll-trigger"
             data-panel={`panel${index + 1}`}
-            ref={(el) => (triggersRef.current[index] = el)}
+            ref={(el) => {
+              triggersRef.current[index] = el;
+              console.log('DEBUG: Trigger ref set for panel:', `panel${index + 1}`, el);
+            }}
           />
         ))}
       </div>
@@ -266,6 +304,14 @@ const Directory = () => {
                 const isScrollingDown = scrollDirection === 'down';
                 const isBeforeCurrent = index < currentIndex;
                 const isAfterCurrent = index > currentIndex;
+
+                console.log('DEBUG: Rendering motion div for panel:', panelId, {
+                  isActive,
+                  currentIndex,
+                  isScrollingDown,
+                  isBeforeCurrent,
+                  isAfterCurrent
+                });
 
                 return (
                   <motion.div
