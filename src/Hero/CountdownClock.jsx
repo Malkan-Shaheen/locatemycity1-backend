@@ -1,6 +1,6 @@
 // CountdownClock.jsx
 import React, { useEffect, useState } from 'react';
-import './Hero.css'; // Your CSS styles
+import './Hero.css'; 
 
 const AnimatedCard = ({ animation, digit }) => (
   <div className={`flipCard ${animation}`}>
@@ -14,45 +14,51 @@ const StaticCard = ({ position, digit }) => (
   </div>
 );
 
-
 const FlipUnitContainer = ({ digit, shuffle, unit }) => {
-  const [disableFlip, setDisableFlip] = useState(false);
+  const [previousDigit, setPreviousDigit] = useState(digit);
+  const [shouldFlip, setShouldFlip] = useState(false);
+  const [displayDigit, setDisplayDigit] = useState(digit);
 
   useEffect(() => {
-    if (shuffle && !disableFlip) {
-      setDisableFlip(true);
-      const timeout = setTimeout(() => {
-        setDisableFlip(false);
-      }, 1000); // prevent flip for 1 sec
-      return () => clearTimeout(timeout);
+    if (shuffle) {
+      // First, set the previous digit to the current display digit
+      setPreviousDigit(displayDigit);
+      // Then immediately update the display digit and trigger flip
+      setDisplayDigit(digit);
+      setShouldFlip(true);
+      
+      const flipTimer = setTimeout(() => {
+        setShouldFlip(false);
+      }, 500); // Match this with your animation duration
+      return () => clearTimeout(flipTimer);
     }
-  }, [shuffle]);
+  }, [shuffle, digit]);
 
-  let currentDigit = digit;
-  let previousDigit = digit + 1;
+  let currentDigit = displayDigit;
+  let prevDigit = previousDigit;
 
+  // Format digits
   if (unit === 'seconds' || unit === 'minutes') {
-    previousDigit = previousDigit > 59 ? 0 : previousDigit;
+    prevDigit = prevDigit > 59 ? 0 : prevDigit;
+    currentDigit = currentDigit > 59 ? 0 : currentDigit;
   } else if (unit === 'hours') {
-    previousDigit = previousDigit > 23 ? 0 : previousDigit;
+    prevDigit = prevDigit > 23 ? 0 : prevDigit;
+    currentDigit = currentDigit > 23 ? 0 : currentDigit;
   }
 
   if (currentDigit < 10) currentDigit = `0${currentDigit}`;
-  if (previousDigit < 10) previousDigit = `0${previousDigit}`;
-
-  const digit1 = shuffle ? previousDigit : currentDigit;
-  const digit2 = !shuffle ? previousDigit : currentDigit;
-  const animation1 = shuffle ? 'fold' : 'unfold';
-  const animation2 = !shuffle ? 'fold' : 'unfold';
+  if (prevDigit < 10) prevDigit = `0${prevDigit}`;
 
   return (
     <div className="flipUnitContainer">
       <StaticCard position="upperCard" digit={currentDigit} />
-      <StaticCard position="lowerCard" digit={previousDigit} />
-      <div className={disableFlip ? 'no-flip' : ''}>
-        <AnimatedCard digit={digit1} animation={animation1} />
-        <AnimatedCard digit={digit2} animation={animation2} />
-      </div>
+      <StaticCard position="lowerCard" digit={shouldFlip ? prevDigit : currentDigit} />
+      {shouldFlip && (
+        <>
+          <AnimatedCard digit={prevDigit} animation="fold" />
+          <AnimatedCard digit={currentDigit} animation="unfold" />
+        </>
+      )}
     </div>
   );
 };
@@ -75,50 +81,48 @@ const CountdownClock = () => {
 
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
   const [shuffle, setShuffle] = useState({
-    days:true,
-    hours: true,
-    minutes: true,
-    seconds: true,
+    days: false,
+    hours: false,
+    minutes: false,
+    seconds: false
   });
 
- useEffect(() => {
-  const interval = setInterval(() => {
-    const newTime = calculateTimeLeft();
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const newTime = calculateTimeLeft();
+      
+      setShuffle({
+        days: newTime.days !== timeLeft.days,
+        hours: newTime.hours !== timeLeft.hours,
+        minutes: newTime.minutes !== timeLeft.minutes,
+        seconds: true // This will make it flip every second
+      });
 
-    setShuffle(prev => ({
-      days: newTime.days !== timeLeft.days,
-      hours: newTime.hours !== timeLeft.hours,
-      minutes: newTime.minutes !== timeLeft.minutes,
-      seconds: !prev.seconds, // 💡 Toggle flip state on every tick
-    }));
+      setTimeLeft(newTime);
+    }, 1000);
 
-    setTimeLeft(newTime);
-  }, 1000);
-
-  return () => clearInterval(interval);
-}, [timeLeft]);
-
+    return () => clearInterval(interval);
+  }, [timeLeft]);
 
   return (
-   <div className="flipClock">
-  {[
-    { unit: 'days', label: 'Days' },
-    { unit: 'hours', label: 'Hours' },
-    { unit: 'minutes', label: 'Minutes' },
-    { unit: 'seconds', label: 'Seconds' },
-  ].map(({ unit, label }, index, arr) => (
-    <div key={unit} className="flipUnitWrapper">
-      <FlipUnitContainer
-        unit={unit}
-        digit={timeLeft[unit]}
-        shuffle={shuffle[unit]}
-      />
-      {index !== arr.length - 1 && <span className="colon">:</span>}
-      <div className="unitLabel">{label}</div>
+    <div className="flipClock">
+      {[
+        { unit: 'days', label: 'Days' },
+        { unit: 'hours', label: 'Hours' },
+        { unit: 'minutes', label: 'Minutes' },
+        { unit: 'seconds', label: 'Seconds' },
+      ].map(({ unit, label }, index, arr) => (
+        <div key={unit} className="flipUnitWrapper">
+          <FlipUnitContainer
+            unit={unit}
+            digit={timeLeft[unit]}
+            shuffle={shuffle[unit]}
+          />
+          {index !== arr.length - 1 && <span className="colon">:</span>}
+          <div className="unitLabel">{label}</div>
+        </div>
+      ))}
     </div>
-  ))}
-</div>
-
   );
 };
 
