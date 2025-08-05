@@ -95,7 +95,8 @@ Early Bird Rate: $50 (50% off, will increase to $100 after launch)
 
 const Directory = () => {
   const sectionRef = useRef(null);
-  const triggersRef = useRef([]);
+  // Initialize with stable ref array
+const triggersRef = useRef(new Array(contentList.length).fill(null));
   const [activePanel, setActivePanel] = useState('panel1');
   const [previousPanel, setPreviousPanel] = useState(null);
   const [scrollDirection, setScrollDirection] = useState('up');
@@ -186,9 +187,9 @@ const Directory = () => {
     };
 
     const observer = new IntersectionObserver(handleScroll, {
-      root: null,
-      threshold: 0.5 // Use a higher threshold for more precise triggering
-    });
+  root: null,
+  threshold: [0.2, 0.8] // More forgiving thresholds
+});
 
     console.log('DEBUG: Observing triggers:', triggersRef.current);
     triggersRef.current.forEach((trigger) => {
@@ -226,6 +227,16 @@ const Directory = () => {
     scrollDirection,
     isScrolling
   });
+
+  // Add this useEffect to handle scroll end detection
+useEffect(() => {
+  const handleScrollEnd = () => {
+    setIsScrolling(false);
+  };
+  
+  window.addEventListener('scrollend', handleScrollEnd);
+  return () => window.removeEventListener('scrollend', handleScrollEnd);
+}, []);
 
   return (
     <div className="directory-section" ref={sectionRef}>
@@ -304,6 +315,7 @@ const Directory = () => {
                 const isScrollingDown = scrollDirection === 'down';
                 const isBeforeCurrent = index < currentIndex;
                 const isAfterCurrent = index > currentIndex;
+
 
                 console.log('DEBUG: Rendering motion div for panel:', panelId, {
                   isActive,
