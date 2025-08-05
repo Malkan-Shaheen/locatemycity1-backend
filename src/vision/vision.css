@@ -295,3 +295,62 @@
     display: none !important;
   }
 }
+
+@media (max-width: 768px) {
+  .empower-section {
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+
+  .frames-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 7px !important;
+    width: 100% !important;
+    max-width: 600px !important;
+    margin-bottom: 40px !important;
+  }
+
+  .frame-img,
+  .frame-img-1,
+  .frame-img-2,
+  .frame-img-3,
+  .frame-img-4 {
+    width: 100% !important;
+    height: auto !important;
+    object-fit: cover !important;
+    aspect-ratio: 4 / 3 !important;
+    margin: 0 !important;
+  }
+
+  .frame-img-4 {
+    margin-top: 0 !important;
+  }
+
+  .empower-text {
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    padding: 0 10px !important;
+    text-align: left !important;
+  }
+}
+
+
+
+@media (max-width: 768px) {
+  .empower-section {
+    flex-direction: column !important;
+  }
+
+  .empower-heading {
+    order: 1 !important;
+  }
+
+  .frames-grid {
+    order: 2 !important;
+  }
+
+  .empower-desc {
+    order: 3 !important;
+  }
+}
