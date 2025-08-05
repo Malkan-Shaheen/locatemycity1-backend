@@ -341,3 +341,6 @@
     padding-right: 1rem !important;
   }
 }
+.bp-card:nth-child(7) {
+  grid-column: 2 / 3; /* Center column in a 3-column grid */
+}

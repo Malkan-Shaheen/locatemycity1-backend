@@ -259,7 +259,7 @@ useEffect(() => {
           {contentList.map((item, index) => (
             <div
               key={`panel${index + 1}`}
-              className={`logo-item ${activePanel === `panel${index + 1}` ? 'active' : ''}`}
+              className={`logo-item1 ${activePanel === `panel${index + 1}` ? 'active' : ''}`}
               data-panel={`panel${index + 1}`}
               onClick={() => handleLogoClick(`panel${index + 1}`)}
             >

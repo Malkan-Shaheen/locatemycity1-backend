@@ -9,78 +9,68 @@ body {
   font-family: 'Poppins', sans-serif;
   position: relative;
   z-index: 1;
- 
 }
 
 .directory-heading {
-  position: absolute;
-  top: 50px;
   width: 100%;
   text-align: center;
-  padding-top: 30px;
-  padding-bottom: 70px;
+  padding: 40px 20px 20px;
   z-index: 2;
 }
 
 .directory-heading h1 {
-  font-size: 36px;
+  font-size: 28px;
   font-weight: 700;
+  margin-bottom: 10px;
 }
 
 .directory-heading h3 {
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 400;
-  margin-top: 6px;
-  padding-bottom: 40px;
-  margin-bottom: 30px;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 /* Panel Section Styles */
 .panel-section {
   display: flex;
+  flex-direction: column;
   position: relative;
   min-height: 100vh;
-  padding-top: 150px;
 }
 
 .logo-nav {
-  width: 120px;
+  width: 100%;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
-  position: sticky;
-  top: 30px;
-  height: 100vh;
+  gap: 15px;
+  padding: 0 20px 30px;
+  position: relative;
   z-index: 10;
-  gap: 10px;
 }
 
-.logo-item {
-  
+.logo-item1 {
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
   transition: all 0.3s ease;
   border: 1px solid #CD9E3C;
-
-  width: 33.842742919921875px;
-height: 33.842742919921875px;
-border-radius: 117.53px;
-border-width: 0.62px;
-opacity: 1;
-gap: 6.15px;
-padding: 4.15px;
-
+  width: 40px;
+  height: 40px;
+  border-radius: 117.53px;
+  opacity: 1;
+  padding: 4.15px;
 }
 
-.logo-item img {
+.logo-item1 img {
   width: 70%;
   height: 70%;
 }
 
-.logo-item.active {
+.logo-item1.active {
   transform: scale(1.1);
   background: linear-gradient(90deg, #CD9E3C 0%, #BD8A2D 100%);
 }
@@ -88,33 +78,33 @@ padding: 4.15px;
 .content-area {
   flex: 1;
   position: relative;
-  height: 400vh;
+  height: auto;
 }
 
 .panel-display {
-  position: sticky;
-  top: 0;
-  height: 100vh;
+  position: relative;
+  height: auto;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   background-color: #121212;
-  gap: 40px;
-  padding: 0 40px;
+  gap: 30px;
+  padding: 0 20px;
 }
 
 .text-content-container {
   position: relative;
-  top: 70px;
   height: auto;
-  width: 50%;
+  width: 100%;
   overflow: hidden;
   text-align: left;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  min-height: 400px;
+  margin-bottom: 40px;
 }
 
 .text-slide {
@@ -123,6 +113,7 @@ padding: 4.15px;
   transition: opacity 0.6s ease;
   width: 100%;
   color: white;
+  padding: 0 10px;
 }
 
 .text-slide.active {
@@ -133,12 +124,11 @@ padding: 4.15px;
 .text-slide h2 {
   margin-bottom: 15px;
   font-family: Satoshi;
-font-weight: 700;
-font-style: Bold;
-font-size: 17px;
-line-height: 150%;
-letter-spacing: 0%;
-
+  font-weight: 700;
+  font-style: Bold;
+  font-size: 20px;
+  line-height: 150%;
+  letter-spacing: 0%;
 }
 
 .text-slide p {
@@ -146,42 +136,33 @@ letter-spacing: 0%;
   white-space: pre-line;
   margin-bottom: 20px;
   font-family: Poppins;
-font-weight: 400;
-font-style: Regular;
-line-height: 150%;
-letter-spacing: 0%;
-text-align: justify;
-
+  font-weight: 400;
+  font-style: Regular;
+  line-height: 150%;
+  letter-spacing: 0%;
+  text-align: justify;
 }
 
 .join-btn {
-
-
   width: 127px;
-height: 56px;
-border-radius: 10px;
-opacity: 1;
-padding-top: 16px;
-padding-right: 24px;
-padding-bottom: 16px;
-padding-left: 24px;
-gap: 8px;
-
+  height: 56px;
+  border-radius: 10px;
+  opacity: 1;
+  padding: 16px 24px;
+  gap: 8px;
 }
 
 .image-container {
   position: relative;
- top: 70px;
-  width: 720px;
-height: 558.36328125px;
-opacity: 1;
-
+  width: 100%;
+  height: 300px;
+  margin-bottom: 30px;
 }
 
 .image-slide {
   position: absolute;
-  /* width: 100%;
-  height: 100%; */
+  width: 100%;
+  height: 100%;
   top: 0;
   left: 0;
   opacity: 0;
@@ -195,6 +176,9 @@ opacity: 1;
 .image-slide img {
   transform: translateY(100%);
   transition: transform 0.8s ease-out;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .image-slide.active img {
@@ -203,167 +187,226 @@ opacity: 1;
 
 .scroll-triggers {
   position: absolute;
-  top: -150;
+  top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
-  .scroll-trigger {
+}
+
+.scroll-trigger {
   height: 100vh;
-  margin-top: -30vh;
 }
 
-}
-/* Add this at the top of your CSS file */
-html {
-  scroll-behavior: smooth;
-}
-
-/* Optional: Make it even smoother */
-.directory-section {
-  scroll-snap-type: y mandatory;
-}
-
-.scroll-trigger {
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
-}
-
-.scroll-trigger {
-  flex: 1;
-}
-
-
-
-.image-slide {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-}
-
-/* Mobile Responsive Styles */
+/* Mobile-first styles (applies to all sizes) */
+/* Mobile-specific styles */
 @media (max-width: 768px) {
-  .directory-section {
-    overflow: hidden !important;
-    height: auto;
-    min-height: 100vh;
+  body {
+    overflow: auto !important;
+  }
+
+  .panel-section {
+    min-height: auto;
+    padding-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .panel-display {
+    flex-direction: column;
+    gap: 0;
+    padding: 0 20px;
   }
 
   .directory-heading {
     position: relative;
-    top: 0;
     padding: 40px 20px 20px;
-  }
-
-  .directory-heading h1 {
-    font-size: 28px;
-  }
-
-  .directory-heading h3 {
-    font-size: 16px;
-    padding-bottom: 20px;
-    margin-bottom: 20px;
-  }
-
-  .panel-section {
-    flex-direction: column;
-    padding-top: 0;
-    min-height: auto;
-    height: auto;
+    order: 1;
   }
 
   .logo-nav {
-    width: 100%;
-    height: auto;
+    order: 2;
+    display: flex;
     flex-direction: row;
     justify-content: center;
-    gap: 15px;
-    padding: 0 20px 30px;
+    align-items: center;
+    padding: 20px;
+    width: 100%;
     position: relative;
     top: 0;
-    margin-bottom: 20px;
+    height: auto;
+    gap: 15px;
+    flex-wrap: wrap;
+    border: none; /* Remove debug borders */
   }
 
-  .logo-item {
+  .logo-item1 {
     width: 40px;
     height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    display: flex;
+    border: 1px solid #CD9E3C;
+    border-radius: 50%;
+    padding: 8px;
+    overflow: visible !important;
+    top: -450px;
+        position: relative;
+  }
+
+  .logo-item1 img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  .image-container {
+    order: 3;
+    height: 250px;
+    margin: 20px 0;
+  }
+
+  .text-content-container {
+    order: 4;
+    min-height: auto;
+    margin-bottom: 40px;
+    height: auto;
+  }
+
+  .text-slide {
+    position: absolute;
+    width: 100%;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    padding: 0;
+  }
+  .text-slide p {
+    overflow: visible !important;
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 20px;
+  white-space: pre-line;
+}
+
+  .text-slide.active {
+    opacity: 1;
+    position: relative;
+    height: auto;
   }
 
   .content-area {
     height: auto;
   }
 
-  .panel-display {
-    position: relative;
-    height: auto;
-    flex-direction: column;
-    padding: 0 20px;
-    gap: 30px;
-  }
-
-  .text-content-container {
-    width: 100%;
-    position: relative;
-    top: 0;
-    order: 2;
-    margin-bottom: 40px;
-    min-height: 400px;
-  }
-
-  .text-slide {
-    position: absolute;
-    padding: 0 10px;
-  }
-
-  .text-slide h2 {
-    font-size: 20px;
-    margin-bottom: 10px;
-  }
-
-  .text-slide p {
-    font-size: 14px;
-  }
-
-  .join-btn {
-    width: 100%;
-    height: 50px;
-  }
-
-  .image-container {
-    width: 100%;
-    height: 300px;
-    order: 1;
-    top: 0;
-    margin-bottom: 30px;
-  }
-
-  .image-slide img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-
   .scroll-triggers {
     display: none;
   }
+}
 
-  /* Animation adjustments for mobile */
-  .image-slide {
+/* Very small screens adjustments */
+@media (max-width: 480px) {
+  .logo-nav {
+    gap: 10px;
+    padding: 15px;
+  }
+
+  .logo-item1 {
+    width: 35px;
+    height: 35px;
+    min-width: 35px;
+    min-height: 35px;
+    padding: 6px;
+  }
+
+  .image-container {
+    height: 220px;
+  }
+
+  .text-slide h2 {
+    font-size: 18px;
+  }
+
+  .text-slide p {
+    font-size: 13px;
+  }
+}
+
+/* Desktop Styles (unchanged from your original) */
+@media (min-width: 769px) {
+  .directory-heading {
     position: absolute;
-    width: 100%;
-    height: 100%;
+    top: 50px;
+    padding-top: 30px;
+    padding-bottom: 70px;
   }
 
-  /* Ensure proper stacking of slides */
-  .image-slide:not(.active) {
-    z-index: 1;
+  .directory-heading h1 {
+    font-size: 36px;
   }
 
-  .image-slide.active {
-    z-index: 2;
+  .directory-heading h3 {
+    font-size: 20px;
+    margin-top: 6px;
+    padding-bottom: 40px;
+    margin-bottom: 30px;
+  }
+
+  .panel-section {
+    flex-direction: row;
+    padding-top: 150px;
+    min-height: 100vh;
+  }
+
+  .logo-nav {
+    width: 120px;
+    height: 100vh;
+    flex-direction: column;
+    position: sticky;
+    top: 30px;
+    padding: 0;
+    gap: 10px;
+  }
+
+  .logo-item1 {
+    width: 33.84px;
+    height: 33.84px;
+  }
+
+  .content-area {
+    height: 400vh;
+  }
+
+  .panel-display {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    flex-direction: row;
+    gap: 40px;
+    padding: 0 40px;
+  }
+
+  .text-content-container {
+    width: 50%;
+    top: 70px;
+    margin-bottom: 0;
+    min-height: auto;
+  }
+
+  .text-slide {
+    padding: 0;
+  }
+
+  .text-slide h2 {
+    font-size: 17px;
+  }
+
+  .image-container {
+    width: 720px;
+    height: 558.36px;
+    top: 70px;
+    margin-bottom: 0;
   }
 }
 
@@ -378,17 +421,18 @@ html {
   }
 
   .logo-nav {
+    overflow: visible !important;
     gap: 10px;
     padding-bottom: 20px;
   }
 
-  .logo-item {
+  .logo-item1 {
     width: 35px;
     height: 35px;
   }
 
   .image-container {
-    height: 250px;
+    height: 220px;
   }
 
   .text-slide h2 {
@@ -397,5 +441,8 @@ html {
 
   .text-slide p {
     font-size: 13px;
+  }
+  .text-content-container{
+    overflow: visible !important;
   }
 }

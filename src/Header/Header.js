@@ -17,6 +17,11 @@ const Header = () => {
       </nav>
       <button className="lineage-button">
         Lineage 1865 <span className="cart-icon">🛒</span>
+        <div className="hamburger">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
       </button>
     </div>
   </div>
