@@ -18,7 +18,7 @@ const ProjectBlackLanding = () => {
             A Movement Dedicated To Elevating Black Excellence And Success.<br />
             We Reshape Narratives, Fund Innovation, And Create Opportunities For Lasting Legacies.
           </p>
-          <button className="cta-button">Get Updates</button>
+          <button className="cta-button">Join Now</button>
 
           <div className="countdown-wrapper">
             <p className="coming-soon">Coming Soon (31 December 2025)</p>

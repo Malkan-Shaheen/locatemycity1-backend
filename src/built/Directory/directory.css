@@ -245,82 +245,70 @@ html {
 }
 
 
-/* Mobile styles */
+/* Mobile layout (image top, text bottom) */
 @media (max-width: 768px) {
-  .directory-heading h1 {
-    font-size: 20px;
+  .page-center {
+    padding: 20px;
+    display: block;
   }
 
-  .directory-heading h3 {
-    font-size: 14px;
-  }
-
-  .panel-section {
+  .empower-section {
     flex-direction: column;
-    padding-top: 100px;
-    height: auto;
-  }
-
-  .logo-nav {
-    width: 100%;
-    height: auto;
-    flex-direction: row;
-    position: relative;
-    padding: 20px 0;
-    justify-content: center;
-  }
-
-  .logo-item {
-    margin: 0 10px;
-    width: 50px;
-    height: 50px;
-  }
-
-  .content-area {
-    height: auto;
-  }
-
-  .panel-display {
-    position: relative;
-    height: auto;
-    flex-direction: column;
-    padding: 40px 20px;
     gap: 30px;
   }
 
-  .text-content-container,
-  .image-container {
+  .frame-container {
+    order: 1; /* Image comes first */
     width: 100%;
-  }
-
-  .text-slide {
-    position: relative;
-    opacity: 0;
-    height: 0;
-    overflow: hidden;
-  }
-
-  .text-slide.active {
     height: auto;
-    opacity: 1;
-    margin-bottom: 40px;
+    aspect-ratio: 16/9;
   }
 
-  .image-slide {
-    position: relative;
-    top: auto;
-    left: auto;
-    opacity: 0;
-    height: 0;
+  .empower-text {
+    order: 2; /* Text comes after */
+    width: 100%;
+    padding: 0;
   }
 
-  .image-slide.active {
-    height: auto;
-    opacity: 1;
-    margin-bottom: 40px;
+  .empower-heading {
+    font-size: 22px;
+    text-align: left;
+    margin-bottom: 12px;
   }
 
-  .scroll-triggers {
+  .empower-border-line {
+    width: 80px;
+    height: 4px;
+    margin: 0 0 15px 0;
+  }
+
+  .empower-desc {
+    font-size: 16px;
+    text-align: left;
+    line-height: 1.5;
+    margin-bottom: 20px;
+  }
+
+  /* Button styles */
+  .empower-button {
+    padding: 12px 24px;
+    font-size: 16px;
+  }
+
+  /* Hide decorative elements */
+  .line, 
+  .empower-icon {
     display: none;
+  }
+
+  /* Fix image grid */
+  .frames-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .frame-img {
+    width: 100%;
+    height: auto;
+    margin: 0 !important;
   }
 }

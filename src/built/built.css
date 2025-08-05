@@ -52,3 +52,55 @@
   width: 90%;
   pointer-events: auto;
 }
+@media screen and (max-width: 768px) {
+  .scroll-section {
+    height: 120vh; /* Reduced height for mobile */
+  }
+
+  .bp-image-container {
+    height: 50%;
+    top: 450px;
+    width: 100%;
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
+    left: 0;
+    transform: none;
+  }
+
+  .bp-main-image {
+    height: 80vh;
+    object-fit: cover;
+    object-position: center top;
+  }
+
+  .scroll-text {
+    padding: 0rem;
+    margin: 0 5px;
+  }
+
+  .text-sticky-container {
+    padding: 0;
+  }
+
+  .scroll-text h1,
+  .scroll-text h2 {
+    font-size: 1.2rem;
+  }
+
+  .scroll-text p {
+    font-size: 0.9rem;
+  }
+}
+
+/* Landscape support */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  .scroll-section {
+    height: 400vh;
+  }
+
+  .scroll-text {
+    font-size: clamp(12px, 3vw, 16px);
+    padding: 0.5rem;
+  }
+}

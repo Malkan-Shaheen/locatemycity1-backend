@@ -15,22 +15,8 @@ html, body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  /* Ensure no accidental overflow from elements */
   max-width: 100vw;
 }
-
-
-/* .app-container {
-  min-height: 100%;
-background: #121212;
-
-} */
-/* .container {
-  max-width: 100%;
-  margin: 0 auto;
-  padding: 0 40px;
-  box-sizing: border-box;
-} */
 ::-webkit-scrollbar {
   width: 0px;
   background: transparent; /* for Chrome/Safari */
@@ -54,11 +40,8 @@ body {
   padding: 0 var(--header-padding-x);
 }
 body {
-  overflow-x: hidden; /* Prevent horizontal scroll */
+  overflow-x: hidden;
 }
-
-
-/* Countdown Clock Fixed Positioning */
 .flipClock1 {
   position: fixed;
   bottom: 20px;
@@ -100,8 +83,17 @@ body {
 .hero-container:first-child:not(:last-child) ~ .flipClock1 {
   display: none;
 }
-/* This will hide clock when it would overlap footer */
 .footer:target ~ .flipClock1,
 .footer:hover ~ .flipClock1 {
   display: none !important;
+}
+
+@media (max-width: 768px) {
+  .coming-soon1 {
+    display: none !important;
+  }
+  .flipUnitContainer1{
+     display: none !important;
+  
+  }
 }

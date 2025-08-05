@@ -250,3 +250,12 @@ width: clamp(40px, 10vw, 60px);
   transform: translateZ(0) !important;
   will-change: transform !important;
 }
+@media (max-width: 768px) {
+  .coming-soon1 {
+    display: none !important;
+  }
+  .flipUnitContainer1{
+     display: none !important;
+  
+  }
+}

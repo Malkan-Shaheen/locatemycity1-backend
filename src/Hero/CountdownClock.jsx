@@ -51,6 +51,7 @@ const FlipUnitContainer = ({ digit, shuffle, unit }) => {
 
   return (
     <div className="flipUnitContainer">
+      <div class="midline-dots"></div>
       <StaticCard position="upperCard" digit={currentDigit} />
       <StaticCard position="lowerCard" digit={shouldFlip ? prevDigit : currentDigit} />
       {shouldFlip && (

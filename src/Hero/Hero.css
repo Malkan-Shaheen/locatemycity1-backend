@@ -482,3 +482,95 @@ background: linear-gradient(to bottom, #E4C658 0%, #9E6A17 100%);
   transform: translateZ(0) !important; /* Add this */
   will-change: transform !important; /* Add this */
 }
+
+/* ========== MOBILE RESPONSIVENESS (max-width: 768px) ========== */
+@media (max-width: 768px) {
+  .hero-container > *:first-child {
+  margin-top: 0 !important;
+}
+
+  .hero-container {
+    background-image: url('/src/images/hero-bg2.png'); /* ✅ Mobile background image */
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center center;
+    height: auto;
+    padding: 0;
+  }
+
+  .heading {
+    font-size: clamp(28px, 7vw, 48px);
+    letter-spacing: 4px;
+    white-space: normal;
+    font-size: 65px;
+    font-weight: 400;
+    margin-top: 30px;
+    margin-bottom: 10px;
+  }
+
+  .subtitle {
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    margin-top: 8px;
+    padding: 0px 20px;
+  }
+
+  .img-frame {
+    bottom: 7px;
+    width: 77%;
+    min-width: unset;
+    position: absolute;
+  }
+
+  .content {
+    height: auto;
+    padding: 20px 16px;
+    margin-top: 0;
+    padding-top: 40px;
+  }
+
+  .description {
+    font-size: 0.9rem;
+    margin-top: 20px;
+    line-height: 1.5;
+    padding: 0 10px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .cta-button {
+    font-size: 0.9rem;
+    padding: 10px 20px;
+    margin-top: 20px !important;
+    width: auto; /* ✅ fit text */
+    display: inline-block;
+    max-width: 100%;
+    margin-bottom: 30px !important;
+  }
+
+  .countdown-wrapper,
+  .flipClock,
+  .flipUnitContainer,
+  .flipCard,
+  .flipUnitWrapper {
+    display: none !important; /* ✅ Hide countdown on mobile */
+  }
+}
+
+@media (max-width: 480px) {
+  .heading {
+    font-size: 24px;
+    letter-spacing: 2px;
+  }
+
+  .description {
+    font-size: 0.85rem;
+    letter-spacing: 0.05rem;
+  }
+
+  .cta-button {
+    width: auto;  /* ✅ Still text-sized */
+    padding: 10px 18px;
+    margin: 0 auto;
+  }
+}

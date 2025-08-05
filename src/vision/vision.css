@@ -147,6 +147,7 @@
   .empower-text {
     max-width: 100%;
     padding: 0 10px;
+    font-size: 14px;
   }
 }
 .text-wrapper {
@@ -272,3 +273,25 @@
   transform: scale(1.03); /* Slight zoom */
 }
 
+
+@media (max-width: 768px) {
+  .empower-section {
+    text-align: left; /* Changed from center to left */
+    align-items: flex-start; /* Changed from center to flex-start */
+  }
+
+  .empower-heading {
+    font-size: 18px; /* Changed from default to 18px */
+    text-align: left; /* Ensure left alignment */
+  }
+
+  .empower-desc {
+    font-size: 14px; /* Changed from 18px to 14px */
+    text-align: left; /* Ensure left alignment */
+  }
+
+  /* Hide icons - assuming they have a class like 'empower-icon' */
+  .logo-item {
+    display: none !important;
+  }
+}
