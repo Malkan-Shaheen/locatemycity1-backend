@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useEffect, useRef } from 'react';
 import './directory.css';
 import { motion } from 'framer-motion';
@@ -181,22 +183,7 @@ const Directory = () => {
     }
   };
 
-  useEffect(() => {
-  // Debug Framer Motion version
-  console.log('Framer Motion version:', motion.version); 
   
-  // Debug current active panel
-  console.log('Active panel:', activePanel);
-  
-  // Debug scroll direction
-  console.log('Scroll direction:', scrollDirection);
-  
-  // Debug if animations are running
-  console.log('Is scrolling:', isScrolling);
-  
-  // Optional: Log the previous panel for transition tracking
-  console.log('Previous panel:', previousPanel);
-}, [activePanel, scrollDirection, isScrolling, previousPanel]);
 
   return (
     <div className="directory-section" ref={sectionRef}>
