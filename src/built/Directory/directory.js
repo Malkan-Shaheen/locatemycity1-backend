@@ -183,6 +183,13 @@ const Directory = () => {
     }
   };
 
+  useEffect(() => {
+  console.log('Framer Motion Features:', {
+    animate: typeof motion.animate,
+    transform: typeof motion.transform,
+    useAnimation: typeof motion.useAnimation
+  });
+}, []);
   
 
   return (
