@@ -89,7 +89,7 @@ line-height: 100%;
 
 }
 
-.merch-desc {
+.merch-descr {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -105,7 +105,7 @@ line-height: 100%;
 }
 
 /* Hover Effects */
-.merch-card.hovered .merch-desc {
+.merch-card.hovered .merch-descr {
   background: linear-gradient(90deg, #CD9E3C 0%, #BD8A2D 100%);
   color: #000;
   border-radius: 12px;
