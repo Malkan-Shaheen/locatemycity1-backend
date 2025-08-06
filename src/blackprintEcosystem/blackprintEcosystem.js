@@ -45,7 +45,6 @@ const cards = [
     text: 'Your one-stop-shop for discovering and shopping Black-owned brands — from beauty to books to food to fashion. This is where Culture spends with intention.',
   },
 ];
-
 export default function BlackprintEcosystem() {
   return (
     <div className="bp-wrapper">
@@ -63,7 +62,6 @@ export default function BlackprintEcosystem() {
               <span>Coming Soon</span>
             </div>
             <div className="bp-card-inner">
-              {/* Fixed image container structure */}
               <div className="bp-card-img-container">
                 <img 
                   src={card.img} 
