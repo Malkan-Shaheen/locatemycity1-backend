@@ -104,7 +104,6 @@ const Directory = () => {
   // Initialize with stable ref array
   const triggersRef = useRef(new Array(contentList.length).fill(null));
   const [activePanel, setActivePanel] = useState('panel1');
-  const [previousPanel, setPreviousPanel] = useState(null);
   const [scrollDirection, setScrollDirection] = useState('up');
   const [isScrolling, setIsScrolling] = useState(false);
   const [isClient, setIsClient] = useState(false);
@@ -154,7 +153,6 @@ const Directory = () => {
         if (newPanel && newPanel !== activePanel) {
           console.log('Switching to panel:', newPanel);
           setIsScrolling(true);
-          setPreviousPanel(activePanel);
           setActivePanel(newPanel);
           
           // Clear any existing timeout
