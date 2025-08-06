@@ -2,7 +2,7 @@
 
 .merch-section {
   background-color: transparent;
-  padding: 120px 20px 120px 20px;
+  /* padding: 120px 20px 120px 20px; */
   position: relative;
   color: white;
   text-align: center;
@@ -20,6 +20,7 @@
   font-style: Bold;
   text-align: center;
   text-transform: capitalize;
+  margin-top: -350px;
 }
 
 .merch-heading p {

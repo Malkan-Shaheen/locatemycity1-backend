@@ -9,13 +9,17 @@ body {
   font-family: 'Poppins', sans-serif;
   position: relative;
   z-index: 1;
+  top: -450px;
 }
 
 .directory-heading {
   width: 100%;
   text-align: center;
-  padding: 40px 20px 20px;
-  z-index: 2;
+  position: relative;
+  right: 150px;
+  /* padding: 40px 20px 20px; */
+  z-index: 1000;
+   pointer-events: none;
 }
 
   .scroll-triggers {
@@ -23,15 +27,16 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    height: 400vh; /* Match content-area height */
+    height: 400vh; 
     z-index: 5;
-    pointer-events: none; /* Don't interfere with user interactions */
+    pointer-events: none; 
   }
 
   .scroll-trigger {
     height: 100vh;
     width: 100%;
-  }heading h1 {
+  }
+  .heading h1 {
   font-size: 28px;
   font-weight: 700;
   margin-bottom: 10px;
@@ -60,10 +65,12 @@ body {
   align-items: center;
   justify-content: center;
   gap: 15px;
-  padding: 250px 20px 30px;
+  /* padding: 300px 20px 30px; */
+ margin-left: 60px;
   position: relative;
   z-index: 10;
-  top: 180px;
+  top: 350px;
+margin-top: 100px;
 }
 
 .logo-item1 {
@@ -118,8 +125,9 @@ body {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  min-height: 400px;
+  min-height: 300px;
   margin-bottom: 40px;
+  left:0px;
 }
 
 .text-slide {
@@ -128,7 +136,7 @@ body {
   transition: opacity 0.6s ease;
   width: 100%;
   color: white;
-  padding: 0 10px;
+  /* padding: 0 10px; */
 }
 
 .text-slide.active {
@@ -144,7 +152,7 @@ body {
   font-size: 20px;
   line-height: 150%;
   letter-spacing: 0%;
-  margin-top: 180px;
+  margin-top: 150px;
 }
 
 .text-slide p {
@@ -183,7 +191,7 @@ body {
   left: 0;
   opacity: 0;
   transition: opacity 0.5s ease;
-  margin-top: 180px;
+  margin-top: 60px;
 }
 
 .image-slide.active {
@@ -251,7 +259,7 @@ body {
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    padding: 0px;
+    padding: 100px;
     width: 100%;
     position: relative;
     height: auto;
@@ -271,8 +279,7 @@ body {
     border-radius: 50%;
     padding: 8px;
     overflow: visible !important;
-    
-        position: relative;
+    position: relative;
   }
 
   .logo-item1 img {
