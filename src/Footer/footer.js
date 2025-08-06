@@ -17,13 +17,13 @@ const Footer = () => {
           </p>
 
           <div className="footer-links">
-            <a href="#" className="footer-link">Privacy</a>
-            <a href="#" className="footer-link">Terms</a>
-            <a href="#" className="footer-icon">
+            <button className="footer-link" onClick={() => console.log('Privacy clicked')}>Privacy</button>
+            <button className="footer-link" onClick={() => console.log('Terms clicked')}>Terms</button>
+            <button className="footer-icon" onClick={() => console.log('Twitter clicked')}>
   <img src={twitterIcon} alt="Twitter" className="footer-icon" />
-</a>
-            <a href="#" className="footer-icon"><i className="fab fa-facebook-f"></i></a>
-            <a href="#" className="footer-icon"><i className="fab fa-instagram"></i></a>
+</button>
+            <button className="footer-icon" onClick={() => console.log('Facebook clicked')}><i className="fab fa-facebook-f"></i></button>
+            <button className="footer-icon" onClick={() => console.log('Instagram clicked')}><i className="fab fa-instagram"></i></button>
           </div>
         </div>
       </div>

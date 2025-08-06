@@ -32,7 +32,7 @@ const FlipUnitContainer1 = ({ digit, shuffle, unit }) => {
       }, 500); // Match this with your animation duration
       return () => clearTimeout(flipTimer);
     }
-  }, [shuffle, digit]);
+  }, [shuffle, digit, displayDigit]);
 
   let currentDigit = displayDigit;
   let prevDigit = previousDigit;
