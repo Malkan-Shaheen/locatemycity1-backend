@@ -2,8 +2,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import './directory.css';
 import { motion } from 'framer-motion';
 
-console.log('DEBUG: Component loading started - checking if motion is available:', motion ? 'YES' : 'NO');
-console.log('DEBUG: Checking if window is defined:', typeof window !== 'undefined' ? 'YES' : 'NO');
+// Utility function to safely access window
+const isBrowser = () => typeof window !== 'undefined';
+
+// Utility function to get scroll position safely
+const getScrollY = () => {
+  if (!isBrowser()) return 0;
+  return window.scrollY || document.documentElement.scrollTop || 0;
+};
 
 
 const contentList = [
@@ -96,147 +102,187 @@ Early Bird Rate: $50 (50% off, will increase to $100 after launch)
 const Directory = () => {
   const sectionRef = useRef(null);
   // Initialize with stable ref array
-const triggersRef = useRef(new Array(contentList.length).fill(null));
+  const triggersRef = useRef(new Array(contentList.length).fill(null));
   const [activePanel, setActivePanel] = useState('panel1');
   const [previousPanel, setPreviousPanel] = useState(null);
   const [scrollDirection, setScrollDirection] = useState('up');
   const [isScrolling, setIsScrolling] = useState(false);
-  const prevScrollY = useRef(typeof window !== 'undefined' ? window.scrollY : 0);
+  const [isClient, setIsClient] = useState(false);
+  const prevScrollY = useRef(0);
   const scrollTimeout = useRef(null);
 
-  console.log('DEBUG: Component mounted - initial state:', {
-    activePanel,
-    previousPanel,
-    scrollDirection,
-    isScrolling,
-    prevScrollY: prevScrollY.current
-  });
+  // Client-side detection effect
+  useEffect(() => {
+    setIsClient(true);
+    if (isBrowser()) {
+      prevScrollY.current = getScrollY();
+    }
+  }, []);
 
   useEffect(() => {
-    console.log('DEBUG: useEffect triggered - setting up scroll observer');
+    if (!isClient) return; // Don't run on server-side
     
     const handleScroll = (entries) => {
-      console.log('DEBUG: IntersectionObserver callback triggered with entries:', entries);
+      console.log('Scroll entries:', entries.length);
+      
+      // Find the entry with the highest intersection ratio
+      let bestEntry = null;
+      let maxRatio = 0;
       
       entries.forEach((entry) => {
-        console.log('DEBUG: Processing entry:', {
-          isIntersecting: entry.isIntersecting,
-          target: entry.target.dataset.panel,
-          isScrolling,
-          ratio: entry.intersectionRatio
-        });
-
-        if (entry.isIntersecting && !isScrolling) {
-          const currentScrollY = window.scrollY;
-          const direction = currentScrollY > prevScrollY.current ? 'down' : 'up';
-          console.log('DEBUG: Scroll direction detected:', direction);
-          
-          setScrollDirection(direction);
-          prevScrollY.current = currentScrollY;
-          
-          const newPanel = entry.target.dataset.panel;
-          console.log('DEBUG: New panel detected:', newPanel);
-          
-          // Prevent scrolling past panel1 when scrolling down
-          if (direction === 'down' && newPanel === 'panel1') {
-            console.log('DEBUG: Case 1 - Scrolling down to panel1');
-            setPreviousPanel(activePanel);
-            setActivePanel(newPanel);
-          } 
-          // Prevent scrolling past panel4 when scrolling up
-          else if (direction === 'up' && newPanel === 'panel4') {
-            console.log('DEBUG: Case 2 - Scrolling up to panel4');
-            setPreviousPanel(activePanel);
-            setActivePanel(newPanel);
-          }
-          // For other cases, only allow scroll if not at boundary
-          else if ((direction === 'down' && activePanel !== 'panel1') || 
-                   (direction === 'up' && activePanel !== 'panel4')) {
-            console.log('DEBUG: Case 3 - Normal scroll transition');
-            setIsScrolling(true);
-            setPreviousPanel(activePanel);
-            setActivePanel(newPanel);
-            
-            // Clear any existing timeout
-            if (scrollTimeout.current) {
-              console.log('DEBUG: Clearing existing scroll timeout');
-              clearTimeout(scrollTimeout.current);
-            }
-            
-            // Set timeout to allow next scroll after animation completes
-            scrollTimeout.current = setTimeout(() => {
-              console.log('DEBUG: Scroll timeout completed - allowing new scrolls');
-              setIsScrolling(false);
-            }, 1000); // Match this with your animation duration
-          } else {
-            console.log('DEBUG: Case 4 - Boundary reached, snapping back');
-            // If trying to scroll past boundary, snap back
-            const trigger = triggersRef.current.find(el => 
-              el?.dataset.panel === activePanel
-            );
-            if (trigger) {
-              console.log('DEBUG: Snapping back to panel:', activePanel);
-              window.scrollTo({
-                top: trigger.offsetTop,
-                behavior: 'smooth'
-              });
-            }
-          }
+        console.log('Entry:', entry.target.dataset.panel, 'intersecting:', entry.isIntersecting, 'ratio:', entry.intersectionRatio);
+        
+        if (entry.isIntersecting && entry.intersectionRatio > maxRatio) {
+          maxRatio = entry.intersectionRatio;
+          bestEntry = entry;
         }
       });
+      
+      if (bestEntry && maxRatio > 0.3) { // Only switch with significant intersection
+        if (!isBrowser()) return; // Safety check
+        
+        const currentScrollY = getScrollY();
+        const direction = currentScrollY > prevScrollY.current ? 'down' : 'up';
+        
+        setScrollDirection(direction);
+        prevScrollY.current = currentScrollY;
+        
+        const newPanel = bestEntry.target.dataset.panel;
+        console.log('Best panel candidate:', newPanel, 'with ratio:', maxRatio, 'direction:', direction);
+        
+        // Allow panel switching based on scroll direction and intersection ratio
+        if (newPanel && newPanel !== activePanel) {
+          console.log('Switching to panel:', newPanel);
+          setIsScrolling(true);
+          setPreviousPanel(activePanel);
+          setActivePanel(newPanel);
+          
+          // Clear any existing timeout
+          if (scrollTimeout.current) {
+            clearTimeout(scrollTimeout.current);
+          }
+          
+          // Set timeout to allow next scroll after animation completes
+          scrollTimeout.current = setTimeout(() => {
+            console.log('Reset scrolling state');
+            setIsScrolling(false);
+          }, 600); // Reduced timeout for better responsiveness
+        }
+      }
     };
 
     const observer = new IntersectionObserver(handleScroll, {
-  root: null,
-  threshold: [0.2, 0.8] // More forgiving thresholds
-});
+      root: null,
+      threshold: [0.1, 0.3, 0.5, 0.7, 0.9], // Multiple thresholds for better detection
+      rootMargin: '0px 0px 0px 0px' // No margin to get exact intersections
+    });
 
-    console.log('DEBUG: Observing triggers:', triggersRef.current);
-    triggersRef.current.forEach((trigger) => {
+    // Copy the current triggers to avoid stale closure
+    const currentTriggers = [...triggersRef.current];
+    
+    currentTriggers.forEach((trigger) => {
       if (trigger) {
-        console.log('DEBUG: Observing trigger:', trigger.dataset.panel);
         observer.observe(trigger);
       }
     });
 
     return () => {
-      console.log('DEBUG: Cleanup - unobserve all triggers');
-      triggersRef.current.forEach((trigger) => {
+      currentTriggers.forEach((trigger) => {
         if (trigger) observer.unobserve(trigger);
       });
       if (scrollTimeout.current) {
-        console.log('DEBUG: Cleanup - clear scroll timeout');
         clearTimeout(scrollTimeout.current);
       }
     };
-  }, [activePanel, isScrolling]);
+  }, [activePanel, isScrolling, isClient]);
 
   const handleLogoClick = (panelId) => {
-    console.log('DEBUG: Logo clicked - panel:', panelId);
+    if (!isClient) return; // Don't run on server-side
+    
     setActivePanel(panelId);
     const trigger = triggersRef.current.find(el => el?.dataset.panel === panelId);
-    if (trigger) {
-      console.log('DEBUG: Scrolling to trigger for panel:', panelId);
+    if (trigger && isBrowser()) {
       trigger.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
-  console.log('DEBUG: Current render state:', {
-    activePanel,
-    previousPanel,
-    scrollDirection,
-    isScrolling
-  });
-
   // Add this useEffect to handle scroll end detection
-useEffect(() => {
-  const handleScrollEnd = () => {
-    setIsScrolling(false);
-  };
-  
-  window.addEventListener('scrollend', handleScrollEnd);
-  return () => window.removeEventListener('scrollend', handleScrollEnd);
-}, []);
+  useEffect(() => {
+    if (!isClient) return; // Don't run on server-side
+    
+    const handleScrollEnd = () => {
+      setIsScrolling(false);
+    };
+    
+    // Use both scrollend (modern) and timeout fallback
+    let scrollTimer;
+    const handleScroll = () => {
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(handleScrollEnd, 150);
+    };
+    
+    if (isBrowser()) {
+      // Try modern scrollend event first
+      if ('onscrollend' in window) {
+        window.addEventListener('scrollend', handleScrollEnd);
+      } else {
+        // Fallback for browsers without scrollend
+        window.addEventListener('scroll', handleScroll, { passive: true });
+      }
+    }
+    
+    return () => {
+      if (isBrowser()) {
+        if ('onscrollend' in window) {
+          window.removeEventListener('scrollend', handleScrollEnd);
+        } else {
+          window.removeEventListener('scroll', handleScroll);
+        }
+      }
+      clearTimeout(scrollTimer);
+    };
+  }, [isClient]);
+
+  // Don't render scroll-dependent features on server-side
+  if (!isClient) {
+    return (
+      <div className="directory-section" ref={sectionRef}>
+        <div className="panel-section">
+          <div className="content-area">
+            <div className="panel-display">
+              <div className="directory-heading">
+                <h1>Join the movement</h1>
+                <h3>Fueling the Future of Black Innovation</h3>
+              </div>
+              <div className="text-content-container">
+                <div className="text-slide active">
+                  <h2>{contentList[0].title}</h2>
+                  <p>
+                    {contentList[0].text.split('\n').map((line, i) => (
+                      <span key={i}>
+                        {line}
+                        <br />
+                      </span>
+                    ))}
+                  </p>
+                  <button className="join-btn">Join Now</button>
+                </div>
+              </div>
+              <div className="image-container">
+                <div className="image-slide active">
+                  <img
+                    src={contentList[0].image}
+                    alt="Slide 1"
+                    style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="directory-section" ref={sectionRef}>
@@ -248,7 +294,6 @@ useEffect(() => {
             data-panel={`panel${index + 1}`}
             ref={(el) => {
               triggersRef.current[index] = el;
-              console.log('DEBUG: Trigger ref set for panel:', `panel${index + 1}`, el);
             }}
           />
         ))}
@@ -315,15 +360,6 @@ useEffect(() => {
                 const isScrollingDown = scrollDirection === 'down';
                 const isBeforeCurrent = index < currentIndex;
                 const isAfterCurrent = index > currentIndex;
-
-
-                console.log('DEBUG: Rendering motion div for panel:', panelId, {
-                  isActive,
-                  currentIndex,
-                  isScrollingDown,
-                  isBeforeCurrent,
-                  isAfterCurrent
-                });
 
                 return (
                   <motion.div
