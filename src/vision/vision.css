@@ -290,16 +290,13 @@
     text-align: left; /* Ensure left alignment */
   }
 
-  /* Hide icons - assuming they have a class like 'empower-icon' */
-  .logo-item {
-    display: none !important;
-  }
 }
 
 @media (max-width: 768px) {
   .empower-section {
     flex-direction: column !important;
     align-items: center !important;
+    text-align: center;
   }
 
   .frames-grid {
@@ -309,6 +306,8 @@
     width: 100% !important;
     max-width: 600px !important;
     margin-bottom: 40px !important;
+    position: relative;
+    top: -120px;
   }
 
   .frame-img,
@@ -333,6 +332,11 @@
     padding: 0 10px !important;
     text-align: left !important;
   }
+  .empower-desc-wrapper{
+    position: relative;
+    top: 600px;
+  }
+
 }
 
 
@@ -342,7 +346,7 @@
     flex-direction: column !important;
   }
 
-  .empower-heading {
+  .empower-heading-wrapper {
     order: 1 !important;
   }
 
@@ -350,7 +354,83 @@
     order: 2 !important;
   }
 
-  .empower-desc {
+  .empower-desc-wrapper {
     order: 3 !important;
+  }
+}
+@media (max-width: 360px) {
+  .empower-section {
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    /* padding: 24px 16px !important; */
+    gap: 0px !important;
+  }
+
+  .empower-text {
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    text-align: left !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 20px !important;
+  }
+
+  .empower-heading-wrapper {
+    order: 1 !important;
+  }
+
+  .empower-heading {
+    font-size: 22px !important;
+    font-weight: 700 !important;
+    /* line-height: 1.4 !important; */
+    /* letter-spacing: 0.02em !important; */
+    text-align: left !important;
+  }
+
+  .mobile-reorder-grid {
+    order: 2 !important;
+    width: 100% !important;
+  }
+
+  .frames-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+
+    width: 100% !important;
+  }
+
+  .frame-img,
+  .frame-img-1,
+  .frame-img-2,
+  .frame-img-3,
+  .frame-img-4 {
+    width: 100% !important;
+    height: auto !important;
+    object-fit: cover !important;
+    border-radius: 10px !important;
+    aspect-ratio: 1 / 1 !important;
+    margin: 0 !important;
+  }
+
+  .empower-desc-wrapper {
+    order: 3 !important;
+    width: 100% !important;
+    padding: 0 !important;
+  }
+
+  .empower-desc-wrapper {
+    font-size: 14px !important;
+    line-height: 1.6 !important;
+    letter-spacing: 0.01em !important;
+    color: #cccccc !important;
+    text-align: left !important;
+   
+  }
+
+  .line {
+    display: none !important;
   }
 }

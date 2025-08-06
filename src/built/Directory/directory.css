@@ -231,15 +231,15 @@ body {
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    padding: 0px;
     width: 100%;
     position: relative;
-    top: 0;
     height: auto;
     gap: 15px;
     flex-wrap: wrap;
     border: none; /* Remove debug borders */
   }
+
 
   .logo-item1 {
     width: 40px;
@@ -251,7 +251,7 @@ body {
     border-radius: 50%;
     padding: 8px;
     overflow: visible !important;
-    top: -450px;
+    
         position: relative;
   }
 
@@ -266,6 +266,7 @@ body {
     order: 3;
     height: 250px;
     margin: 20px 0;
+    margin-top: 30px !important;
   }
 
   .text-content-container {
@@ -339,11 +340,12 @@ body {
     position: absolute;
     top: 50px;
     padding-top: 30px;
-    padding-bottom: 70px;
+    padding-bottom: 40px;
   }
 
   .directory-heading h1 {
     font-size: 36px;
+    margin-top: 100px !important;
   }
 
   .directory-heading h3 {
@@ -383,8 +385,8 @@ body {
     top: 0;
     height: 100vh;
     flex-direction: row;
-    gap: 40px;
-    padding: 0 40px;
+    gap: 10px;
+    padding: 0 0px;
   }
 
   .text-content-container {
@@ -445,4 +447,91 @@ body {
   .text-content-container{
     overflow: visible !important;
   }
+}
+@media (max-width: 480px){
+  .directory-section{
+  position: relative;
+  top:450px;
+  padding-top: 100px;
+  }
+  h1{
+    padding-top: 100px !important;
+  }
+}
+@media (max-width: 767px) {
+  .empower-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 16px;
+    gap: 24px;
+  }
+
+  .empower-heading-wrapper {
+    order: 1;
+    width: 100%;
+    text-align: left;
+  }
+
+  .logo-nav {
+    order: 2;
+    position: relative !important; /* Ensure it's in normal flow */
+    top: 0 !important;             /* Remove manual offset */
+    width: 100%;
+    z-index: 10;
+    margin-bottom: 16px;
+  }
+
+  .mobile-reorder-grid {
+    order: 3;
+    width: 100%;
+  }
+
+  .frames-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    width: 100%;
+  }
+
+  .frame-img,
+  .frame-img-1,
+  .frame-img-2,
+  .frame-img-3,
+  .frame-img-4 {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+
+  .empower-desc-wrapper {
+    order: 4;
+    width: 100%;
+  }
+
+  .empower-desc {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #ccc;
+    text-align: left;
+  }
+
+  .empower-heading {
+    font-size: 22px;
+    line-height: 1.3;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  .line {
+    display: none;
+  }
+}
+@media (max-width: 540px) {
+ .directory-section{
+  position: relative;
+  top: 120px;
+ }
+  
 }

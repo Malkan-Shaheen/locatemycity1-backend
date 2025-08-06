@@ -490,11 +490,11 @@ background: linear-gradient(to bottom, #E4C658 0%, #9E6A17 100%);
 }
 
   .hero-container {
-    background-image: url('/src/images/hero-bg2.png'); /* ✅ Mobile background image */
+    background-image: url('/src/images/hero-bg2.png');
     background-size: 100% 100%;
     background-repeat: no-repeat;
     background-position: center center;
-    height: auto;
+    height: 100vh;
     padding: 0;
   }
 
@@ -504,7 +504,7 @@ background: linear-gradient(to bottom, #E4C658 0%, #9E6A17 100%);
     white-space: normal;
     font-size: 65px;
     font-weight: 400;
-    margin-top: 30px;
+    margin-top: 10px;
     margin-bottom: 10px;
   }
 
@@ -512,7 +512,7 @@ background: linear-gradient(to bottom, #E4C658 0%, #9E6A17 100%);
     font-size: 0.7rem;
     letter-spacing: 0.4em;
     margin-top: 8px;
-    padding: 0px 20px;
+    padding: 0px 10px;
   }
 
   .img-frame {
@@ -545,16 +545,10 @@ background: linear-gradient(to bottom, #E4C658 0%, #9E6A17 100%);
     width: auto; /* ✅ fit text */
     display: inline-block;
     max-width: 100%;
-    margin-bottom: 30px !important;
+    /* margin-bottom: 30px !important; */
   }
 
-  .countdown-wrapper,
-  .flipClock,
-  .flipUnitContainer,
-  .flipCard,
-  .flipUnitWrapper {
-    display: none !important; /* ✅ Hide countdown on mobile */
-  }
+  
 }
 
 @media (max-width: 480px) {
@@ -572,5 +566,245 @@ background: linear-gradient(to bottom, #E4C658 0%, #9E6A17 100%);
     width: auto;  /* ✅ Still text-sized */
     padding: 10px 18px;
     margin: 0 auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .flipClock {
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    gap: 10px; /* Slightly reduced gap */
+    padding: 0 10px;
+    justify-content: center;
+  }
+
+  .flipUnitContainer {
+    width: clamp(50px, 22vw, 70px); /* Smaller width on mobile */
+    height: 60px; /* Reduced height */
+  }
+
+  .upperCard span,
+  .lowerCard span,
+  .flipCard span {
+    font-size: 42px; /* Reduced font size */
+  }
+
+  .unitLabel {
+    font-size: 10px; /* Smaller label text */
+    margin-top: 4px;
+  }
+
+  .colon {
+    font-size: 1.2rem;
+    top: 12%;
+    right: -8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .flipClock {
+    gap: 8px;
+  }
+
+  .flipUnitContainer {
+    width: clamp(45px, 24vw, 60px);
+    height: 54px;
+  }
+
+  .upperCard span,
+  .lowerCard span,
+  .flipCard span {
+    font-size: 36px;
+  }
+
+  .colon {
+    font-size: 1rem;
+    right: -6px;
+  }
+}
+@media (max-width: 375px) {
+  .flipClock {
+    gap: 6px;
+    flex-wrap: wrap; /* Ensure wrapping */
+    justify-content: center;
+    padding: 0 5px;
+  }
+
+  .flipUnitContainer {
+    width: clamp(40px, 24vw, 52px);
+    height: 48px;
+  }
+
+  .upperCard span,
+  .lowerCard span,
+  .flipCard span {
+    font-size: 30px;
+    letter-spacing: -1px;
+  }
+
+  .unitLabel {
+    font-size: 9px;
+    margin-top: 3px;
+  }
+
+  .colon {
+    font-size: 0.9rem;
+    right: -4px;
+    top: 10%;
+  }
+}
+
+@media (max-width: 320px) {
+  .flipClock {
+    gap: 4px;
+    padding: 0 4px;
+  }
+
+  .flipUnitContainer {
+    width: clamp(36px, 22vw, 46px);
+    height: 42px;
+  }
+
+  .upperCard span,
+  .lowerCard span,
+  .flipCard span {
+    font-size: 26px;
+  }
+
+  .unitLabel {
+    font-size: 8px;
+    margin-top: 2px;
+  }
+
+  .colon {
+    font-size: 0.75rem;
+    right: -3px;
+  }
+}
+/* Improved Flip Clock Responsiveness */
+@media (max-width: 768px) {
+  .flipClock {
+    gap: 8px; /* Reduced gap for smaller screens */
+    padding: 0 5px;
+  }
+
+  .flipUnitContainer {
+    width: clamp(40px, 20vw, 65px);
+    height: clamp(45px, 12vw, 60px);
+    min-width: 40px; /* Ensure it never gets too small */
+  }
+
+  .upperCard, 
+  .lowerCard, 
+  .flipCard {
+    height: 50% !important;
+  }
+
+ 
+  .unitLabel {
+    font-size: clamp(8px, 2.5vw, 10px);
+    margin-top: 2px;
+  }
+
+  .colon {
+    font-size: clamp(12px, 4vw, 16px);
+    right: -6px;
+    top: 30%; /* Better vertical alignment */
+  }
+}
+
+@media (max-width: 480px) {
+  .flipClock {
+    gap: 6px;
+    padding: 0 6px;
+  }
+
+  .flipUnitContainer {
+    width: clamp(40px, 20vw, 60px);
+    height: clamp(42px, 10vw, 54px);
+    overflow: visible;
+  }
+
+
+
+
+
+  .colon {
+    font-size: clamp(16px, 4vw, 24px);
+    right: -5px;
+    top: 28%;
+  }
+
+  .unitLabel {
+    font-size: clamp(8px, 2vw, 10px);
+    margin-top: 2px;
+  }
+ 
+
+}
+
+@media (max-width: 480px) {
+  
+  .flipCard span,
+  .upperCard span,
+  .lowerCard span {
+    display: flex !important;
+    font-size: 40px !important;
+   
+
+  }
+}
+
+
+/* Extreme Small Screen Protection */
+@media (max-width: 360px) {
+  .flipClock {
+    transform: scale(0.9); /* Slightly scale down the whole clock */
+    transform-origin: center;
+    width: 95%; /* Allow some padding */
+    margin: 0 auto;
+  }
+
+  .flipUnitContainer {
+    width: clamp(32px, 16vw, 42px);
+    height: clamp(36px, 9vw, 42px);
+  }
+
+  .upperCard span,
+  .lowerCard span,
+  .flipCard span {
+    font-size: clamp(18px, 5.5vw, 28px);
+  }
+
+  .unitLabel {
+    font-size: 7px;
+  }
+
+  .colon {
+    right: -4px;
+    font-size: 12px;
+  }
+}
+
+/* Protection for very tall aspect ratios (like some foldables) */
+@media (max-width: 768px) and (min-height: 1000px) {
+  .flipClock {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .flipUnitContainer {
+    height: clamp(50px, 8vh, 70px);
+  }
+}
+
+/* Fix for iOS devices to prevent font scaling issues */
+@supports (-webkit-touch-callout: none) {
+  @media (max-width: 768px) {
+    .upperCard span,
+    .lowerCard span,
+    .flipCard span {
+      font-size: clamp(22px, 6.5vw, 38px);
+      -webkit-text-size-adjust: none;
+    }
   }
 }

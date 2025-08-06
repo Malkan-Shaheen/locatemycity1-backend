@@ -332,15 +332,112 @@
     max-width: 100%;
   }
 }
-@media (max-width: 768px) {
-  .bp-wrapper {
-    justify-content: flex-start;
-    padding-top: 2rem;
-    min-height: auto;
-    padding-left: 1rem !important;
-    padding-right: 1rem !important;
-  }
-}
+
 .bp-card:nth-child(7) {
   grid-column: 2 / 3; /* Center column in a 3-column grid */
+}
+
+@media (max-width: 768px) {
+  .bp-header {
+    padding-top: 100px;
+  }
+  
+  .bp-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    width: 100%;
+    padding: 0 20px;
+  }
+
+  .bp-card {
+    width: 100%;
+    max-width: 361.79px;
+  }
+
+  .bp-card p {
+    max-width: 100%;
+  }
+  
+  .bp-coming-soon-tag {
+    right: -35px;
+    width: 140px;
+  }
+}
+
+.bp-card:nth-child(7) {
+  grid-column: auto;
+}
+
+@media (min-width: 769px) and (max-width: 1200px) {
+  .bp-grid {
+    grid-template-columns: repeat(2, minmax(300px, 361.79px));
+  }
+  
+  .bp-card:nth-child(7) {
+    grid-column: span 2;
+    justify-self: center;
+  }
+}
+/* ✅ Mobile and Very Small Screens (≤480px) */
+@media (max-width: 480px) {
+  .bp-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 0 16px;
+    justify-items: center;
+  }
+
+  .bp-card {
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
+  }
+
+  .bp-card p {
+    max-width: 100%;
+  }
+.bp-coming-soon-tag {
+  position: absolute;
+  padding: 10px 60px;
+  font-size: 10px;
+  overflow: visible !important;
+  font-weight: 700;
+  z-index: 10;
+  white-space: nowrap;
+  line-height: 1.6;
+  opacity: 0;
+}
+.bp-card:hover .bp-coming-soon-tag {
+  opacity: 1;
+}
+
+
+}
+
+/* ✅ Small to Medium Screens (481px to 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+  .bp-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    padding: 0 24px;
+    justify-items: center;
+  }
+
+  .bp-card {
+    width: 100%;
+    max-width: 361.79px;
+    margin: 0 auto;
+  }
+
+  .bp-card p {
+    max-width: 100%;
+  }
+
+  .bp-coming-soon-tag {
+    right: -36px;
+    top: 26px;
+    padding: 5px 36px;
+    font-size: 12px;
+    width: max-content;
+  }
 }

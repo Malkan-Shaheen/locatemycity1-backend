@@ -23,10 +23,6 @@ html, body {
 }
 
 body {
-  overflow-x: hidden !important;
-}
-
-body {
   overflow-x: hidden; /* Prevent horizontal scroll */
 }
 .app-container {
@@ -83,17 +79,5 @@ body {
 .hero-container:first-child:not(:last-child) ~ .flipClock1 {
   display: none;
 }
-.footer:target ~ .flipClock1,
-.footer:hover ~ .flipClock1 {
-  display: none !important;
-}
 
-@media (max-width: 768px) {
-  .coming-soon1 {
-    display: none !important;
-  }
-  .flipUnitContainer1{
-     display: none !important;
-  
-  }
-}
+

@@ -250,25 +250,4 @@ width: clamp(40px, 10vw, 60px);
   transform: translateZ(0) !important;
   will-change: transform !important;
 }
-@media (max-width: 768px) {
-  .coming-soon1 {
-    display: none !important;
-  }
-  .flipUnitContainer1{
-     display: none !important;
-  
-  }
-}
 
-@media (max-width: 768px) {
-  .coming-soon1,
-  .flipUnitContainer1,
-  .flipUnitWrapper1,
-  .flipCard1,
-  .upperCard1,
-  .lowerCard1,
-  .colon1,
-  .unitLabel1 {
-    display: none !important;
-  }
-}
