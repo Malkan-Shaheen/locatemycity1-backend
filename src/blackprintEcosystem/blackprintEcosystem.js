@@ -75,7 +75,7 @@ export default function BlackprintEcosystem() {
         {cards.map((card, index) => (
           <div key={index} className="bp-card">
             <div className="bp-coming-soon-tag">
-              <span>Coming Soon</span>
+              <p>Coming Soon</p>
             </div>
             <div className="bp-card-inner">
               <div className="bp-card-img-container">

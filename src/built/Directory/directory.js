@@ -263,14 +263,14 @@ const Directory = () => {
                 <h3>Fueling the Future of Black Innovation</h3>
               </div>
               <div className="text-content-container">
-                <div className="text-slide active">
+                <div className="text-slide1 active">
                   <h2>{contentList[0].title}</h2>
                   <p>
                     {contentList[0].text.split('\n').map((line, i) => (
-                      <span key={i}>
+                      <p key={i}>
                         {line}
                         <br />
-                      </span>
+                      </p>
                     ))}
                   </p>
                   <button className="join-btn">Join Now</button>
@@ -343,7 +343,7 @@ const Directory = () => {
               {contentList.map((item, index) => (
                 <div
                   key={`text-panel${index + 1}`}
-                  className={`text-slide ${activePanel === `panel${index + 1}` ? 'active' : ''}`}
+                  className={`text-slide1 ${activePanel === `panel${index + 1}` ? 'active' : ''}`}
                   data-panel={`panel${index + 1}`}
                 >
                   <h2>{item.title}</h2>

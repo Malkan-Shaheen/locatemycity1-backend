@@ -139,7 +139,7 @@
 
   .nav,
   .lineage-button {
-    display: none !important;
+    display: none ;
   }
 
   .logo-img {

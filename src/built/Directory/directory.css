@@ -138,7 +138,7 @@ margin-top: 100px;
   left:0px;
 }
 
-.text-slide {
+.text-slide1 {
   position: absolute;
   opacity: 0;
   transition: opacity 0.6s ease;
@@ -147,12 +147,12 @@ margin-top: 100px;
   /* padding: 0 10px; */
 }
 
-.text-slide.active {
+.text-slide1.active {
   opacity: 1;
   position: relative;
 }
 
-.text-slide h2 {
+.text-slide1 h2 {
   margin-bottom: 15px;
   font-family: Satoshi;
   font-weight: 700;
@@ -163,7 +163,7 @@ margin-top: 100px;
   margin-top: 150px;
 }
 
-.text-slide p {
+.text-slide1 p {
   font-size: 14px;
   white-space: pre-line;
   margin-bottom: 20px;
@@ -311,14 +311,14 @@ margin-top: 100px;
     height: auto;
   }
 
-  .text-slide {
+  .text-slide1 {
     position: absolute;
     width: 100%;
     opacity: 0;
     transition: opacity 0.6s ease;
     padding: 0;
   }
-  .text-slide p {
+  .text-slide1 p {
     overflow: visible !important;
   font-size: 14px;
   line-height: 1.5;
@@ -326,7 +326,7 @@ margin-top: 100px;
   white-space: pre-line;
 }
 
-  .text-slide.active {
+  .text-slide1.active {
     opacity: 1;
     position: relative;
     height: auto;
@@ -373,11 +373,11 @@ margin-top: 100px;
     height: 220px;
   }
 
-  .text-slide h2 {
+  .text-slide1 h2 {
     font-size: 18px;
   }
 
-  .text-slide p {
+  .text-slide1 p {
     font-size: 13px;
   }
 }
@@ -448,11 +448,11 @@ margin-top: 100px;
     min-height: auto;
   }
 
-  .text-slide {
+  .text-slide1 {
     padding: 0;
   }
 
-  .text-slide h2 {
+  .text-slide1 h2 {
     font-size: 17px;
   }
 
@@ -507,12 +507,15 @@ margin-top: 100px;
     height: 220px;
   }
 
-  .text-slide h2 {
+  .text-slide1 h2 {
     font-size: 18px;
   }
 
-  .text-slide p {
+  .text-slide1 p {
     font-size: 13px;
+    border: 2px solid red;
+    height: 100vh;
+    color: white;
   }
   .text-content-container{
     overflow: visible !important;
@@ -527,6 +530,7 @@ margin-top: 100px;
   h1{
     padding-top: 100px !important;
   }
+
 }
 @media (max-width: 767px) {
   .empower-section {
@@ -600,15 +604,27 @@ margin-top: 100px;
   }
 }
 @media (max-width: 540px) {
- .directory-section{
-  position: relative;
-  top: 120px;
- }
+  .directory-section {
+    position: relative;
+    top: 0 !important;
+    padding-top: 80px; /* Adjust as needed */
+  }
 }
+
 
 @media (max-width: 768px) {
   .directory-section {
     top: 0 !important;
-    padding-top:50; /* adjust as needed */
+    padding-top:0; /* adjust as needed */
   }
+}
+@media (max-width: 768px) {
+ .text-slide1 p {
+  display: block !important;
+  color: white !important;
+  font-size: 16px !important;
+  
+}
+
+ 
 }

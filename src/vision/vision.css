@@ -411,7 +411,7 @@
   }
 
   .line {
-    display: none !important;
+    display: none ;
   }
 }
 
