@@ -13,21 +13,21 @@ const products = [
   {
     id: 1,
     name: 'Heritage Drip',
-    desc: 'Shop Now!',
+    descr: 'Shop Now!',
     img: hoodie,
     hoverImg: hoodieHover,
   },
   {
     id: 2,
     name: 'Heritage Drip',
-    desc: 'Shop Now!',
+    descr: 'Shop Now!',
     img: journal,
     hoverImg: journalHover,
   },
   {
     id: 3,
     name: 'Heritage Drip',
-    desc: 'Shop Now!',
+    descr: 'Shop Now!',
     img: tshirt,
     hoverImg: tshirtHover,
   },
@@ -64,8 +64,8 @@ export default function Mission() {
             />
             <div className="merch-info">
               <h3>{product.name}</h3>
-              <div className="merch-desc">
-                <span>{product.desc}</span>
+              <div className="merch-descr">
+                <span>{product.descr}</span>
                 <FaArrowRight className="arrow-icon" />
               </div>
             </div>

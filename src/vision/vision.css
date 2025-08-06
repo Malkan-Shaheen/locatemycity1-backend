@@ -363,7 +363,6 @@
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
-    /* padding: 24px 16px !important; */
     gap: 0px !important;
   }
 
@@ -384,8 +383,6 @@
   .empower-heading {
     font-size: 22px !important;
     font-weight: 700 !important;
-    /* line-height: 1.4 !important; */
-    /* letter-spacing: 0.02em !important; */
     text-align: left !important;
   }
 
