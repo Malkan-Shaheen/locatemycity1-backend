@@ -37,6 +37,7 @@ body {
   flex-direction: column;
   position: relative;
   min-height: 100vh;
+
 }
 
 .logo-nav {
@@ -46,9 +47,10 @@ body {
   align-items: center;
   justify-content: center;
   gap: 15px;
-  padding: 0 20px 30px;
+  padding: 250px 20px 30px;
   position: relative;
   z-index: 10;
+  top: 180px;
 }
 
 .logo-item1 {
@@ -129,6 +131,7 @@ body {
   font-size: 20px;
   line-height: 150%;
   letter-spacing: 0%;
+  margin-top: 180px;
 }
 
 .text-slide p {
@@ -167,6 +170,7 @@ body {
   left: 0;
   opacity: 0;
   transition: opacity 0.5s ease;
+  margin-top: 180px;
 }
 
 .image-slide.active {
