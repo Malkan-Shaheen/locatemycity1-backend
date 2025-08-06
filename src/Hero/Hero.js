@@ -1,6 +1,7 @@
 import React from 'react';
 import './Hero.css';
 import FlipClock from './CountdownClock';
+import frameHero from './../images/frame-hero.png';
 
 const ProjectBlackLanding = () => {
   return (
@@ -10,7 +11,7 @@ const ProjectBlackLanding = () => {
         <div className="content">
           <div className="heading-container">
             <h1 className="heading">Project BLACK</h1>
-            <img className='img-frame' src="/images/frame-hero.png" alt="Frame" />
+            <img className='img-frame' src={frameHero} alt="Frame" />
           </div>
 
           <p className="subtitle">BE A PART OF THE MOVEMENT</p>
