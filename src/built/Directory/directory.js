@@ -2,6 +2,16 @@ import React, { useState, useEffect, useRef } from 'react';
 import './directory.css';
 import { motion } from 'framer-motion';
 
+// Import images
+import childImg from './../../images/child.png';
+import manImg from './../../images/man.png';
+import womanImg from './../../images/woman.png';
+import crownImg from './../../images/crown.png';
+import icon1 from './../../images/icon1.png';
+import icon2 from './../../images/icon2.png';
+import icon3 from './../../images/icon3.png';
+import icon4 from './../../images/icon4.png';
+
 // Utility function to safely access window
 const isBrowser = () => typeof window !== 'undefined';
 
@@ -14,8 +24,8 @@ const getScrollY = () => {
 
 const contentList = [
   {
-    image: require('./../../images/child.png'),
-    icon: require('./../../images/icon1.png'),
+    image: childImg,
+    icon: icon1,
     title: "The Seed: Planted in the Directory",
     price: "$50 (Limited Time) / Annum",
     text: `The entry-level tier designed for businesses looking to establish their presence and gain early access to Project Black's growing network.
@@ -33,8 +43,8 @@ Early Bird Rate: $50 (50% off, will increase to $100 after launch)
 `
   },
   {
-    image: require('./../../images/man.png'),
-    icon: require('./../../images/icon2.png'),
+    image: manImg,
+    icon: icon2,
     title: "Growth Phase",
     price: "$50 (Limited Time) / Annum",
     text: `Designed for business owners looking for a competitive edge and deeper engagement within Project Black.
@@ -55,8 +65,8 @@ One additional social media feature (extra promotion across Project Black's plat
   `
   },
   {
-    image: require('./../../images/woman.png'),
-    icon: require('./../../images/icon3.png'),
+    image: womanImg,
+    icon: icon3,
     title: "Established Root",
     price: "$50 (Limited Time) / Annum",
     text: `For entrepreneurs scaling up and ready to lead the culture.
@@ -79,8 +89,8 @@ The Black Box — Flame Edition
  `
   },
   {
-    image: require('./../../images/crown.png'),
-    icon: require('./../../images/icon4.png'),
+    image: crownImg,
+    icon: icon4,
     title: "Harvesting Change",
     price: "$50 (Limited Time) / Annum",
     text: `The entry-level tier designed for businesses looking to establish their presence and gain early access to Project Black's growing network.
