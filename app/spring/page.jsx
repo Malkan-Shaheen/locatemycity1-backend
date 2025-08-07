@@ -441,7 +441,8 @@ export default function SpringLocationsExplorer() {
           color: white;
           text-decoration: none;
           font-weight: 600;
-          padding: 12px 25px;
+          padding: 14px 25px;    /* Slightly taller */
+  min-height: 48px; 
           border-radius: 50px;
           display: flex;
           align-items: center;
@@ -737,19 +738,22 @@ export default function SpringLocationsExplorer() {
           display: flex;
           flex-wrap: wrap;
           justify-content: center;
-          gap: 1rem;
+          gap: 12px;
           margin-top: 1.5rem;
         }
           .state-btn,
 .view-map-btn {
-  min-width: 44px;
-  min-height: 44px;
-  padding: 12px 20px; /* or similar */
+   min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
         
         .state-btn {
-          padding: 0.8rem 1.8rem;
+          padding: 12px 24px; /* More consistent padding */
+  min-width: 48px;    /* Minimum touch target width */
+  min-height: 48px; 
           background-color: white;
           border: none;
           border-radius: 50px;
@@ -867,7 +871,11 @@ export default function SpringLocationsExplorer() {
           background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
           color: white;
           border: none;
-          padding: 0.5rem 1.2rem;
+            padding: 12px 20px;    /* Larger padding */
+  min-height: 48px;      /* Minimum touch target height */
+  display: inline-flex;  /* Better vertical alignment */
+  align-items: center;
+  justify-content: center;
           border-radius: 20px;
           cursor: pointer;
           font-size: 0.85rem;
