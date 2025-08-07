@@ -8,18 +8,12 @@ export default function Map({ sourceCoords, destinationCoords, distance }) {
   const mapInstance = useRef(null);
   const markersRef = useRef([]);
   const polylineRef = useRef(null);
-
-  // Initialize map
   useEffect(() => {
     if (!mapRef.current || mapInstance.current) return;
-
-    // Create map instance with world view
     mapInstance.current = L.map(mapRef.current, {
       zoomControl: true,
       worldCopyJump: true,
     });
-
-    // Add tile layer with neutral map style
     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
@@ -27,8 +21,6 @@ export default function Map({ sourceCoords, destinationCoords, distance }) {
       minZoom: 2,
       maxZoom: 8,
     }).addTo(mapInstance.current);
-
-    // Set initial view
     mapInstance.current.setView([30, 0], 2);
 
     return () => {
@@ -38,21 +30,13 @@ export default function Map({ sourceCoords, destinationCoords, distance }) {
       }
     };
   }, []);
-
-  // Update markers and polyline when coordinates change
   useEffect(() => {
     if (!mapInstance.current) return;
-
-    // Clear previous markers
     markersRef.current.forEach((marker) => marker.remove());
     markersRef.current = [];
-
-    // Remove previous polyline
     if (polylineRef.current) {
       polylineRef.current.remove();
     }
-
-    // Marker helper
     const createMarker = (coords, color, label) => {
       return L.circleMarker([coords.lat, coords.lng], {
         radius: 6,
@@ -65,8 +49,6 @@ export default function Map({ sourceCoords, destinationCoords, distance }) {
         .addTo(mapInstance.current)
         .bindPopup(label);
     };
-
-    // Add markers
     if (destinationCoords) {
       const destMarker = createMarker(
         destinationCoords,
@@ -84,8 +66,6 @@ export default function Map({ sourceCoords, destinationCoords, distance }) {
       );
       markersRef.current.push(sourceMarker);
     }
-
-    // Add simple line between points if both exist
     if (destinationCoords && sourceCoords) {
       polylineRef.current = L.polyline(
         [

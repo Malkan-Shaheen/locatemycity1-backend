@@ -10,8 +10,6 @@ const LeafletMap = ({ source, destination, distance }) => {
   const layerGroupRef = useRef(null);
   const [mapInitialized, setMapInitialized] = useState(false);
   const [mapError, setMapError] = useState(false);
-
-  // Cleanup function
   const cleanupMap = () => {
     if (mapInstanceRef.current) {
       mapInstanceRef.current.off();
@@ -27,44 +25,26 @@ const LeafletMap = ({ source, destination, distance }) => {
   };
 
   useEffect(() => {
-    // Only initialize if we have valid data and container
     if (!source || !destination || !mapContainerRef.current) {
       return;
     }
-
-    // Cleanup any existing map first
     cleanupMap();
 
     try {
-      // Initialize map with explicit options
       const map = L.map(mapContainerRef.current, {
         preferCanvas: true,
         zoomControl: false,
         attributionControl: false,
-        // Prevent double-tap zoom on mobile
         doubleClickZoom: false,
-        // Disable inertia for better performance
         inertia: false
       });
-
-      // Store the map instance
       mapInstanceRef.current = map;
-
-      // Create a layer group
       const layerGroup = L.layerGroup().addTo(map);
       layerGroupRef.current = layerGroup;
-
-      // Calculate center point
       const centerLat = (parseFloat(source.lat) + parseFloat(destination.lat)) / 2;
       const centerLng = (parseFloat(source.lng) + parseFloat(destination.lng)) / 2;
-
-      // Set view after initialization
       map.setView([centerLat, centerLng], 3);
-
-      // Detect high DPI displays
       const isHighDPI = window.devicePixelRatio > 1;
-
-      // Add base tile layer
       L.tileLayer(
         isHighDPI 
           ? 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}@2x.png'
@@ -74,12 +54,9 @@ const LeafletMap = ({ source, destination, distance }) => {
           maxZoom: 19,
           tileSize: isHighDPI ? 512 : 256,
           zoomOffset: isHighDPI ? -1 : 0,
-          // Prevent tile loading errors
           errorTileUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
         }
       ).addTo(map);
-
-      // Create custom icons
       const createIcon = (color) => L.icon({
         iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${color}.png`,
         shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
@@ -88,8 +65,6 @@ const LeafletMap = ({ source, destination, distance }) => {
         popupAnchor: [1, -34],
         shadowSize: [41, 41]
       });
-
-      // Add markers with error handling
       try {
         L.marker([source.lat, source.lng], { icon: createIcon('green') })
           .addTo(layerGroup)
@@ -97,7 +72,6 @@ const LeafletMap = ({ source, destination, distance }) => {
       } catch (markerError) {
         console.error('Failed to create source marker:', markerError);
       }
-
       try {
         L.marker([destination.lat, destination.lng], { icon: createIcon('red') })
           .addTo(layerGroup)
@@ -105,15 +79,11 @@ const LeafletMap = ({ source, destination, distance }) => {
       } catch (markerError) {
         console.error('Failed to create destination marker:', markerError);
       }
-
-      // Add connection line
       try {
         const line = L.polyline(
           [[source.lat, source.lng], [destination.lat, destination.lng]],
           { color: '#3388ff', weight: 3, dashArray: '5,5' }
         ).addTo(layerGroup);
-
-        // Add distance label at midpoint
         const midpoint = line.getBounds().getCenter();
         L.marker(midpoint, {
           icon: L.divIcon({
@@ -121,23 +91,18 @@ const LeafletMap = ({ source, destination, distance }) => {
             className: 'distance-label-container',
             iconSize: [100, 30]
           }),
-          interactive: false // Make the label non-clickable
+          interactive: false 
         }).addTo(layerGroup);
       } catch (lineError) {
         console.error('Failed to create connection line:', lineError);
       }
-
-      // Fit bounds with padding
       map.fitBounds([
         [source.lat, source.lng],
         [destination.lat, destination.lng]
       ], { padding: [50, 50] });
 
-      // Add controls after map is ready
       L.control.zoom({ position: 'topright' }).addTo(map);
       L.control.attribution({ position: 'bottomright' }).addTo(map);
-
-      // Mark map as initialized
       setMapInitialized(true);
       setMapError(false);
 
@@ -146,8 +111,6 @@ const LeafletMap = ({ source, destination, distance }) => {
       cleanupMap();
       setMapError(true);
     }
-
-    // Cleanup on unmount
     return cleanupMap;
   }, [source, destination, distance]);
 
@@ -158,7 +121,6 @@ const LeafletMap = ({ source, destination, distance }) => {
       </div>
     );
   }
-
   return (
     <div
       ref={mapContainerRef}
@@ -179,5 +141,4 @@ const LeafletMap = ({ source, destination, distance }) => {
     </div>
   );
 };
-
 export default LeafletMap;

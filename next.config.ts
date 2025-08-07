@@ -1,17 +1,31 @@
 const nextConfig = {
+  async headers() {
+    return [
+      {
+        source: '/:path*',  
+        headers: [
+          {
+            key: 'X-Robots-Tag',
+            value: 'index, follow, max-image-preview:large',
+          },
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=3600, stale-while-revalidate=60',
+          },
+        ],
+      },
+    ];
+  },
   async rewrites() {
     return [
-      // Keep your existing API proxy
       {
         source: '/api/:path*',
         destination: 'http://localhost:3001/api/:path*',
       },
-      // Add the new rewrite with proper parameter mapping
       {
         source: '/card1/how-far-is-:destination-from-me',
         destination: '/card1/how-far-is-:destination-from-me', 
       },
-      // Optional: trailing slash version
       {
         source: '/card1/how-far-is-:destination-from-me/',
         destination: '/card1/how-far-is-:destination-from-me',

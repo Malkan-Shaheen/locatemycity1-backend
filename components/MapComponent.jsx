@@ -1,4 +1,3 @@
-// components/MapComponent.js
 'use client';
 import { useRef, useEffect } from 'react';
 import L from 'leaflet';
@@ -11,8 +10,6 @@ export default function MapComponent({ locations }) {
 
   useEffect(() => {
     if (mapInstanceRef.current || !mapRef.current) return;
-
-    // Fix icon paths
     delete L.Icon.Default.prototype._getIconUrl;
     L.Icon.Default.mergeOptions({
       iconRetinaUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',

@@ -1919,17 +1919,14 @@ body {
 .stat-item:last-child {
   border-bottom: none;
 }
-
 .stat-item strong {
   color: var(--dark-blue);
   font-weight: 500;
 }
-
 .interactive-map-section {
   padding: 3rem 0;
   background-color: white;
 }
-
 .section-heading {
   text-align: center;
   margin-bottom: 2rem;
@@ -1938,7 +1935,6 @@ body {
   font-size: 2rem;
   font-weight: 600;
 }
-
 .section-heading::after {
   content: '';
   display: block;
@@ -1948,12 +1944,10 @@ body {
   margin: 0.8rem auto 0;
   border-radius: 2px;
 }
-
 .state-browser-section {
   padding: 3rem 0;
   background-color: var(--alice-blue);
 }
-
 .state-buttons-container {
   display: flex;
   flex-wrap: wrap;
@@ -1961,7 +1955,6 @@ body {
   gap: 1rem;
   margin-top: 1.5rem;
 }
-
 .state-button {
   padding: 0.8rem 1.8rem;
   background-color: white;
@@ -1975,7 +1968,6 @@ body {
   position: relative;
   overflow: hidden;
 }
-
 .state-button::before {
   content: '';
   position: absolute;
@@ -1988,27 +1980,22 @@ body {
   transition: opacity 0.3s ease;
   z-index: 0;
 }
-
 .state-button:hover {
   color: white;
   transform: translateY(-3px);
   box-shadow: 0 8px 15px rgba(70, 130, 180, 0.2);
 }
-
 .state-button:hover::before {
   opacity: 1;
 }
-
 .state-button span {
   position: relative;
   z-index: 1;
 }
-
 .all-locations-section {
   padding: 3rem 0;
   background-color: white;
 }
-
 .state-location-group {
   background: white;
   border-radius: 12px;
@@ -2018,7 +2005,6 @@ body {
   border-left: 4px solid var(--powder-blue);
   transition: all 0.3s ease;
 }
-
 .state-location-group:hover {
   box-shadow: 0 8px 25px rgba(70, 130, 180, 0.1);
 }
@@ -2038,7 +2024,6 @@ body {
   gap: 1rem;
   margin-top: 1.5rem;
 }
-
 .location-item {
   background: var(--alice-blue);
   padding: 1rem 1.2rem;
@@ -2049,13 +2034,11 @@ body {
   transition: all 0.3s ease;
   text-align: center;
 }
-
 .location-item:hover {
   transform: translateX(5px);
   background: white;
   box-shadow: 0 4px 10px rgba(70, 130, 180, 0.1);
 }
-
 .location-name {
   font-weight: 500;
   color: var(--dark-blue);
@@ -2063,7 +2046,6 @@ body {
   white-space: normal;
   word-break: break-word;
 }
-
 .map-view-button {
   background: linear-gradient(135deg, var(--primary-blue), var(--sky-blue));
   color: white;
