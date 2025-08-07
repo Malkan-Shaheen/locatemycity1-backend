@@ -256,7 +256,7 @@ export default function SpringLocationsExplorer() {
         <section className="states-section" aria-labelledby="states-heading">
           <div className="container">
             <h2 id="states-heading" className="section-title">Browse by State</h2>
-            <div className="states-container" role="list">
+           <div className="states-container" role="list">
   {isLoading ? (
     <div className="loading-container" role="status" aria-busy="true">
       <div className="spinner" aria-hidden="true"></div>
@@ -264,18 +264,19 @@ export default function SpringLocationsExplorer() {
     </div>
   ) : (
     uniqueStates.map(state => (
-      <div key={state} role="listitem">
-        <button
-          className="state-btn"
-          onClick={() => setSelectedState(state)}
-          aria-pressed={selectedState === state}
-        >
-          {state}
-        </button>
-      </div>
+      <button
+        key={state}
+        className="state-btn"
+        onClick={() => setSelectedState(state)}
+        aria-pressed={selectedState === state}
+        role="listitem"
+      >
+        {state}
+      </button>
     ))
   )}
 </div>
+
 
             {selectedState && (
               <div id="state-countries-container" aria-live="polite" style={{ marginTop: '2rem' }}>
