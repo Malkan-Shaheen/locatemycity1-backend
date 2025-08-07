@@ -1305,7 +1305,7 @@ body {
 
 h3 {
   font-size: 1.8rem;
-  color: var(--primary-color); /* Headings use primary */
+  color:  #226c9c; /* Headings use primary */
   margin-bottom: 15px;
   font-weight: 600;
 }
