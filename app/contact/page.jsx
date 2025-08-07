@@ -83,7 +83,8 @@ export default function ContactPage() {
             </p>
           </div>
          
-        </section>my     </div>
+        </section> <Footer />
+      </div>
 
       <style jsx>{`
         .contact-page {

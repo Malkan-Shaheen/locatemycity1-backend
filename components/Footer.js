@@ -17,7 +17,7 @@ export default function Footer() {
 
         {/* Center: Links */}
         <div className="footer-section">
-          <h2 className="footer-heading">Quick Links</h2>
+          <h4 className="footer-heading">Quick Links</h4>
           <ul className="footer-links">
             <li><Link href="/">Home</Link></li>
             <li><Link href="/about">About Us</Link></li>
@@ -28,7 +28,7 @@ export default function Footer() {
 
         {/* Right: Contact Info */}
         <div className="footer-section">
-          <h1 className="footer-heading">Contact Us</h1>
+          <h4 className="footer-heading">Contact Us</h4>
   
 <p>
   <FaEnvelope className="footer-icon" />{' '}
@@ -36,7 +36,11 @@ export default function Footer() {
     support@locatemycity.com
   </a>
 </p>         
-         
+          <div className="footer-social">
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer"><FaFacebook /></a>
+            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer"><FaTwitter /></a>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"><FaInstagram /></a>
+          </div>
         </div>
       </div>
 

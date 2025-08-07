@@ -108,12 +108,18 @@ export default function HeroSection() {
 
   return (
     <>
-      <Head>
-        <title>LocateMyCity</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
-      </Head>
+     <Head>
+  <meta charSet="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LocateMyCity</title>
+  <meta name="description" content="LocateMyCity helps you instantly explore locations worldwide – from ghost towns to booming cities. Find distances, compare places, and discover natural features in seconds." />
+  <meta name="robots" content="index, follow" />
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
+</Head>
+
 
       <div className="hero-container" ref={containerRef}>
         <div className="hero">

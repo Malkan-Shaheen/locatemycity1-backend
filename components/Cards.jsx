@@ -50,7 +50,7 @@ export default function Features() {
               <span role="img" aria-label="rock">🪨</span>
             </div>
             <h3>Rock Cities</h3>
-            <p>Discover amazing rock formations and geological wonders in cities worldwide. Explore nature's most impressive stone architectures.</p>
+            <p>Explore cities and towns with “rock” in their name—unique places tied together by one powerful word.</p>
             <Link href="/rock"><button className="card-btn">Explore Rocks</button></Link>
           </div>
 
@@ -59,7 +59,7 @@ export default function Features() {
               <span role="img" aria-label="spring">💧</span>
             </div>
             <h3>Spring Cities</h3>
-            <p>Find cities known for their beautiful springs and water features. Perfect for planning refreshing getaways to water-rich destinations.</p>
+            <p>Explore cities with “Spring” in their name—perfect for discovering places that sound refreshing, whether or not water is involved.</p>
             <Link href="/spring"><button className="card-btn">Discover Springs</button></Link>
           </div>
         </div>
