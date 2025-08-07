@@ -263,19 +263,20 @@ const Directory = () => {
                 <h3>Fueling the Future of Black Innovation</h3>
               </div>
               <div className="text-content-container">
-                <div className="text-slide1 active">
-                  <h2>{contentList[0].title}</h2>
-                  <p>
-                    {contentList[0].text.split('\n').map((line, i) => (
-                      <p key={i}>
-                        {line}
-                        <br />
-                      </p>
-                    ))}
-                  </p>
-                  <button className="join-btn">Join Now</button>
-                </div>
-              </div>
+  <div className="text-slide1 active">
+    <h2>{contentList[0].title}</h2>
+    <div className="text-paragraph">
+      {contentList[0].text.split('\n').map((line, i) => (
+        <p key={i}>
+          {line}
+          <br />
+        </p>
+      ))}
+    </div>
+    <button className="join-btn">Join Now</button>
+  </div>
+</div>
+
               <div className="image-container">
                 <div className="image-slide active">
                   <img
