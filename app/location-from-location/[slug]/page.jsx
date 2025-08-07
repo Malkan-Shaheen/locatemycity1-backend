@@ -86,10 +86,10 @@ export default function DistanceResult() {
   const router = useRouter();
   const params = useParams();
 
-  const slug = params.slug;
-  const [sourceName, destinationName] = slug 
-    ? slug.replace('how-far-is-', '').split('-from-')
-    : [null, null];
+const slug = Array.isArray(params.slug) ? params.slug : [params.slug];
+ const [sourceName, destinationName] = Array.isArray(slug) && slug.length === 1
+  ? slug[0].replace('how-far-is-', '').split('-from-')
+  : [null, null];
 
   useEffect(() => {
     if (!sourceName || !destinationName) return;
