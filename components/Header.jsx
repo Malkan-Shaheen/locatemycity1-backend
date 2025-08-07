@@ -1,48 +1,74 @@
-'use client';
+import { useState, useEffect } from 'react';
+import './Header.css'; // We'll create this CSS file next
 
-import Head from 'next/head';
-import Image from 'next/image';
-import Link from 'next/link';
+const Header = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
-export default function Header() {
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 992);
+      // Close menu when resizing to desktop if open
+      if (window.innerWidth > 992 && isMenuOpen) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    // Set initial state
+    handleResize();
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [isMenuOpen]);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   return (
-    <>
-      <Head>
-        <title>LocateMyCity</title>
-        <meta name="description" content="LocateMyCity helps you instantly explore locations worldwide - from ghost towns to booming cities. Find distances, compare locations, discover rock formations & springs. Fast, precise geographic information at your fingertips." />
-        <meta name="robots" content="index, follow" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
-      </Head>
-
-      <header>
-        <div className="container">
-          {/* Floating circles */}
-          <div className="floating-circle" style={{ width: '80px', height: '80px', top: '20%', left: '10%' }}></div>
-          <div className="floating-circle" style={{ width: '120px', height: '120px', bottom: '-30%', right: '15%' }}></div>
-          <div className="floating-circle" style={{ width: '60px', height: '60px', top: '50%', left: '80%' }}></div>
-
-          <div className="header-content">
-            <div className="logo">
-              <Image 
-                src="/Images/cityfav.png" 
-                alt="Logo" 
-                width={50} 
-                height={50} 
-                className="logo-image"
-                priority
-              />
-              LocateMyCity
-            </div>
-            <nav>
-              <Link href="/" title="Home">HOME</Link>
-              <Link href="/about">ABOUT US</Link>
-              <Link href="/contact">CONTACT US</Link>
-            </nav>
+    <header>
+      <div className="container">
+        <div className="header-content">
+          <div className="logo">
+            <img src="/logo.png" alt="Logo" className="logo-image" />
+            <span>Your Logo</span>
           </div>
+          
+          {/* Desktop Navigation - visible on larger screens */}
+          {!isMobile && (
+            <nav className="nav-links">
+              <a href="/">Home</a>
+              <a href="/about">About Us</a>
+              <a href="/contact">Contact Us</a>
+            </nav>
+          )}
+          
+          {/* Hamburger Menu - visible on mobile */}
+          {isMobile && (
+            <div 
+              className={`hamburger ${isMenuOpen ? 'open' : ''}`} 
+              onClick={toggleMenu}
+              aria-label="Menu"
+            >
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          )}
         </div>
-      </header>
-    </>
+      </div>
+      
+      {/* Mobile Menu - slides down when hamburger is clicked */}
+      {isMobile && (
+        <div className={`mobile-menu ${isMenuOpen ? 'open' : ''}`}>
+          <a href="/" onClick={() => setIsMenuOpen(false)}>Home</a>
+          <a href="/about" onClick={() => setIsMenuOpen(false)}>About Us</a>
+          <a href="/contact" onClick={() => setIsMenuOpen(false)}>Contact Us</a>
+        </div>
+      )}
+    </header>
   );
-}
+};
+
+export default Header;
