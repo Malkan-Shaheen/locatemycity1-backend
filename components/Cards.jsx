@@ -26,44 +26,44 @@ export default function Features() {
           <h2>Explore Location Features</h2>
         </div>
 
-        <div className="cards-container">
-          <div className="feature-card">
-            <div className="card-icon">
-              <span role="img" aria-label="location">📍</span>
-            </div>
-            <h3>Distance From Me</h3>
-            <p>Calculate precise distances from your current location to any destination. Get accurate measurements in miles or kilometers with real-time updates.</p>
-            <Link href="/location-from-me/locationfromme"><button className="card-btn">Calculate Distance</button></Link>
-          </div>
+        <div className="feature-card" role="article" aria-label="Location to Location feature">
+  <div className="card-icon">
+    <span role="img" aria-label="Compare Locations">🗺️</span>
+  </div>
+  <h3>Location to Location</h3>
+  <p>Compare distances between any two points of interest. Perfect for planning trips or finding the most convenient routes between locations.</p>
+  <Link href="/location-from-location/locationtolocation" passHref>
+    <button className="card-btn" aria-label="Compare two locations">
+      Compare Locations
+    </button>
+  </Link>
+</div>
 
-          <div className="feature-card">
-            <div className="card-icon">
-              <span role="img" aria-label="route">🗺️</span>
-            </div>
-            <h3>Location to Location</h3>
-            <p>Compare distances between any two points of interest. Perfect for planning trips or finding the most convenient routes between locations.</p>
-            <Link href="/location-from-location/locationtolocation"><button className="card-btn">Compare Locations</button></Link>
-          </div>
+<div className="feature-card" role="article" aria-label="Rock Cities feature">
+  <div className="card-icon">
+    <span role="img" aria-label="Explore Rock Cities">🪨</span>
+  </div>
+  <h3>Rock Cities</h3>
+  <p>Discover amazing rock formations and geological wonders in cities worldwide. Explore nature's most impressive stone architectures.</p>
+  <Link href="/rock" passHref>
+    <button className="card-btn" aria-label="Explore rock formations">
+      Explore Rocks
+    </button>
+  </Link>
+</div>
 
-          <div className="feature-card">
-            <div className="card-icon">
-              <span role="img" aria-label="rock">🪨</span>
-            </div>
-            <h3>Rock Cities</h3>
-            <p>Discover amazing rock formations and geological wonders in cities worldwide. Explore nature's most impressive stone architectures.</p>
-            <Link href="/rock"><button className="card-btn">Explore Rocks</button></Link>
-          </div>
-
-          <div className="feature-card">
-            <div className="card-icon">
-              <span role="img" aria-label="spring">💧</span>
-            </div>
-            <h3>Spring Cities</h3>
-            <p>Find cities known for their beautiful springs and water features. Perfect for planning refreshing getaways to water-rich destinations.</p>
-            <Link href="/spring"><button className="card-btn">Discover Springs</button></Link>
-          </div>
-        </div>
-
+<div className="feature-card" role="article" aria-label="Spring Cities feature">
+  <div className="card-icon">
+    <span role="img" aria-label="Explore Spring Cities">💧</span>
+  </div>
+  <h3>Spring Cities</h3>
+  <p>Find cities known for their beautiful springs and water features. Perfect for planning refreshing getaways to water-rich destinations.</p>
+  <Link href="/spring" passHref>
+    <button className="card-btn" aria-label="Discover spring destinations">
+      Discover Springs
+    </button>
+  </Link>
+</div>
         
       </section>
 
