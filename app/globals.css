@@ -1250,10 +1250,16 @@ body {
 }
 
 /* --- Cards --- */
+:root {
+  --primary-color: #4DA8DA;
+  --secondary-color: #80D8C3;
+  --accent-color: #FFD66B;
+  --light-color: #F5F5F5;
+}
 
 .features-section {
   padding: 80px 40px;
-  background-color: e8e8e8;
+  background-color: var(--light-color); /* Used your light color */
   position: relative;
   overflow: hidden;
 }
@@ -1261,15 +1267,13 @@ body {
 .section-title h2 {
   font-size: 2.5rem;
   font-weight: 700;
-  background: linear-gradient(90deg, #03a9f4, #00bcd4);
+  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color)); /* Your gradient */
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  /* display: inline-block; */
   text-align: center;
   align-items: center;
   margin-bottom: 40px;
-  color: #3bb5fd;
 }
 
 .cards-container {
@@ -1280,12 +1284,11 @@ body {
   margin: 0 auto;
 }
 
-
 .feature-card {
-  background: #1E1E1E;
+  background: white;
   border-radius: 20px;
   padding: 35px;
-  box-shadow: 0 15px 30px rgba(3, 169, 244, 0.1);
+  box-shadow: 0 15px 30px rgba(77, 168, 218, 0.1); /* primary color with alpha */
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   position: relative;
   overflow: hidden;
@@ -1297,21 +1300,14 @@ body {
 
 .feature-card:hover {
   transform: translateY(-10px);
-  box-shadow: 0 20px 40px rgba(3, 169, 244, 0.2);
+  box-shadow: 0 20px 40px rgba(77, 168, 218, 0.2); /* primary color with alpha */
 }
 
-.feature-card h3 {
-  color: #FFFFFF; /* Pure white */
-  font-size: 20px;
-  margin-bottom: 12px;
+h3 {
+  font-size: 1.8rem;
+  color: var(--primary-color); /* Headings use primary */
+  margin-bottom: 15px;
   font-weight: 600;
-}
-
-.feature-card p {
-  color: #E0E0E0; /* Light gray (contrast ratio 7.5:1 on #1E1E1E) */
-  font-size: 16px;
-  line-height: 1.6;
-  margin-bottom: 20px;
 }
 
 .card-icon {
@@ -1322,35 +1318,31 @@ body {
   justify-content: center;
   font-size: 2rem;
   margin-bottom: 25px;
-  color: #CD9E3C;
+  color: var(--accent-color); /* Icon uses accent color for visual contrast */
 }
 
 .card-btn {
-  background: #CD9E3C;
-  color: #121212;
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  color: white;
   border: none;
   margin-top: 15px;
   padding: 12px 25px;
-  font-size: 1rem; /* Changed from 1px to 1rem */
+  font-size: 1rem;
   font-weight: 400;
   border-radius: 50px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 5px 15px rgba(3, 169, 244, 0.3);
-  white-space: normal; /* Allow text to wrap */
-  text-align: center; /* Center the text */
-  min-height: 44px; /* Minimum touch target size for mobile */
-  display: flex; /* Better text alignment */
-  align-items: center; /* Vertically center text */
-  justify-content: center; /* Horizontally center text */
-}
-.card-btn:hover {
-  background: #D4A017; /* Brighter gold */
-  color: #000000; /* Pure black text on hover */
+  box-shadow: 0 5px 15px rgba(77, 168, 218, 0.3);
+  white-space: normal;
+  text-align: center;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .floating-elements .floating-element {
-  background: rgba(0, 188, 212, 0.05);
+  background: rgba(128, 216, 195, 0.05); /* Secondary color with low opacity */
   border-radius: 50%;
   animation: float 15s infinite linear;
   position: absolute;
@@ -1369,7 +1361,6 @@ body {
     transform: translateY(0) rotate(360deg);
   }
 }
-
 
 @media (min-width: 1024px) {
   .features-section {

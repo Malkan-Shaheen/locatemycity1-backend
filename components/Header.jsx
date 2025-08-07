@@ -286,7 +286,7 @@ const Header = () => {
           <div className="header-content">
             <div className="logo">
               <img src="/Images/cityfav.png" alt="Logo" className="logo-image" />
-              <span>Your Logo</span>
+              <span>Locate My City</span>
             </div>
 
             <nav className="nav-links">
