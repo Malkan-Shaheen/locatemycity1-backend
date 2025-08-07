@@ -74,14 +74,15 @@ export default function SpringLocationsExplorer() {
   const uniqueStates = [...new Set(allSprings.map(l => l.state))].sort();
   const stateLocations = selectedState ? allSprings.filter(l => l.state === selectedState) : [];
 
-  const locationsByState = Array.isArray(allSprings) && allSprings.length > 0
+  const locationsByState = Array.isArray(allSprings)
   ? allSprings.reduce((acc, loc) => {
-      if (!acc[loc.state]) acc[loc.state] = [];
-      acc[loc.state].push(loc);
+      if (loc && loc.state) {  // Check if loc and loc.state exist
+        if (!acc[loc.state]) acc[loc.state] = [];
+        acc[loc.state].push(loc);
+      }
       return acc;
-    }, {})
+    }, {}) // Always provide initial value
   : {};
-
 
   const focusOnLocation = (lat, lon, name) => {
     // Create a clean URL path
