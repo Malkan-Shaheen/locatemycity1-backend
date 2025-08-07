@@ -255,26 +255,22 @@ export default function SpringLocationsExplorer() {
         <section className="states-section" aria-labelledby="states-heading">
           <div className="container">
             <h2 id="states-heading" className="section-title">Browse by State</h2>
-           <div className="states-container" role="list">
-  {isLoading ? (
-    <div className="loading-container" role="status" aria-busy="true">
-      <div className="spinner" aria-hidden="true"></div>
-      <span className="sr-only">Loading states...</span>
-    </div>
-  ) : (
-    uniqueStates.map(state => (
+          
+          
+           <ul className="states-container">
+  {uniqueStates.map(state => (
+    <li key={state}>
       <button
-        key={state}
         className="state-btn"
         onClick={() => setSelectedState(state)}
         aria-pressed={selectedState === state}
-        role="listitem"
       >
         {state}
       </button>
-    ))
-  )}
-</div>
+    </li>
+  ))}
+</ul>
+
 
 
             {selectedState && (
@@ -744,6 +740,13 @@ export default function SpringLocationsExplorer() {
           gap: 1rem;
           margin-top: 1.5rem;
         }
+          .state-btn,
+.view-map-btn {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 12px 20px; /* or similar */
+}
+
         
         .state-btn {
           padding: 0.8rem 1.8rem;
