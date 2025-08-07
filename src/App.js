@@ -1,10 +1,11 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import Header from './Header/Header';
 import HeroSection from './Hero/Hero';
 import Built from './built/built';
 import NextSection from './blackprintEcosystem/blackprintEcosystem';
 import Vision from './vision/vision';
-import Directory from './built/Directory/directory';
+import Directory from './built/Directory/directory'; // Desktop version
+import Tabdirectory from './built/Directory/tabdirectory';
 import Mission from './mission/mission';
 import Footer from './Footer/footer';
 import FAQs from './faqs/faqs';
@@ -15,6 +16,24 @@ function App() {
   const nextSectionRef = useRef();
   const builtRef = useRef();
   const clockRef = useRef();
+  const [isMobileDevice, setIsMobileDevice] = useState(false);
+
+  // Check device type on mount and resize
+  useEffect(() => {
+    const checkDevice = () => {
+      // You can adjust this threshold as needed (768px is common for tablets)
+      setIsMobileDevice(window.innerWidth < 1024);
+    };
+
+    // Initial check
+    checkDevice();
+
+    // Add event listener for window resize
+    window.addEventListener('resize', checkDevice);
+
+    // Cleanup
+    return () => window.removeEventListener('resize', checkDevice);
+  }, []);
 
   const handleScrollComplete = () => {
     nextSectionRef.current?.scrollIntoView({
@@ -61,7 +80,10 @@ function App() {
       </div>
 
       <Vision />
-      <Directory />
+      
+      {/* Render appropriate directory based on device */}
+      {isMobileDevice ? <Tabdirectory /> : <Directory />}
+      
       <Mission />
       <FAQs />
       <Footer />
