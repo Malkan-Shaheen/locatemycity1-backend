@@ -1545,18 +1545,14 @@ h3 {
 /* --- Rock cities --- */
 
 :root {
-  --primary-blue: #4682B4;
-  /* Steel Blue */
-  --sky-blue: #87CEEB;
-  /* Sky Blue */
-  --powder-blue: #B0E0E6;
-  /* Powder Blue */
-  --alice-blue: #F0F8FF;
-  /* Alice Blue */
-  --dark-blue: #1E4B6B;
-  /* Darker Blue */
-  --text-color: #4a4a4a;
+  --primary-blue: #2E5F8A; /* Darker Steel Blue - better contrast */
+  --sky-blue: #5EB3D9;     /* Darker Sky Blue for white text readability */
+  --powder-blue: #8DBFD0;  /* Slightly darker powder blue */
+  --alice-blue: #E6F2FA;   /* Slightly darker but still soft */
+  --dark-blue: #1E4B6B;    /* Keep - already great contrast */
+  --text-color: #333333;   /* Darker text for readability */
 }
+
 
 body {
   font-family: 'Poppins', sans-serif;
