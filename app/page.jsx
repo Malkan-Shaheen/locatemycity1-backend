@@ -15,6 +15,7 @@ export default function Home() {
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="icon" type="image/png" href="/images/cityfav.png" />
+        <meta name="google-site-verification" content="gnOkROJ3NqrSdmmHd5CCq3mw9oUug92Cm64OoO0BPRg" />
         <link
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
