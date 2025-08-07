@@ -19,12 +19,7 @@ export default function Footer() {
         <div className="footer-section">
           <h4 className="footer-heading">Quick Links</h4>
           <ul className="footer-links">
-            <li>
-  <Link href="/" passHref legacyBehavior>
-    <a aria-label="Go to Home page">Home</a>
-  </Link>
-</li>
-
+            <li><Link href="/">Home</Link></li>
             <li><Link href="/about">About Us</Link></li>
             <li><Link href="/faq">FAQ</Link></li>
             <li><Link href="/contact">Contact</Link></li>
