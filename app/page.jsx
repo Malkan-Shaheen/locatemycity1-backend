@@ -59,20 +59,6 @@ export default function Home() {
         />
       </Head>
 
-      {/* ✅ Google Analytics Scripts */}
-      <Script
-        src="https://www.googletagmanager.com/gtag/js?id=G-MZ2JZL4WKS"
-        strategy="afterInteractive"
-      />
-      <Script id="google-analytics" strategy="afterInteractive">
-        {`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-MZ2JZL4WKS');
-        `}
-      </Script>
-
       <main>
         <Header />
         <Hero />
