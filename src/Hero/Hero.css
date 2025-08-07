@@ -808,3 +808,11 @@ background: linear-gradient(to bottom, #E4C658 0%, #9E6A17 100%);
     }
   }
 }
+@media (max-width: 480px) {
+  .flipCard span,
+  .upperCard span,
+  .lowerCard span {
+    display: flex !important;
+    font-size: 28px !important; /* smaller than 40px */
+  }
+}

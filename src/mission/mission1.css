@@ -1,0 +1,123 @@
+/* MerchSection-mobile.css - For small screens only */
+
+@media screen and (max-width: 1023px) {
+  .merch-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    margin-top: 40px;
+  }
+
+  .merch-card {
+    width: 100%;
+    max-width: 364.44px;
+    height: auto;
+    margin-bottom: 0;
+  }
+
+  .merch-image {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1/1;
+    max-height: none !important;
+  }
+
+  /* Maintain all other styles */
+  .merch-section {
+    background-color: transparent;
+    position: relative;
+    color: white;
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+    overflow: hidden;
+  }
+
+  .merch-heading h2 {
+    font-size: 24px;
+    margin-top: -350px;
+  }
+
+  .merch-heading p {
+    display: none;
+  }
+
+  .merch-heading span {
+    display: none;
+  }
+
+  .merch-info,
+  .merch-descr,
+  .arrow-icon {
+    /* Maintain all original styles */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: -4%;
+    transition: all 0.3s ease;
+  }
+
+  /* Maintain hover effects */
+  .merch-card.hovered .merch-descr {
+    background: linear-gradient(90deg, #CD9E3C 0%, #BD8A2D 100%);
+    color: #000;
+    border-radius: 12px;
+    padding: 12px 20px;
+    font-size: 25px;
+    justify-content: space-between;
+  }
+
+  .merch-card.hovered .arrow-icon {
+    opacity: 0;
+  }
+
+  .merch-card.hovered .merch-info h3 {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  .merch-card.hovered .merch-image {
+    transform: translateY(12px);
+  }
+
+  /* Maintain background effects */
+  .merch-section::before,
+  .merch-section::after {
+    content: '';
+    position: absolute;
+    width: 440.25px;
+    height: 440.25px;
+    opacity: 0.25;
+    filter: blur(120px);
+    mix-blend-mode: screen;
+    background: linear-gradient(90deg, #CD9E3C 0%, #BD8A2D 100%);
+    border-radius: 50%;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  .merch-section::before {
+    top: 200px;
+    height: 400px !important;
+    left: -150px;
+  }
+
+  .merch-section::after {
+    bottom: 120px;
+    right: -150px;
+  }
+}
+
+/* For very small screens (optional extra adjustments) */
+@media screen and (max-width: 480px) {
+  .merch-heading h2 {
+    font-size: 20px;
+    margin-top: -200px; /* Adjusted for better mobile viewing */
+  }
+  
+  .merch-grid {
+    gap: 20px;
+  }
+}

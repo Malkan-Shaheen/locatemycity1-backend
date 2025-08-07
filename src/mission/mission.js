@@ -1,6 +1,7 @@
 // MerchSection.jsx
-import React, { useState } from 'react';
-import './mission.css';
+import React, { useState, useEffect } from 'react';
+import './mission.css'; // Default desktop styles
+import './mission1.css'; // Mobile styles
 import hoodie from './../images/hoodie.png';
 import hoodieHover from './../images/Hhoodie.png';
 import journal from './../images/book.png';
@@ -35,18 +36,35 @@ const products = [
 
 export default function Mission() {
   const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth <= 1023);
+    };
+
+    // Initial check
+    checkScreenSize();
+
+    // Add event listener
+    window.addEventListener('resize', checkScreenSize);
+
+    // Clean up
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
 
   return (
-    <section className="merch-section">
+    <section className={`merch-section ${isMobile ? 'mobile-layout' : 'desktop-layout'}`}>
       <div className="merch-heading">
-         <div className="merch-text-wrapper">
-        <h2>Wear The Mission. Fuel The Movement</h2>
-        <p>
-          This isn't just merch — it's a message. Every hoodie, journal, and tee
-          supports the legacy we’re building together.<br />
-          The Leniage8185 brand is where culture meets purpose.
-        </p>
-        <span><em>Shop With Meaning. Invest In The Movement</em></span></div>
+        <div className="merch-text-wrapper">
+          <h2>Wear The Mission. Fuel The Movement</h2>
+          <p>
+            This isn't just merch — it's a message. Every hoodie, journal, and tee
+            supports the legacy we're building together.<br />
+            The Leniage8185 brand is where culture meets purpose.
+          </p>
+          <span><em>Shop With Meaning. Invest In The Movement</em></span>
+        </div>
       </div>
 
       <div className="merch-grid">
