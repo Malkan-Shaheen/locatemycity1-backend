@@ -3396,7 +3396,7 @@ body {
         }
         
         .state-group-title {
-          color: var(--dark-color);
+          color: black;
           margin-top: 0;
           padding-bottom: 0.5rem;
           border-bottom: 2px solid var(--accent-color);
@@ -3437,8 +3437,9 @@ body {
         }
         
         .view-map-btn {
-          background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+          background: var(--dark-color);
           color: white;
+          font-weight: 500;
           border: none;
             padding: 12px 20px;    /* Larger padding */
   min-height: 48px;      /* Minimum touch target height */
