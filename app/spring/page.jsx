@@ -55,30 +55,31 @@ export default function SpringLocationsExplorer() {
     loadData();
   }, []);
 
-  const commonNames = () => {
-    const nameCounts = {};
-    allSprings.forEach(loc => {
-      nameCounts[loc.name] = (nameCounts[loc.name] || 0) + 1;
-    });
-    return Object.entries(nameCounts).sort((a, b) => b[1] - a[1]).slice(0, 4);
-  };
-
-  const statesMost = () => {
-    const stateCounts = {};
-    allSprings.forEach(loc => {
-      stateCounts[loc.state] = (stateCounts[loc.state] || 0) + 1;
-    });
-    return Object.entries(stateCounts).sort((a, b) => b[1] - a[1]).slice(0, 4);
-  };
+ const commonNames = () => {
+  if (!allSprings.length) return [];
+  const nameCounts = {};
+  allSprings.forEach(loc => {
+    nameCounts[loc.name] = (nameCounts[loc.name] || 0) + 1;
+  });
+  return Object.entries(nameCounts).sort((a, b) => b[1] - a[1]).slice(0, 4);
+};
+const statesMost = () => {
+  if (!allSprings.length) return [];
+  const stateCounts = {};
+  allSprings.forEach(loc => {
+    stateCounts[loc.state] = (stateCounts[loc.state] || 0) + 1;
+  });
+  return Object.entries(stateCounts).sort((a, b) => b[1] - a[1]).slice(0, 4);
+};
 
   const uniqueStates = [...new Set(allSprings.map(l => l.state))].sort();
   const stateLocations = selectedState ? allSprings.filter(l => l.state === selectedState) : [];
 
   const locationsByState = allSprings.reduce((acc, loc) => {
-    if (!acc[loc.state]) acc[loc.state] = [];
-    acc[loc.state].push(loc);
-    return acc;
-  }, {});
+  if (!acc[loc.state]) acc[loc.state] = [];
+  acc[loc.state].push(loc);
+  return acc;
+}, {});
 
   const focusOnLocation = (lat, lon, name) => {
     // Create a clean URL path
