@@ -211,7 +211,7 @@ const Header = () => {
         <div className="container">
           <div className="header-content">
             <div className="logo">
-              <img src="logo.png" alt="Logo" className="logo-image" />
+              <img src="/Images/logo.png" alt="Logo" className="logo-image" />
               <span>Your Logo</span>
             </div>
 
