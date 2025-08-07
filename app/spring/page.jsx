@@ -13,11 +13,13 @@ export default function SpringLocationsExplorer() {
   const [allSprings, setAllSprings] = useState([]);
   const [selectedState, setSelectedState] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
- useEffect(() => {
+  useEffect(() => {
     const loadData = async () => {
       try {
         setIsLoading(true);
+        setError(null);
         const backendUrl = 'https://locate-my-city-backend-production-e8a2.up.railway.app';
         console.log("Fetching from:", backendUrl);
 
@@ -33,6 +35,7 @@ export default function SpringLocationsExplorer() {
         setAllSprings(data);
       } catch (error) {
         console.error('Error loading spring data:', error);
+        setError(error.message);
         // Fallback data if API fails
         setAllSprings([
           {
@@ -77,229 +80,269 @@ export default function SpringLocationsExplorer() {
   }, {});
 
   const focusOnLocation = (lat, lon, name) => {
-  // Create a clean URL path
-  const cleanName = name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-  const cleanUrl = `/location-from-me/how-far-is-${cleanName}-from-me`;
-  
-  // Create a hidden form to submit the data
-  const form = document.createElement('form');
-  form.method = 'POST';
-  form.action = cleanUrl;
-  form.target = '_blank';
-  form.style.display = 'none';
+    // Create a clean URL path
+    const cleanName = name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    const cleanUrl = `/location-from-me/how-far-is-${cleanName}-from-me`;
+    
+    // Create a hidden form to submit the data
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = cleanUrl;
+    form.target = '_blank';
+    form.style.display = 'none';
 
-  // Add latitude and longitude as hidden inputs
-  const addHiddenField = (name, value) => {
-    const input = document.createElement('input');
-    input.type = 'hidden';
-    input.name = name;
-    input.value = value;
-    form.appendChild(input);
+    // Add latitude and longitude as hidden inputs
+    const addHiddenField = (name, value) => {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = name;
+      input.value = value;
+      form.appendChild(input);
+    };
+
+    addHiddenField('lat', lat);
+    addHiddenField('lon', lon);
+
+    // Add form to DOM and submit
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
   };
-
-  addHiddenField('lat', lat);
-  addHiddenField('lon', lon);
-
-  // Add form to DOM and submit
-  document.body.appendChild(form);
-  form.submit();
-  document.body.removeChild(form);
-};
 
   return (
     <>
       <Head>
-        <title>LocateMyCity</title>
+        <title>Spring Locations Explorer | LocateMyCity</title>
+        <meta name="description" content="Discover unique U.S. cities named after natural springs with interactive map and state-by-state listings" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
       </Head>
 
-      <header className="main-header">
+      <a href="#main-content" className="skip-link">Skip to main content</a>
+
+      <header className="main-header" role="banner">
         <div className="header-container">
-          {/* Floating circles */}
-          <div className="floating-circle" style={{ width: '80px', height: '80px', top: '20%', left: '10%' }}></div>
-          <div className="floating-circle" style={{ width: '120px', height: '120px', bottom: '-30%', right: '15%' }}></div>
-          <div className="floating-circle" style={{ width: '60px', height: '60px', top: '50%', left: '80%' }}></div>
+          {/* Floating circles - decorative only */}
+          <div className="floating-circle" style={{ width: '80px', height: '80px', top: '20%', left: '10%' }} aria-hidden="true"></div>
+          <div className="floating-circle" style={{ width: '120px', height: '120px', bottom: '-30%', right: '15%' }} aria-hidden="true"></div>
+          <div className="floating-circle" style={{ width: '60px', height: '60px', top: '50%', left: '80%' }} aria-hidden="true"></div>
           
           <div className="header-content">
             <div className="logo">
               <Image 
                 src="/Images/cityfav.png" 
-                alt="Logo" 
+                alt="LocateMyCity Logo" 
                 width={50} 
                 height={50} 
                 className="logo-image"
                 priority
               />
-              LocateMyCity
+              <span>LocateMyCity</span>
             </div>
-            <nav>
-              <a href="\" title="Home">HOME</a>
-              <Link href="/about">ABOUT US</Link>
-              <Link href="/contact">CONTACT US</Link>
+            <nav role="navigation" aria-label="Main navigation">
+              <a href="\" title="Home" aria-current="page">HOME</a>
+              <Link href="/about" passHref legacyBehavior>
+                <a>ABOUT US</a>
+              </Link>
+              <Link href="/contact" passHref legacyBehavior>
+                <a>CONTACT US</a>
+              </Link>
             </nav>
           </div>
         </div>
       </header>
-      <Head>
-        <title>Spring Locations Explorer</title>
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-      </Head>
 
-      <section className="page-hero">
-        <div className="container">
-          <h1>Cities with "Spring" in the Name</h1>
-          <p className="subtitle">Discover unique U.S. cities named after natural spring</p>
-        </div>
-      </section>
+      <main id="main-content">
+        <section className="page-hero" aria-labelledby="page-title">
+          <div className="container">
+            <h1 id="page-title">Cities with "Spring" in the Name</h1>
+            <p className="subtitle">Discover unique U.S. cities named after natural springs</p>
+          </div>
+        </section>
 
+        {error && (
+          <div role="alert" className="error-alert">
+            Error loading data: {error}. Showing sample data instead.
+          </div>
+        )}
 
-      <section className="stats-section">
-        <div className="container">
-          <div className="stats-container">
-            <div className="stat-card">
-              <div className="stat-card-content">
-                <h3 className="stat-card-title">Most Common Names</h3>
-                <ul className="stat-card-list">
-                  {isLoading ? (
-                    <div className="loading-container"><div className="spinner"></div></div>
-                  ) : (
-                    commonNames().map(([name, count]) => (
-                      <li key={name} className="stat-card-item">
-                        <span>{name}</span> <strong>{count} locations</strong>
-                      </li>
-                    ))
-                  )}
-                </ul>
+        <section className="stats-section" aria-labelledby="stats-heading">
+          <div className="container">
+            <h2 id="stats-heading" className="sr-only">Statistics about spring locations</h2>
+            <div className="stats-container">
+              <div className="stat-card">
+                <div className="stat-card-content">
+                  <h3 className="stat-card-title">Most Common Names</h3>
+                  <ul className="stat-card-list" role="list">
+                    {isLoading ? (
+                      <div className="loading-container" role="status" aria-busy="true">
+                        <div className="spinner" aria-hidden="true"></div>
+                        <span className="sr-only">Loading most common names...</span>
+                      </div>
+                    ) : (
+                      commonNames().map(([name, count]) => (
+                        <li key={name} className="stat-card-item" role="listitem">
+                          <span>{name}</span> <strong>{count} locations</strong>
+                        </li>
+                      ))
+                    )}
+                  </ul>
+                </div>
               </div>
-            </div>
 
-            <div className="stat-card">
-              <div className="stat-card-content">
-                <h3 className="stat-card-title">States with Most</h3>
-                <ul className="stat-card-list">
-                  {isLoading ? (
-                    <div className="loading-container"><div className="spinner"></div></div>
-                  ) : (
-                    statesMost().map(([state, count]) => (
-                      <li key={state} className="stat-card-item">
-                        <span>{state}</span> <strong>{count} cities</strong>
-                      </li>
-                    ))
-                  )}
-                </ul>
+              <div className="stat-card">
+                <div className="stat-card-content">
+                  <h3 className="stat-card-title">States with Most</h3>
+                  <ul className="stat-card-list" role="list">
+                    {isLoading ? (
+                      <div className="loading-container" role="status" aria-busy="true">
+                        <div className="spinner" aria-hidden="true"></div>
+                        <span className="sr-only">Loading states with most springs...</span>
+                      </div>
+                    ) : (
+                      statesMost().map(([state, count]) => (
+                        <li key={state} className="stat-card-item" role="listitem">
+                          <span>{state}</span> <strong>{count} cities</strong>
+                        </li>
+                      ))
+                    )}
+                  </ul>
+                </div>
               </div>
-            </div>
 
-            <div className="stat-card">
-              <div className="stat-card-content">
-                <h3 className="stat-card-title">Notable Locations</h3>
-                <ul className="stat-card-list">
-                  {isLoading ? (
-                    <div className="loading-container"><div className="spinner"></div></div>
-                  ) : (
-                    [
-                      { name: "Hot Springs, AR", description: "Historic Spa Town" },
-                      { name: "Sulphur Springs, TX", description: "Famous for minerals" },
-                      { name: "Palm Springs, CA", description: "Desert resort" },
-                      { name: "Coral Springs, FL", description: "Master-planned city" }
-                    ].map(location => (
-                      <li key={location.name} className="stat-card-item">
-                        <span>{location.name}</span> <strong>{location.description}</strong>
-                      </li>
-                    ))
-                  )}
-                </ul>
+              <div className="stat-card">
+                <div className="stat-card-content">
+                  <h3 className="stat-card-title">Notable Locations</h3>
+                  <ul className="stat-card-list" role="list">
+                    {isLoading ? (
+                      <div className="loading-container" role="status" aria-busy="true">
+                        <div className="spinner" aria-hidden="true"></div>
+                        <span className="sr-only">Loading notable locations...</span>
+                      </div>
+                    ) : (
+                      [
+                        { name: "Hot Springs, AR", description: "Historic Spa Town" },
+                        { name: "Sulphur Springs, TX", description: "Famous for minerals" },
+                        { name: "Palm Springs, CA", description: "Desert resort" },
+                        { name: "Coral Springs, FL", description: "Master-planned city" }
+                      ].map(location => (
+                        <li key={location.name} className="stat-card-item" role="listitem">
+                          <span>{location.name}</span> <strong>{location.description}</strong>
+                        </li>
+                      ))
+                    )}
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section className="map-section">
-        <div className="container">
-          <h2 className="section-title">Interactive Map</h2>
-          {isLoading ? (
-            <div className="loading-container"><div className="spinner"></div></div>
-          ) : (
-            <MapWithNoSSR locations={allSprings} />
-          )}
-        </div>
-      </section>
-
-      <section className="states-section">
-        <div className="container">
-          <h2 className="section-title">Browse by State</h2>
-          <div className="states-container">
+        <section className="map-section" aria-labelledby="map-heading">
+          <div className="container">
+            <h2 id="map-heading" className="section-title">Interactive Map</h2>
             {isLoading ? (
-              <div className="loading-container"><div className="spinner"></div></div>
+              <div className="loading-container" role="status" aria-busy="true">
+                <div className="spinner" aria-hidden="true"></div>
+                <span className="sr-only">Loading map...</span>
+              </div>
             ) : (
-              uniqueStates.map(state => (
-                <button key={state} className="state-btn" onClick={() => setSelectedState(state)}>
-                  <span>{state}</span>
-                </button>
+              <MapWithNoSSR locations={allSprings} />
+            )}
+          </div>
+        </section>
+
+        <section className="states-section" aria-labelledby="states-heading">
+          <div className="container">
+            <h2 id="states-heading" className="section-title">Browse by State</h2>
+            <div className="states-container" role="list">
+              {isLoading ? (
+                <div className="loading-container" role="status" aria-busy="true">
+                  <div className="spinner" aria-hidden="true"></div>
+                  <span className="sr-only">Loading states...</span>
+                </div>
+              ) : (
+                uniqueStates.map(state => (
+                  <button 
+                    key={state} 
+                    className="state-btn" 
+                    onClick={() => setSelectedState(state)}
+                    role="listitem"
+                    aria-pressed={selectedState === state}
+                  >
+                    <span>{state}</span>
+                  </button>
+                ))
+              )}
+            </div>
+            {selectedState && (
+              <div id="state-countries-container" aria-live="polite" style={{ marginTop: '2rem' }}>
+                <div className="state-group">
+                  <h3 className="state-group-title">{selectedState}</h3>
+                  <div className="countries-list" role="list">
+                    {stateLocations.map(loc => (
+                      <div 
+                        key={`${loc.name}-${loc.lat}-${loc.lon}`} 
+                        className="country-item"
+                        role="listitem"
+                      >
+                        <span className="country-name">{loc.name}</span>
+                        <button 
+                          className="view-map-btn" 
+                          onClick={() => focusOnLocation(loc.lat, loc.lon, loc.name)}
+                          aria-label={`View ${loc.name} on map`}
+                          style={{ width: '120px' }}
+                        >
+                          View on Map
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </section>
+
+        <section className="countries-section" aria-labelledby="all-locations-heading">
+          <div className="container">
+            <h2 id="all-locations-heading" className="section-title">All Locations by State</h2>
+            {isLoading ? (
+              <div className="loading-container" role="status" aria-busy="true">
+                <div className="spinner" aria-hidden="true"></div>
+                <span className="sr-only">Loading all locations...</span>
+              </div>
+            ) : (
+              Object.keys(locationsByState).sort().map(state => (
+                <div key={state} className="state-group">
+                  <h3 className="state-group-title">{state}</h3>
+                  <div className="countries-list" role="list">
+                    {locationsByState[state].map(loc => (
+                      <div 
+                        key={`${loc.name}-${loc.lat}-${loc.lon}-all`} 
+                        className="country-item"
+                        role="listitem"
+                      >
+                        <span className="country-name">{loc.name}</span>
+                        <button 
+                          className="view-map-btn" 
+                          onClick={() => focusOnLocation(loc.lat, loc.lon, loc.name)}
+                          aria-label={`View ${loc.name} on map`}
+                          style={{ width: '120px' }}
+                        >
+                          View on Map
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               ))
             )}
           </div>
-          {selectedState && (
-            <div id="state-countries-container" style={{ marginTop: '2rem' }}>
-              <div className="state-group">
-                <h3 className="state-group-title">{selectedState}</h3>
-                <div className="countries-list">
-                  {stateLocations.map(loc => (
-                    <div key={`${loc.name}-${loc.lat}-${loc.lon}`} className="country-item">
-                      <span className="country-name">{loc.name}</span>
-                       <button 
-  className="view-map-btn" 
-  onClick={() => focusOnLocation(loc.lat, loc.lon, loc.name)}
-  style={{ width: '120px' }}
->
-  View on Map
-</button>
-
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </section>
-
-      <section className="countries-section">
-        <div className="container">
-          <h2 className="section-title">All Locations by State</h2>
-          {isLoading ? (
-            <div className="loading-container"><div className="spinner"></div></div>
-          ) : (
-            Object.keys(locationsByState).sort().map(state => (
-              <div key={state} className="state-group">
-                <h3 className="state-group-title">{state}</h3>
-                <div className="countries-list">
-                  {locationsByState[state].map(loc => (
-                    <div key={`${loc.name}-${loc.lat}-${loc.lon}-all`} className="country-item">
-                      <span className="country-name">{loc.name}</span>
-                      <button 
-  className="view-map-btn" 
-  onClick={() => focusOnLocation(loc.lat, loc.lon, loc.name)}
-  style={{ width: '120px' }}
->
-  View on Map
-</button>
-
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-        <Footer />
-      </section>
-    
-
+          <Footer />
+        </section>
+      </main>
 
       <style jsx global>{`
         :root {
@@ -309,10 +352,10 @@ export default function SpringLocationsExplorer() {
           --light-color: #F0F8FF; /* Alice Blue */
           --dark-color: #1E4B6B; /* Darker Blue */
           --text-color: #4a4a4a;
+          --error-color: #d32f2f;
         }
         
         body {
-         
           font-family: 'Poppins', sans-serif;
           margin: 0;
           padding: 0;
@@ -320,7 +363,45 @@ export default function SpringLocationsExplorer() {
           background-color: var(--secondary-color);
           line-height: 1.6;
         }
-          .main-header {
+
+        .skip-link {
+          position: absolute;
+          top: -40px;
+          left: 0;
+          background: var(--primary-color);
+          color: white;
+          padding: 8px;
+          z-index: 100;
+          transition: top 0.3s;
+        }
+
+        .skip-link:focus {
+          top: 0;
+        }
+
+        .error-alert {
+          background-color: #ffebee;
+          color: var(--error-color);
+          padding: 1rem;
+          text-align: center;
+          border-left: 4px solid var(--error-color);
+          margin: 1rem auto;
+          max-width: 1200px;
+        }
+
+        .sr-only {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          padding: 0;
+          margin: -1px;
+          overflow: hidden;
+          clip: rect(0, 0, 0, 0);
+          white-space: nowrap;
+          border-width: 0;
+        }
+        
+        .main-header {
           width: 100%;
           background: linear-gradient(135deg, #6bb9f0 0%, #3498db);
           position: fixed;
@@ -337,7 +418,6 @@ export default function SpringLocationsExplorer() {
           padding: 1.5rem 2rem;
         }
         
-        /* Rest of your header styles remain the same */
         .header-content {
           display: flex;
           justify-content: space-between;
@@ -359,12 +439,12 @@ export default function SpringLocationsExplorer() {
           -webkit-text-fill-color: transparent;
           text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-          .logo-image {
+        
+        .logo-image {
           border-radius: 50%;
           filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
         }
 
-        /* Navigation styles */
         nav {
           display: flex;
           gap: 20px;
@@ -413,78 +493,54 @@ export default function SpringLocationsExplorer() {
         }
 
         @media (min-width: 1440px) {
-  .container {
-    max-width: 1400px;
-    padding: 2rem 3rem;
-  }
+          .container {
+            max-width: 1400px;
+            padding: 2rem 3rem;
+          }
 
-  .logo {
-    font-size: 2.2rem;
-    gap: 20px;
-  }
+          .logo {
+            font-size: 2.2rem;
+            gap: 20px;
+          }
 
-  .logo-image {
-    width: 60px !important;
-    height: 60px !important;
-  }
+          .logo-image {
+            width: 60px !important;
+            height: 60px !important;
+          }
 
-  nav a {
-    font-size: 1.05rem;
-    padding: 14px 30px;
-    min-width: 180px;
-    height: 55px;
-  }
-}
+          nav a {
+            font-size: 1.05rem;
+            padding: 14px 30px;
+            min-width: 180px;
+            height: 55px;
+          }
+        }
 
-@media (min-width: 1920px) {
-  .container {
-    max-width: 1600px;
-    padding: 2.5rem 4rem;
-  }
+        @media (min-width: 1920px) {
+          .container {
+            max-width: 1600px;
+            padding: 2.5rem 4rem;
+          }
 
-  .logo {
-    font-size: 2.5rem;
-    gap: 25px;
-  }
+          .logo {
+            font-size: 2.5rem;
+            gap: 25px;
+          }
 
-  .logo-image {
-    width: 70px !important;
-    height: 70px !important;
-  }
+          .logo-image {
+            width: 70px !important;
+            height: 70px !important;
+          }
 
-  nav a {
-    font-size: 1.15rem;
-    padding: 16px 35px;
-    min-width: 200px;
-    height: 60px;
-  }
-}
+          nav a {
+            font-size: 1.15rem;
+            padding: 16px 35px;
+            min-width: 200px;
+            height: 60px;
+          }
+        }
 
         /* Floating circles */
-        header::before {
-          content: "";
-          position: absolute;
-          top: -50px;
-          left: -50px;
-          width: 150px;
-          height: 150px;
-          background: rgba(255,255,255,0.1);
-          border-radius: 50%;
-          z-index: -1;
-        }
-
-        header::after {
-          content: "";
-          position: absolute;
-          bottom: -80px;
-          right: -60px;
-          width: 200px;
-          height: 200px;
-          background: rgba(255,255,255,0.08);
-          border-radius: 50%;
-          z-index: -1;
-        }
-
         .floating-circle {
           position: absolute;
           background: rgba(255,255,255,0.05);
@@ -497,6 +553,12 @@ export default function SpringLocationsExplorer() {
           0% { transform: translateY(0) rotate(0deg); }
           50% { transform: translateY(-20px) rotate(180deg); }
           100% { transform: translateY(0) rotate(360deg); }
+        }
+
+        @media (prefers-reduced-motion) {
+          .floating-circle {
+            animation: none;
+          }
         }
 
         /* Responsive styles */
@@ -521,8 +583,9 @@ export default function SpringLocationsExplorer() {
           .logo {
             font-size: 1.5rem;
           }
-      }
-          .page-hero {
+        }
+        
+        .page-hero {
           color: white;
           padding: 3rem 0;
           text-align: center;
@@ -531,7 +594,6 @@ export default function SpringLocationsExplorer() {
           overflow: hidden;
           margin-top: 80px;
           background: linear-gradient(135deg, #6bb9f0 0%, #3498db);
-
         }
 
         .page-hero::before {
@@ -572,30 +634,12 @@ export default function SpringLocationsExplorer() {
           font-weight: 300;
           position: relative;
           z-index: 1;
-      }
+        }
         
         .container {
           max-width: 1200px;
           margin: 0 auto;
           padding: 0 20px;
-        }
-        
-        h1 {
-          margin: 0;
-          font-size: 2.8rem;
-          font-weight: 700;
-          position: relative;
-          z-index: 1;
-          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        
-        .subtitle {
-          font-size: 1.3rem;
-          opacity: 0.9;
-          margin-top: 0.5rem;
-          font-weight: 300;
-          position: relative;
-          z-index: 1;
         }
         
         /* Stats Cards Section */
@@ -725,6 +769,8 @@ export default function SpringLocationsExplorer() {
           box-shadow: 0 4px 10px rgba(70, 130, 180, 0.1);
           position: relative;
           overflow: hidden;
+          min-width: 44px;
+          min-height: 44px;
         }
         
         .state-btn::before {
@@ -748,6 +794,16 @@ export default function SpringLocationsExplorer() {
         
         .state-btn:hover::before {
           opacity: 1;
+        }
+        
+        .state-btn:focus {
+          outline: 3px solid var(--primary-color);
+          outline-offset: 3px;
+        }
+        
+        .state-btn[aria-pressed="true"] {
+          background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+          color: white;
         }
         
         .state-btn span {
@@ -792,14 +848,14 @@ export default function SpringLocationsExplorer() {
         }
         
         .country-item {
-         background: var(--light-color);
-  padding: 1rem 1.2rem;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;  /* Center align items horizontally */
-  transition: all 0.3s ease;
-  text-align: center;   /* Center the text */
+          background: var(--light-color);
+          padding: 1rem 1.2rem;
+          border-radius: 8px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          transition: all 0.3s ease;
+          text-align: center;
         }
         
         .country-item:hover {
@@ -810,28 +866,31 @@ export default function SpringLocationsExplorer() {
         
         .country-name {
           font-weight: 500;
-  color: var(--dark-color);
-  margin-bottom: 0.5rem;
-  white-space: normal;
-  word-break: break-word;
+          color: var(--dark-color);
+          margin-bottom: 0.5rem;
+          white-space: normal;
+          word-break: break-word;
         }
         
         .view-map-btn {
           background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-  color: white;
-  border: none;
-  padding: 0.5rem 1.2rem;
-  border-radius: 20px;
-  cursor: pointer;
-  font-size: 0.85rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 5px rgba(70, 130, 180, 0.2);
-  margin-top: 0.5rem;
+          color: white;
+          border: none;
+          padding: 0.5rem 1.2rem;
+          border-radius: 20px;
+          cursor: pointer;
+          font-size: 0.85rem;
+          transition: all 0.3s ease;
+          box-shadow: 0 2px 5px rgba(70, 130, 180, 0.2);
+          margin-top: 0.5rem;
+          min-width: 44px;
+          min-height: 44px;
         }
         
-        .view-map-btn:hover {
+        .view-map-btn:hover, .view-map-btn:focus {
           transform: translateY(-2px);
           box-shadow: 0 5px 10px rgba(70, 130, 180, 0.3);
+          outline: none;
         }
         
         /* Loading Spinner */
@@ -853,17 +912,6 @@ export default function SpringLocationsExplorer() {
           display: flex;
           justify-content: center;
           padding: 2rem;
-        }
-        
-        /* Pulse Animation */
-        @keyframes pulse {
-          0% { transform: scale(1); }
-          50% { transform: scale(1.05); }
-          100% { transform: scale(1); }
-        }
-        
-        .pulse {
-          animation: pulse 2s infinite;
         }
         
         /* Responsive */
