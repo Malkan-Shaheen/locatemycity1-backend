@@ -20,7 +20,7 @@ useEffect(() => {
   const loadLocationData = async () => {
     try {
       setIsDataLoading(true);
-      const backendUrl = 'https://backend-production-cfe6.up.railway.app';
+      const backendUrl = 'https://locate-my-city-backend-production-e8a2.up.railway.app';
       console.log("Fetching from:", backendUrl);
 
       const response = await fetch(`${backendUrl}/api/locations`);
@@ -146,7 +146,7 @@ const focusOnMapLocation = (lat, lon, name) => {
       <section className="hero-banner">
         <div className="content-container">
           <h1 className="main-heading">Cities with "Rock" in the Name</h1>
-          <p className="hero-subtitle">Discover unique U.S. locations with "Rock" in their name</p>
+          <p className="hero-subtitle">Discover unique U.S. cities celebrating America's geological heritage</p>
         </div>
       </section>
 
