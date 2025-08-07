@@ -6,7 +6,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import Footer from '../../components/Footer'
 
-
 // Dynamically import Leaflet
 const MapWithNoSSR = dynamic(() => import('../../components/MapComponent'), { ssr: false });
 
@@ -17,27 +16,40 @@ export default function SpringLocationsExplorer() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    console.log('Component mounted, starting data load');
     const loadData = async () => {
       try {
+        console.log('Starting data fetch');
         setIsLoading(true);
         setError(null);
         const backendUrl = 'https://locate-my-city-backend-production-e8a2.up.railway.app';
         console.log("Fetching from:", backendUrl);
 
+        const startTime = performance.now();
         const response = await fetch(`${backendUrl}/api/springs/flat`);
+        const endTime = performance.now();
+        console.log(`Fetch completed in ${(endTime - startTime).toFixed(2)}ms`);
         console.log("Response status:", response.status);
 
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          const errorText = await response.text();
+          console.error('Fetch error details:', errorText);
+          throw new Error(`HTTP error! status: ${response.status}, details: ${errorText}`);
         }
 
         const data = await response.json();
-        console.log("Fetched data:", data);
+        console.log("Fetched data count:", data.length);
+        console.log("First 5 items:", data.slice(0, 5));
         setAllSprings(data);
       } catch (error) {
-        console.error('Error loading spring data:', error);
+        console.error('Full error loading spring data:', {
+          message: error.message,
+          stack: error.stack,
+          name: error.name
+        });
         setError(error.message);
         // Fallback data if API fails
+        console.warn('Using fallback data due to error');
         setAllSprings([
           {
             name: "Blue Springs",
@@ -48,6 +60,7 @@ export default function SpringLocationsExplorer() {
           }
         ]);
       } finally {
+        console.log('Data load completed, setting loading to false');
         setIsLoading(false);
       }
     };
@@ -55,61 +68,86 @@ export default function SpringLocationsExplorer() {
     loadData();
   }, []);
 
- const commonNames = () => {
-  if (!allSprings.length) return [];
+  const commonNames = useMemo(() => {
+  console.log('Recalculating commonNames');
   const nameCounts = {};
   allSprings.forEach(loc => {
+    if (!loc.name) return;
     nameCounts[loc.name] = (nameCounts[loc.name] || 0) + 1;
   });
   return Object.entries(nameCounts).sort((a, b) => b[1] - a[1]).slice(0, 4);
-};
-const statesMost = () => {
-  if (!allSprings.length) return [];
+}, [allSprings]);
+
+const statesMost = useMemo(() => {
+  console.log('Recalculating statesMost');
   const stateCounts = {};
   allSprings.forEach(loc => {
+    if (!loc.state) return;
     stateCounts[loc.state] = (stateCounts[loc.state] || 0) + 1;
   });
   return Object.entries(stateCounts).sort((a, b) => b[1] - a[1]).slice(0, 4);
-};
+}, [allSprings]);
 
   const uniqueStates = [...new Set(allSprings.map(l => l.state))].sort();
+  console.log('Unique states:', uniqueStates);
   const stateLocations = selectedState ? allSprings.filter(l => l.state === selectedState) : [];
+  console.log('State locations for', selectedState, ':', stateLocations.length);
 
-  const locationsByState = allSprings.reduce((acc, loc) => {
-  if (!acc[loc.state]) acc[loc.state] = [];
-  acc[loc.state].push(loc);
-  return acc;
-}, {});
+  const locationsByState = allSprings.reduce((acc, loc, index) => {
+    if (!loc.state) {
+      console.warn(`Location at index ${index} has no state`, loc);
+      return acc;
+    }
+    if (!acc[loc.state]) acc[loc.state] = [];
+    acc[loc.state].push(loc);
+    return acc;
+  }, {});
+
+  console.log('Locations by state count:', Object.keys(locationsByState).length);
 
   const focusOnLocation = (lat, lon, name) => {
-    // Create a clean URL path
-    const cleanName = name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-    const cleanUrl = `/location-from-me/how-far-is-${cleanName}-from-me`;
-    
-    // Create a hidden form to submit the data
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = cleanUrl;
-    form.target = '_blank';
-    form.style.display = 'none';
+    console.log('Focusing on location:', { name, lat, lon });
+    try {
+      // Create a clean URL path
+      const cleanName = name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+      const cleanUrl = `/location-from-me/how-far-is-${cleanName}-from-me`;
+      console.log('Generated clean URL:', cleanUrl);
+      
+      // Create a hidden form to submit the data
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = cleanUrl;
+      form.target = '_blank';
+      form.style.display = 'none';
 
-    // Add latitude and longitude as hidden inputs
-    const addHiddenField = (name, value) => {
-      const input = document.createElement('input');
-      input.type = 'hidden';
-      input.name = name;
-      input.value = value;
-      form.appendChild(input);
-    };
+      // Add latitude and longitude as hidden inputs
+      const addHiddenField = (name, value) => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = name;
+        input.value = value;
+        form.appendChild(input);
+      };
 
-    addHiddenField('lat', lat);
-    addHiddenField('lon', lon);
+      addHiddenField('lat', lat);
+      addHiddenField('lon', lon);
 
-    // Add form to DOM and submit
-    document.body.appendChild(form);
-    form.submit();
-    document.body.removeChild(form);
+      // Add form to DOM and submit
+      document.body.appendChild(form);
+      console.log('Submitting form for location:', name);
+      form.submit();
+      document.body.removeChild(form);
+    } catch (err) {
+      console.error('Error in focusOnLocation:', err);
+    }
   };
+
+  console.log('Rendering component with state:', {
+    isLoading,
+    error,
+    allSpringsCount: allSprings.length,
+    selectedState
+  });
 
   return (
     <>
@@ -120,7 +158,6 @@ const statesMost = () => {
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
       </Head>
-
 
       <header className="main-header" role="banner">
         <div className="header-container">
@@ -143,11 +180,11 @@ const statesMost = () => {
             </div>
             <nav role="navigation" aria-label="Main navigation">
               <a href="\" title="Home" aria-current="page">HOME</a>
-              <Link href="/about" passHref legacyBehavior>
-                <a>ABOUT US</a>
+              <Link href="/about">
+                ABOUT US
               </Link>
-              <Link href="/contact" passHref legacyBehavior>
-                <a>CONTACT US</a>
+              <Link href="/contact">
+                CONTACT US
               </Link>
             </nav>
           </div>
@@ -177,7 +214,7 @@ const statesMost = () => {
                   <h3 className="stat-card-title">Most Common Names</h3>
                   <ul className="stat-card-list" role="list">
                     {isLoading ? (
-                      <div className="loading-container" role="status" aria-busy="true">
+                      <div className="loading-container" role="status" aria-live="polite" aria-busy="true">
                         <div className="spinner" aria-hidden="true"></div>
                         <span className="sr-only">Loading most common names...</span>
                       </div>
@@ -258,22 +295,23 @@ const statesMost = () => {
           <div className="container">
             <h2 id="states-heading" className="section-title">Browse by State</h2>
           
-          
-           <ul className="states-container">
-  {uniqueStates.map(state => (
-    <li key={state}>
-      <button
-        className="state-btn"
-        onClick={() => setSelectedState(state)}
-        aria-pressed={selectedState === state}
-      >
-        {state}
-      </button>
-    </li>
-  ))}
-</ul>
-
-
+            <ul className="states-container">
+              {uniqueStates.map(state => (
+                <li key={state}>
+                  <button
+                    className="state-btn"
+                    onClick={() => {
+                      console.log('State selected:', state);
+                      setSelectedState(state);
+                    }}
+                    aria-pressed={selectedState === state}
+                    aria-label={`Show cities in ${state}`}
+                  >
+                    {state}
+                  </button>
+                </li>
+              ))}
+            </ul>
 
             {selectedState && (
               <div id="state-countries-container" aria-live="polite" style={{ marginTop: '2rem' }}>
@@ -342,9 +380,6 @@ const statesMost = () => {
           <Footer />
         </section>
       </main>
-      
-
-      
     </>
   );
 }
