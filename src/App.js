@@ -3,7 +3,8 @@ import Header from './Header/Header';
 import HeroSection from './Hero/Hero';
 import Built from './built/built';
 import NextSection from './blackprintEcosystem/blackprintEcosystem';
-import Vision from './vision/vision';
+import Vision from './vision/vision';       // Desktop version
+import Vision2 from './vision/vision2';     // Mobile version
 import Directory from './built/Directory/directory'; // Desktop version
 import Tabdirectory from './built/Directory/tabdirectory';
 import Mission from './mission/mission';
@@ -79,7 +80,7 @@ function App() {
         <NextSection />
       </div>
 
-      <Vision />
+      {isMobileDevice ? <Vision2 /> : <Vision />}
       
       {/* Render appropriate directory based on device */}
       {isMobileDevice ? <Tabdirectory /> : <Directory />}

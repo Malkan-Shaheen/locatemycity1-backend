@@ -30,12 +30,13 @@
     color: white;
     text-align: center;
     font-family: 'Poppins', sans-serif;
-    overflow: hidden;
+    overflow: visible;
+
   }
 
   .merch-heading h2 {
     font-size: 24px;
-    margin-top: -350px;
+    margin-top: 50px;
   }
 
   .merch-heading p {
