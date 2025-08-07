@@ -119,7 +119,6 @@ export default function SpringLocationsExplorer() {
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
       </Head>
 
-      <a href="#main-content" className="skip-link">Skip to main content</a>
 
       <header className="main-header" role="banner">
         <div className="header-container">
@@ -366,20 +365,7 @@ export default function SpringLocationsExplorer() {
           line-height: 1.6;
         }
 
-        .skip-link {
-          position: absolute;
-          top: -40px;
-          left: 0;
-          background: var(--primary-color);
-          color: white;
-          padding: 8px;
-          z-index: 100;
-          transition: top 0.3s;
-        }
-
-        .skip-link:focus {
-          top: 0;
-        }
+      
 
         .error-alert {
           background-color: #ffebee;
