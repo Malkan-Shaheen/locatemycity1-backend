@@ -1,7 +1,14 @@
+
 'use client';
 import React, { useState } from 'react';
 
 const Header = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
+
   return (
     <>
       <style>{`
@@ -102,6 +109,94 @@ const Header = () => {
             left: 100%;
         }
 
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            width: 30px;
+            height: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .hamburger span {
+            display: block;
+            position: absolute;
+            height: 3px;
+            width: 100%;
+            background: white;
+            border-radius: 3px;
+            opacity: 1;
+            left: 0;
+            transform: rotate(0deg);
+            transition: .25s ease-in-out;
+        }
+
+        .hamburger span:nth-child(1) {
+            top: 0px;
+        }
+
+        .hamburger span:nth-child(2), .hamburger span:nth-child(3) {
+            top: 10px;
+        }
+
+        .hamburger span:nth-child(4) {
+            top: 20px;
+        }
+
+        .hamburger.open span:nth-child(1) {
+            top: 10px;
+            width: 0%;
+            left: 50%;
+        }
+
+        .hamburger.open span:nth-child(2) {
+            transform: rotate(45deg);
+        }
+
+        .hamburger.open span:nth-child(3) {
+            transform: rotate(-45deg);
+        }
+
+        .hamburger.open span:nth-child(4) {
+            top: 10px;
+            width: 0%;
+            left: 50%;
+        }
+
+        .mobile-menu {
+            position: fixed;
+            top: 90px;
+            left: 0;
+            width: 100%;
+            background: #3bb5fd;
+            padding: 2rem;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            transform: translateY(-150%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 5;
+        }
+
+        .mobile-menu.open {
+            transform: translateY(0);
+        }
+
+        .mobile-menu a {
+            display: block;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 50px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu a:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
         header::before {
             content: "";
             position: absolute;
@@ -147,14 +242,12 @@ const Header = () => {
         }
 
         @media (max-width: 992px) {
-            .nav-links a {
-                min-width: 120px;
-                padding: 10px 15px;
-                font-size: 0.9rem;
+            .nav-links {
+                display: none;
             }
-            
-            .logo {
-                font-size: 1.5rem;
+
+            .hamburger {
+                display: block;
             }
         }
 
@@ -164,45 +257,26 @@ const Header = () => {
             }
 
             .logo {
-                font-size: 1.2rem;
-                gap: 10px;
+                font-size: 1.5rem;
             }
 
             .logo-image {
                 height: 30px;
                 width: 30px;
             }
-            
-            .nav-links {
-                gap: 10px;
-            }
-            
-            .nav-links a {
-                min-width: 100px;
-                height: 40px;
-                padding: 8px 12px;
-                font-size: 0.8rem;
-            }
         }
 
         @media (max-width: 480px) {
             header {
-                height: 70px;
+                height: 80px;
+            }
+
+            .mobile-menu {
+                top: 80px;
             }
 
             .logo {
-                font-size: 1rem;
-            }
-            
-            .nav-links a {
-                min-width: 80px;
-                height: 35px;
-                padding: 5px 8px;
-                font-size: 0.7rem;
-            }
-            
-            .locate-city {
-                display: none;
+                font-size: 10px;
             }
         }
       `}</style>
@@ -211,16 +285,32 @@ const Header = () => {
         <div className="container">
           <div className="header-content">
             <div className="logo">
-              <img src="/Images/logo.png" alt="Logo" className="logo-image" />
+              <img src="/Images/cityfav.png" alt="Logo" className="logo-image" />
               <span>Your Logo</span>
             </div>
 
             <nav className="nav-links">
               <a href="/">Home</a>
-              <a href="/about" className="locate-city">Locate My City</a>
-              <a href="/contact">Contact</a>
+              <a href="/about">About Us</a>
+              <a href="/contact">Contact Us</a>
             </nav>
+
+            <div
+              className={`hamburger ${menuOpen ? 'open' : ''}`}
+              onClick={toggleMenu}
+            >
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
           </div>
+        </div>
+
+        <div className={`mobile-menu ${menuOpen ? 'open' : ''}`}>
+          <a href="/">Home</a>
+          <a href="/about">About Us</a>
+          <a href="/contact">Contact Us</a>
         </div>
       </header>
     </>
