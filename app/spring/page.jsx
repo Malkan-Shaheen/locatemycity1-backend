@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import Footer from '../../components/Footer'
 
+
 // Dynamically import Leaflet
 const MapWithNoSSR = dynamic(() => import('../../components/MapComponent'), { ssr: false });
 
@@ -340,6 +341,9 @@ export default function SpringLocationsExplorer() {
           <Footer />
         </section>
       </main>
+      
+
+      
     </>
   );
 }

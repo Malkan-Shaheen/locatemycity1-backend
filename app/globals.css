@@ -3568,3 +3568,10 @@ html {
   -webkit-tap-highlight-color: transparent !important;
   scroll-behavior: smooth !important;
 }
+.view-map-btn:focus {
+  outline: 3px solid #1e90ff; /* or any visible color */
+  outline-offset: 2px;
+}
+.view-map-btn {
+  margin: 8px !important; /* Ensure spacing between other buttons */
+}
