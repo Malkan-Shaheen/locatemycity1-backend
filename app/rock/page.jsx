@@ -113,37 +113,7 @@ export default function RockyLocationsExplorer() {
 
       <div aria-hidden="true" style={{ display: 'none' }}></div>
 
-      <header className="site-header" role="banner">
-        <div className="header-wrapper">
-          {/* Floating circles - decorative only */}
-          <div className="decorative-circle" style={{ width: '80px', height: '80px', top: '20%', left: '10%' }} aria-hidden="true"></div>
-          <div className="decorative-circle" style={{ width: '120px', height: '120px', bottom: '-30%', right: '15%' }} aria-hidden="true"></div>
-          <div className="decorative-circle" style={{ width: '60px', height: '60px', top: '50%', left: '80%' }} aria-hidden="true"></div>
-          
-          <div className="header-content-wrapper">
-            <div className="site-logo">
-              <Image 
-                src="/Images/cityfav.png" 
-                alt="LocateMyCity Logo" 
-                width={50} 
-                height={50} 
-                className="logo-img"
-                priority
-              />
-              <h1>LocateMyCity</h1>
-            </div>
-            <nav className="main-navigation" role="navigation" aria-label="Main navigation">
-              <a href="/" title="Home">HOME</a>
-              <Link href="/about" passHref legacyBehavior>
-                <a title="About Us">ABOUT US</a>
-              </Link>
-              <Link href="/contact" passHref legacyBehavior>
-                <a title="Contact Us">CONTACT US</a>
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </header>
+    <Header />
 
       <main id="main-content" role="main">
         <section className="hero-banner" aria-labelledby="main-heading">
