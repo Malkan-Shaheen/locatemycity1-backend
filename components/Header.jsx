@@ -292,7 +292,7 @@ const Header = () => {
 
             <nav className="nav-links" aria-label="Main navigation">
               <a href="/">Home</a>
-              <a href="/about">About Us</a>
+              <a href="/about">AboutUs</a>
               <a href="/contact">Contact Us</a>
             </nav>
 
