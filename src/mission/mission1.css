@@ -48,7 +48,7 @@
   .arrow-icon {
     display: flex;
     align-items: center;
-    gap: 8px; /* Slightly smaller gap */
+    /* gap: 8px; Slightly smaller gap */
     font-size: 14px; /* Reduced font for fit */
     font-weight: 500;
     letter-spacing: -4%;
@@ -132,7 +132,7 @@
     color: transparent;
     /* border-radius: 12px; */
     font-size: 14px;
-     padding: 16px 24px;
+     /* padding: 16px 24px; */
   height: 80vh;
   width: 100vw;
    
