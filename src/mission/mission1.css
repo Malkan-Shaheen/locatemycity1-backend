@@ -136,8 +136,7 @@
   height: 80vh;
   width: 100vw;
    
-    margin: 10px auto 0;
-    height: 0;
+    /* margin: 10px auto 0; */
     overflow: hidden;
     transition: all 0.3s ease;
   }
