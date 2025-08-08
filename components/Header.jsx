@@ -316,7 +316,7 @@ const Header = () => {
                 loading="lazy"
                 decoding="async"
               />
-              <h2>LocateMyCity</h2>
+              <h2>LocateMy City</h2>
             </div>
 
             <nav className="nav-links" aria-label="Main navigation">
