@@ -257,9 +257,9 @@ const Header = () => {
           className={`mobile-menu ${menuOpen ? 'open' : ''}`}
           aria-hidden={!menuOpen}
         >
-          <a href="#home" onClick={(e) => handleNavigation(e, '#home')}>Home</a>
-          <a href="#about" onClick={(e) => handleNavigation(e, '#about')}>About</a>
-          <a href="#contact" onClick={(e) => handleNavigation(e, '#contact')}>Contact</a>
+          <a href="/" onClick={(e) => handleNavigation(e, '/')}>Home</a>
+          <a href="/about" onClick={(e) => handleNavigation(e, '/about')}>About</a>
+          <a href="/contact" onClick={(e) => handleNavigation(e, '/contact')}>Contact</a>
         </div>
       </header>
     </>
