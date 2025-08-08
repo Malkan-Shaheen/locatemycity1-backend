@@ -63,7 +63,7 @@
   padding: 12px 20px;
   height: 80%;
   font-size: 18px;
-  justify-content: space-between;
+  justify-content: center;
   white-space: nowrap; /* Prevents line break */
 }
 
