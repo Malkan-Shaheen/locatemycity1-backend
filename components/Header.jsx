@@ -26,16 +26,17 @@ const Header = () => {
             overflow: hidden;
             z-index: 1;
             padding: 0;
-            height: 90px;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
         }
 
         .container {
             width: 100%;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 1rem 2rem;
+            padding: 0.5rem 1rem;
             position: relative;
-            height: 100%;
         }
 
         .header-content {
@@ -45,33 +46,31 @@ const Header = () => {
             width: 100%;
             position: relative;
             z-index: 2;
-            height: 100%;
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 15px;
-            font-size: 1.8rem;
+            gap: 10px;
+            font-size: clamp(1.2rem, 4vw, 1.8rem);
             font-weight: 700;
             background: linear-gradient(90deg, #ffffff, #e0e0e0);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            height: 100%;
         }
 
         .logo-image {
             border-radius: 50%;
             filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-            height: 40px;
-            width: 40px;
+            height: clamp(30px, 8vw, 40px);
+            width: clamp(30px, 8vw, 40px);
         }
 
         .nav-links {
             display: flex;
-            gap: 20px;
+            gap: 10px;
         }
 
         .nav-links a {
@@ -81,18 +80,19 @@ const Header = () => {
             color: white;
             text-decoration: none;
             font-weight: 600;
-            padding: 12px 25px;
+            padding: 0.5rem 1rem;
             border-radius: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
-            min-width: 150px;
-            height: 50px;
+            min-width: 100px;
+            height: 40px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
             border: 1px solid rgba(255, 255, 255, 0.2);
             position: relative;
             overflow: hidden;
+            font-size: 0.9rem;
         }
 
         .nav-links a::before {
@@ -123,6 +123,8 @@ const Header = () => {
             height: 20px;
             position: relative;
             z-index: 15;
+            background: transparent;
+            border: none;
         }
 
         .hamburger span {
@@ -171,26 +173,24 @@ const Header = () => {
         }
 
         .mobile-menu {
-          position: fixed;
-          top: 0;
-          right: 0;
-          width: auto;
-          height: 90px;
-          background: rgba(59, 181, 253, 0.95);
-          padding: 0 1rem;
-          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-          border-radius: 0 0 0 15px;
-          opacity: 0;
-          pointer-events: none;
-          transform: translateX(100%);
-          transition: transform 0.3s ease, opacity 0.3s ease;
-          z-index: 9999; /* VERY high so it sits on top */
-          display: flex;
-          flex-direction: row;
-          gap: 15px;
-          font-weight: 600;
-          font-size: 0.85rem;
-          align-items: center;
+            position: fixed;
+            top: 80px;
+            right: 0;
+            width: auto;
+            min-width: 150px;
+            background: rgba(59, 181, 253, 0.98);
+            padding: 1rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+            border-radius: 0 0 0 15px;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateX(100%);
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-weight: 600;
         }
 
         .mobile-menu.open {
@@ -202,9 +202,10 @@ const Header = () => {
         .mobile-menu a {
             color: white;
             text-decoration: none;
-            background: transparent;
-            padding: 4px 8px;
-            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-align: right;
             transition: background 0.3s ease;
             white-space: nowrap;
         }
@@ -225,54 +226,31 @@ const Header = () => {
 
         @media (max-width: 768px) {
             .container {
-                padding: 1rem;
+                padding: 0.5rem;
             }
 
-            .logo {
-                font-size: 1.5rem;
-            }
-
-            .logo-image {
-                height: 30px;
-                width: 30px;
+            .nav-links a {
+                min-width: 80px;
+                height: 35px;
+                font-size: 0.8rem;
+                padding: 0.5rem;
             }
         }
 
         @media (max-width: 480px) {
             header {
-                height: 80px;
+                min-height: 70px;
             }
-@media (max-width: 480px) {
-    header {
-        height: 80px;
-    }
-
-    .mobile-menu {
-        top: 80px;
-        width: auto; /* Let it fit content width */
-        padding: 0.75rem 1rem;
-        font-size: 0.85rem;
-        flex-direction: column; /* Stack links vertically */
-        align-items: flex-end; /* Align to right */
-        gap: 10px; /* Space between items */
-        right: 10px; /* Add space from right */
-        border-radius: 0 0 0 10px;
-    }
-
-    .mobile-menu a {
-        display: block;
-        width: 100%;
-        padding: 8px 12px;
-        text-align: right;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 6px;
-    }
-
-    .logo {
-        font-size: 10px;
-    }
-}
-
+            
+            .mobile-menu {
+                top: 70px;
+                padding: 0.75rem;
+                font-size: 0.85rem;
+            }
+            
+            .logo {
+                gap: 8px;
+            }
         }
 
         header::before {
@@ -320,7 +298,7 @@ const Header = () => {
         }
       `}</style>
 
-    <header role="banner">
+      <header role="banner">
         <div className="container">
           <div className="header-content">
             <div className="logo">
@@ -333,7 +311,7 @@ const Header = () => {
                 loading="lazy"
                 decoding="async"
               />
-              <span>Locate My City</span>
+              <span>LocateMyCity</span>
             </div>
 
             <nav className="nav-links" aria-label="Main navigation">
