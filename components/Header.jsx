@@ -128,8 +128,8 @@ const Header = () => {
         .hamburger {
             display: none;
             cursor: pointer;
-            width: 24px;
-            height: 18px;
+            width: 20px;
+            height: 12px;
             position: relative;
             right: 0;
             z-index: 15;
@@ -146,7 +146,7 @@ const Header = () => {
             background: white;
             border-radius: 3px;
             opacity: 1;
-            left: 0;
+            left: 10px;
             transform: rotate(0deg);
             transition: .25s ease-in-out;
         }
@@ -187,7 +187,7 @@ const Header = () => {
         .mobile-menu {
             position: fixed;
             top: 80px;
-            right: 0;
+            right: 10px;
             width: auto;
             min-width: 150px;
             background: rgba(59, 181, 253, 0.98);
@@ -257,8 +257,8 @@ const Header = () => {
                 border-radius: 0 0 0 12px;
             }
             .logo {
-                gap: 8px;
-                margin-left: 8px;
+                gap: 10px;
+                margin-left: 14px;
             }
             .logo h2 {
                 display: none;
@@ -268,7 +268,7 @@ const Header = () => {
                 width: 36px;
             }
             .hamburger {
-                margin-right: 8px;
+                margin-right: 12px;
             }
         }
       `}</style>
