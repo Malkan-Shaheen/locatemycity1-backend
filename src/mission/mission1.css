@@ -60,13 +60,14 @@
  .merch-card.hovered .merch-descr {
   background: linear-gradient(90deg, #CD9E3C 0%, #BD8A2D 100%);
   color: #000;
-  border-radius: 12px;
+  border-radius: 16px;
   /* padding: 12px 20px; */
   height: 80%;
   width: 100%; /* Match width of merch-card (which is same as merch-image) */
   box-sizing: border-box;
   font-size: 18px;
   justify-content: center;
+  max-width: 280px;
   white-space: nowrap; /* Prevents line break */
 }
 
