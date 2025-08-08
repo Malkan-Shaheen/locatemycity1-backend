@@ -10,6 +10,12 @@
 
   }
 
+  .merch-card.hovered .merch-descr {
+  /* existing styles */
+  min-height: 150px;  /* button won't shrink smaller than this */
+}
+
+
   .merch-card {
     width: 100%;
     max-width: 280px; /* Reduced so 3 fit side-by-side */
@@ -57,15 +63,12 @@
     letter-spacing: -4%;
     transition: all 0.3s ease;
   }
-  .merch-descr{
-    padding-top: 12px !important;
-    padding-bottom: 12px !important;
-  }
+  
 
   /* Hover effects */
  .merch-card.hovered .merch-descr {
   background: linear-gradient(90deg, #CD9E3C 0%, #BD8A2D 100%);
-  color: black;
+  color: red;
   border-radius: 16px;
   padding: 12px 20px;
   height: 100%;
