@@ -256,14 +256,33 @@ const Header = () => {
         </div>
 
         <div
-          ref={menuRef}
-          className={`mobile-menu ${menuOpen ? 'open' : ''}`}
-          aria-hidden={!menuOpen}
-        >
-     <a href="/home" onClick={(e) => handleNavigation(e, '/home')}>Home</a>
-<a href="/about" onClick={(e) => handleNavigation(e, '/about')}>About</a>
-<a href="/contact" onClick={(e) => handleNavigation(e, '/contact')}>Contact</a>
-        </div>
+  ref={menuRef}
+  className={`mobile-menu ${menuOpen ? 'open' : ''}`}
+  aria-hidden={!menuOpen}
+>
+  <a
+    href="/home"
+    tabIndex={menuOpen ? 0 : -1}
+    onClick={(e) => handleNavigation(e, '/home')}
+  >
+    Home
+  </a>
+  <a
+    href="/about"
+    tabIndex={menuOpen ? 0 : -1}
+    onClick={(e) => handleNavigation(e, '/about')}
+  >
+    About
+  </a>
+  <a
+    href="/contact"
+    tabIndex={menuOpen ? 0 : -1}
+    onClick={(e) => handleNavigation(e, '/contact')}
+  >
+    Contact
+  </a>
+</div>
+
       </header>
     </>
   );
