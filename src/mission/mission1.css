@@ -7,6 +7,7 @@
     gap: 20px; /* Slightly smaller gap */
     margin-top: 40px;
     justify-items: center;
+
   }
 
   .merch-card {
@@ -62,6 +63,8 @@
   border-radius: 12px;
   padding: 12px 20px;
   height: 80%;
+  width: 100%; /* Match width of merch-card (which is same as merch-image) */
+  box-sizing: border-box;
   font-size: 18px;
   justify-content: center;
   white-space: nowrap; /* Prevents line break */
@@ -160,5 +163,17 @@
   .merch-card {
     padding: 0 10px; /* Add some padding to prevent edge touching */
     box-sizing: border-box; /* Include padding in width calculation */
+  }
+}
+
+@media screen and (max-width: 1023px) {
+  .merch-grid {
+    padding: 0 10px; /* 10px padding on left and right */
+    box-sizing: border-box;
+  }
+  .merch-image{
+    padding: 0 10px !important; /* 10px padding on left and right */
+    box-sizing: border-box;
+    border-radius: 20px;
   }
 }
