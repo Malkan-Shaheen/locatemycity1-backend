@@ -13,7 +13,10 @@ const Header = () => {
     setMenuOpen(!menuOpen);
   };
 
-  if (!mounted) return null;
+  if (!mounted) {
+    // Don't render on server or before mounting to prevent hydration errors
+    return null;
+  }
 
   return (
     <>
@@ -169,139 +172,133 @@ const Header = () => {
             left: 50%;
         }
 
-        /* --- New vertical sidebar menu --- */
         .mobile-menu {
           position: fixed;
           top: 0;
           right: 0;
-          width: 120px; /* slim vertical bar */
-          height: 90px; /* same as header */
+          width: auto;
+          height: 90px;
           background: rgba(59, 181, 253, 0.95);
-          padding: 10px 0;
+          padding: 0 1rem;
           box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
           border-radius: 0 0 0 15px;
           opacity: 0;
           pointer-events: none;
           transform: translateX(100%);
           transition: transform 0.3s ease, opacity 0.3s ease;
-          z-index: 9999;
+          z-index: 9999; /* VERY high so it sits on top */
           display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: space-evenly;
+          flex-direction: row;
+          gap: 15px;
           font-weight: 600;
           font-size: 0.85rem;
+          align-items: center;
         }
 
         .mobile-menu.open {
-          opacity: 1;
-          pointer-events: auto;
-          transform: translateX(0);
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(0);
         }
 
         .mobile-menu a {
-          color: white;
-          text-decoration: none;
-          background: transparent;
-          padding: 0;
-          margin: 0;
-          white-space: nowrap;
-          line-height: 1.2;
-          width: 100%;
-          text-align: center;
-          border-radius: 0; /* no boxes */
-          transition: background 0.3s ease;
+            color: white;
+            text-decoration: none;
+            background: transparent;
+            padding: 4px 8px;
+            text-align: center;
+            transition: background 0.3s ease;
+            white-space: nowrap;
         }
 
         .mobile-menu a:hover {
-          background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.3);
         }
 
         @media (max-width: 992px) {
-          .nav-links {
-            display: none;
-          }
+            .nav-links {
+                display: none;
+            }
 
-          .hamburger {
-            display: block;
-          }
+            .hamburger {
+                display: block;
+            }
         }
 
         @media (max-width: 768px) {
-          .container {
-            padding: 1rem;
-          }
+            .container {
+                padding: 1rem;
+            }
 
-          .logo {
-            font-size: 1.5rem;
-          }
+            .logo {
+                font-size: 1.5rem;
+            }
 
-          .logo-image {
-            height: 30px;
-            width: 30px;
-          }
+            .logo-image {
+                height: 30px;
+                width: 30px;
+            }
         }
 
         @media (max-width: 480px) {
-          header {
-            height: 80px;
-          }
+            header {
+                height: 80px;
+            }
 
-          .mobile-menu {
-            top: 80px;
-            width: 110px;
-            height: 80px;
-            font-size: 0.8rem;
-            padding: 8px 0;
-          }
+            .mobile-menu {
+                top: 80px;
+                width: 120px;
+                padding: 0.75rem 1rem;
+                font-size: 0.8rem;
+            }
 
-          .logo {
-            font-size: 10px;
-          }
+            .logo {
+                font-size: 10px;
+            }
         }
 
         header::before {
-          content: "";
-          position: absolute;
-          top: -50px;
-          left: -50px;
-          width: 150px;
-          height: 150px;
-          background: #3bb5fd;
-          border-radius: 50%;
-          z-index: -1;
+            content: "";
+            position: absolute;
+            top: -50px;
+            left: -50px;
+            width: 150px;
+            height: 150px;
+            background: #3bb5fd;
+            border-radius: 50%;
+            z-index: -1;
         }
 
         header::after {
-          content: "";
-          position: absolute;
-          bottom: -80px;
-          right: -60px;
-          width: 200px;
-          height: 200px;
-          background: rgba(255, 255, 255, 0.08);
-          border-radius: 50%;
-          z-index: -1;
+            content: "";
+            position: absolute;
+            bottom: -80px;
+            right: -60px;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 50%;
+            z-index: -1;
         }
 
         .floating-circle {
-          position: absolute;
-          background: rgba(255, 255, 255, 0.05);
-          border-radius: 50%;
-          z-index: -1;
-          animation: float 15s infinite linear;
+            position: absolute;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            z-index: -1;
+            animation: float 15s infinite linear;
         }
 
         @keyframes float {
-          0% {
-            transform: translateY(0) rotate(0deg);
-          }
-          50% {
-            transform: translateY(-20px) rotate(180deg);
-          }
-          100% {
-            transform: translateY(0) rotate(360deg);
-          }
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(180deg);
+            }
+            100% {
+                transform: translateY(0) rotate(360deg);
+            }
         }
       `}</style>
 
@@ -326,9 +323,7 @@ const Header = () => {
               aria-expanded={menuOpen}
               role="button"
               tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') toggleMenu();
-              }}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') toggleMenu(); }}
             >
               <span></span>
               <span></span>
