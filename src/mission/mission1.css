@@ -69,7 +69,7 @@ min-width: 250px;
   /* Hover effects */
  .merch-card.hovered .merch-descr {
   background: linear-gradient(90deg, #CD9E3C 0%, #BD8A2D 100%);
-  color: red;
+  color: black;
   border-radius: 16px;
   padding: 12px 20px;
   height: 100%;
