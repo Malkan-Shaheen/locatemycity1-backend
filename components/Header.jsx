@@ -232,18 +232,12 @@ const Header = () => {
               <h2>LocateMyCity</h2>
             </div>
 
-        <nav className="nav-links" aria-label="Main navigation">
-  <Link href="/">
-    <a onClick={(e) => handleNavigation(e, '/')}>Home</a>
-  </Link>
-  <Link href="/about">
-    <a onClick={(e) => handleNavigation(e, '/about')}>About</a>
-  </Link>
-  <Link href="/contact">
-    <a onClick={(e) => handleNavigation(e, '/contact')}>Contact</a>
-  </Link>
-</nav>
-            
+            <nav className="nav-links" aria-label="Main navigation">
+              <a href="/" onClick={(e) => handleNavigation(e, '/home')}>Home</a>
+              <a href="/about" onClick={(e) => handleNavigation(e, '/about')}>About</a>
+              <a href="/contact" onClick={(e) => handleNavigation(e, '/contact')}>Contact</a>
+            </nav>
+
             <button
               ref={hamburgerRef}
               className={`hamburger ${menuOpen ? 'open' : ''}`}
