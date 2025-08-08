@@ -242,17 +242,37 @@ const Header = () => {
             header {
                 height: 80px;
             }
+@media (max-width: 480px) {
+    header {
+        height: 80px;
+    }
 
-            .mobile-menu {
-                top: 80px;
-                width: 120px;
-                padding: 0.75rem 1rem;
-                font-size: 0.8rem;
-            }
+    .mobile-menu {
+        top: 80px;
+        width: auto; /* Let it fit content width */
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+        flex-direction: column; /* Stack links vertically */
+        align-items: flex-end; /* Align to right */
+        gap: 10px; /* Space between items */
+        right: 10px; /* Add space from right */
+        border-radius: 0 0 0 10px;
+    }
 
-            .logo {
-                font-size: 10px;
-            }
+    .mobile-menu a {
+        display: block;
+        width: 100%;
+        padding: 8px 12px;
+        text-align: right;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+    }
+
+    .logo {
+        font-size: 10px;
+    }
+}
+
         }
 
         header::before {
