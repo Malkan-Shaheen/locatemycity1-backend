@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import Link from 'next/link';
+
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -233,10 +233,12 @@ const Header = () => {
               <h2>LocateMyCity</h2>
             </div>
 
-            <nav className="nav-links" aria-label="Main navigation">
-              <a href="/" onClick={(e) => handleNavigation(e, '/home')}>Home</a>
-              <a href="/about" onClick={(e) => handleNavigation(e, '/about')}>About</a>
-              <a href="/contact" onClick={(e) => handleNavigation(e, '/contact')}>Contact</a>
+             <nav className="nav-links" aria-label="Main navigation">
+         <nav className="nav-links" aria-label="Main navigation">
+  <a href="/home" onClick={(e) => handleNavigation(e, '/home')}>Home</a>
+  <a href="/about" onClick={(e) => handleNavigation(e, '/about')}>About</a>
+  <a href="/contact" onClick={(e) => handleNavigation(e, '/contact')}>Contact</a>
+</nav>
             </nav>
 
             <button
@@ -258,9 +260,9 @@ const Header = () => {
           className={`mobile-menu ${menuOpen ? 'open' : ''}`}
           aria-hidden={!menuOpen}
         >
-          <a href="/" onClick={(e) => handleNavigation(e, '/')}>Home</a>
-          <a href="/about" onClick={(e) => handleNavigation(e, '/about')}>About</a>
-          <a href="/contact" onClick={(e) => handleNavigation(e, '/contact')}>Contact</a>
+     <a href="/home" onClick={(e) => handleNavigation(e, '/home')}>Home</a>
+<a href="/about" onClick={(e) => handleNavigation(e, '/about')}>About</a>
+<a href="/contact" onClick={(e) => handleNavigation(e, '/contact')}>Contact</a>
         </div>
       </header>
     </>
