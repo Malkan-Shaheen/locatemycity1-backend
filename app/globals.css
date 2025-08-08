@@ -28,6 +28,11 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+a, button {
+  min-width: 48px;
+  min-height: 48px;
+}
+
 /* --- DistanceCalculator Styles --- */
 /* ------------------- Animations ------------------- */
 @keyframes fadeIn {
@@ -1826,7 +1831,11 @@ body {
   position: relative;
   overflow: hidden;
 }
-
+.stat-card a{
+display: inline-block;
+  padding: 0.5rem 1rem;
+  min-height: 48px;
+}
 .stat-card:hover {
   transform: translateY(-10px);
   box-shadow: 0 15px 30px rgba(70, 130, 180, 0.15);
@@ -1913,10 +1922,11 @@ body {
   justify-content: center;
   gap: 1rem;
   margin-top: 1.5rem;
+  
+
 }
 
 .state-button {
-  padding: 0.8rem 1.8rem;
   background-color: white;
   border: none;
   border-radius: 50px;
@@ -1927,6 +1937,9 @@ body {
   box-shadow: 0 4px 10px rgba(70, 130, 180, 0.1);
   position: relative;
   overflow: hidden;
+  padding: 0.75rem 1.25rem; /* Bigger clickable area */
+  min-width: 48px;
+  min-height: 48px;
 }
 
 .state-button::before {
@@ -1994,13 +2007,15 @@ body {
 
 .location-item {
   background: var(--alice-blue);
-  padding: 1rem 1.2rem;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
   align-items: center;
   transition: all 0.3s ease;
   text-align: center;
+  padding: 0.75rem 1rem; /* Touch-friendly size */
+  min-width: 48px;
+  min-height: 48px;
 }
 
 .location-item:hover {
