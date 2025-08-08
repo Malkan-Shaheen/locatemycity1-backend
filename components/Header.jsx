@@ -1,29 +1,24 @@
 'use client';
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const menuRef = useRef(null); // for detecting outside click
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Close menu on outside click
+  // Close menu when clicking outside
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
+    const handleClickOutside = (e) => {
+      if (!e.target.closest('header') && menuOpen) {
         setMenuOpen(false);
       }
     };
-
-    if (menuOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-
+    document.addEventListener('click', handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('click', handleClickOutside);
     };
   }, [menuOpen]);
 
@@ -47,7 +42,6 @@ const Header = () => {
           display: flex;
           align-items: center;
         }
-
         .container {
           width: 100%;
           max-width: 1200px;
@@ -55,7 +49,6 @@ const Header = () => {
           padding: 0.5rem 1rem;
           position: relative;
         }
-
         .header-content {
           display: flex;
           justify-content: space-between;
@@ -64,7 +57,6 @@ const Header = () => {
           position: relative;
           z-index: 2;
         }
-
         .logo {
           display: flex;
           align-items: center;
@@ -77,19 +69,16 @@ const Header = () => {
           -webkit-text-fill-color: transparent;
           text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-
         .logo-image {
           border-radius: 50%;
           filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
           height: clamp(30px, 8vw, 40px);
           width: clamp(30px, 8vw, 40px);
         }
-
         .nav-links {
           display: flex;
           gap: 10px;
         }
-
         .nav-links a {
           background: rgba(255, 255, 255, 0.15);
           backdrop-filter: blur(10px);
@@ -111,40 +100,22 @@ const Header = () => {
           overflow: hidden;
           font-size: 0.9rem;
         }
-
-        .nav-links a::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: -100%;
-          width: 100%;
-          height: 100%;
-          background: linear-gradient(90deg, #3bb5fd, transparent);
-          transition: 0.5s;
-        }
-
         .nav-links a:hover {
           transform: translateY(-3px);
           box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
           background: rgba(255, 255, 255, 0.25);
         }
-
-        .nav-links a:hover::before {
-          left: 100%;
-        }
-
         .hamburger {
           display: none;
           cursor: pointer;
           width: clamp(24px, 6vw, 32px);
           height: clamp(18px, 4.5vw, 24px);
           position: relative;
-          right: 12px;
+          right: 8px;
           z-index: 15;
           background: transparent;
           border: none;
         }
-
         .hamburger span {
           display: block;
           position: absolute;
@@ -152,50 +123,36 @@ const Header = () => {
           width: 100%;
           background: white;
           border-radius: 3px;
-          opacity: 1;
           left: 0;
-          transform: rotate(0deg);
           transition: .25s ease-in-out;
         }
-
-        .hamburger span:nth-child(1) {
-          top: 0px;
-        }
-
-        .hamburger span:nth-child(2), .hamburger span:nth-child(3) {
+        .hamburger span:nth-child(1) { top: 0; }
+        .hamburger span:nth-child(2),
+        .hamburger span:nth-child(3) {
           top: 50%;
           transform: translateY(-50%);
         }
-
-        .hamburger span:nth-child(4) {
-          bottom: 0px;
-        }
-
+        .hamburger span:nth-child(4) { bottom: 0; }
         .hamburger.open span:nth-child(1) {
           top: 50%;
           width: 0%;
           left: 50%;
         }
-
         .hamburger.open span:nth-child(2) {
           transform: translateY(-50%) rotate(45deg);
         }
-
         .hamburger.open span:nth-child(3) {
           transform: translateY(-50%) rotate(-45deg);
         }
-
         .hamburger.open span:nth-child(4) {
           bottom: 50%;
           width: 0%;
           left: 50%;
         }
-
         .mobile-menu {
           position: fixed;
           top: 80px;
           right: 0;
-          width: auto;
           min-width: 150px;
           background: rgba(59, 181, 253, 0.98);
           padding: 1rem;
@@ -212,13 +169,11 @@ const Header = () => {
           font-weight: 600;
           align-items: center;
         }
-
         .mobile-menu.open {
           opacity: 1;
           pointer-events: auto;
           transform: translateX(0);
         }
-
         .mobile-menu a {
           color: white;
           text-decoration: none;
@@ -227,67 +182,31 @@ const Header = () => {
           border-radius: 6px;
           text-align: center;
           transition: background 0.3s ease;
-          white-space: nowrap;
           width: 100%;
         }
-
         .mobile-menu a:hover {
           background: rgba(255, 255, 255, 0.3);
         }
-
         @media (max-width: 992px) {
-          .nav-links {
-            display: none;
-          }
-          .hamburger {
-            display: block;
-          }
+          .nav-links { display: none; }
+          .hamburger { display: block; }
         }
-
-        @media (max-width: 768px) {
-          .container {
-            padding: 0.5rem;
-          }
-          .logo {
-            font-size: 1rem;
-          }
-        }
-
         @media (max-width: 480px) {
-          header {
-            min-height: 70px;
-          }
-
-          .mobile-menu {
-            top: 70px;
-            padding: 1rem;
-            font-size: 0.9rem;
-            border-radius: 0 0 0 12px;
-          }
-
-          .logo {
-            gap: 6px;
-            margin-right: auto; /* push logo to the left */
-          }
-
-          .logo h2 {
-            display: none;
-          }
-
+          header { min-height: 70px; }
+          .mobile-menu { top: 70px; font-size: 0.9rem; }
+          .logo { gap: 4px; }
           .logo-image {
-            height: 36px;
-            width: 36px;
+            height: 42px;
+            width: 42px;
           }
-
           .hamburger {
-            width: 20px;
-            height: 16px;
-            margin-left: 4px; /* tighter spacing */
+            width: 16px;
+            height: 12px;
           }
         }
       `}</style>
 
-      <header role="banner">
+      <header>
         <div className="container">
           <div className="header-content">
             <div className="logo">
@@ -295,15 +214,11 @@ const Header = () => {
                 src="/Images/cityfav.png"
                 alt="Locate My City logo"
                 className="logo-image"
-                width="40"
-                height="40"
-                loading="lazy"
-                decoding="async"
               />
               <h2>LocateMyCity</h2>
             </div>
 
-            <nav className="nav-links" aria-label="Main navigation">
+            <nav className="nav-links">
               <a href="/">Home</a>
               <a href="/about">About Us</a>
               <a href="/contact">Contact Us</a>
@@ -328,9 +243,6 @@ const Header = () => {
         <div
           id="mobile-menu"
           className={`mobile-menu ${menuOpen ? 'open' : ''}`}
-          role="navigation"
-          aria-label="Mobile navigation"
-          ref={menuRef}
         >
           <a href="/" onClick={() => setMenuOpen(false)}>Home</a>
           <a href="/about" onClick={() => setMenuOpen(false)}>About Us</a>
