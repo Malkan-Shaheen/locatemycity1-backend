@@ -83,7 +83,7 @@ export default function Mission() {
             <div className="merch-info">
               <h3>{product.name}</h3>
               <div className="merch-descr">
-                <span>{product.descr}</span>
+                <p>{product.descr}</p>
                 <FaArrowRight className="arrow-icon" />
               </div>
             </div>

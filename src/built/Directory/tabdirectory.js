@@ -12,45 +12,45 @@ import icon3 from './../../images/icon3.png';
 import icon4 from './../../images/icon4.png';
 
 const contentList = [
-  {
+ {
     image: childImg,
     icon: icon1,
     title: "The Seed: Planted in the Directory",
     price: "$50 (Limited Time) / Annum",
-text: `The entry-level tier designed for businesses looking to establish their presence and gain early access to Project Black's growing network.
+    text: `The entry-level tier designed for businesses looking to establish their presence and gain early access to Project Black’s growing network.
 
 Benefits:
-Business listing in the Directory on GoProjectBlack.com
-Exposure to an engaged audience and exclusive early access opportunities
-Social media highlights to drive traffic to your business
-Recognition in the Founders Circle as an early supporter
+• Business listing in the Directory on GoProjectBlack.com
+• Exposure to an engaged audience and exclusive early access opportunities
+• Social media highlights to drive traffic to your business
+• Recognition in the Founders Circle as an early supporter
 
 Welcome package: The Trailblazer Innovator Edition
 
 Early Bird Rate: $50 (50% off, will increase to $100 after launch)
-
-`  },
-  {
+`
+},
+{
     image: manImg,
     icon: icon2,
     title: "Growth Phase",
     price: "$50 (Limited Time) / Annum",
-text: `Designed for business owners looking for a competitive edge and deeper engagement within Project Black.
+    text: `Designed for business owners looking for a competitive edge and deeper engagement within Project Black.
 
 Benefits:
-All Trailblazer perks included
-Early access to platform launches and events
-Exclusive discounts with partner brands
-Founders Circle recognition with permanent listing
-Private networking with Black 100 members
-Priority spotlights for your business on the platform
+• All Trailblazer perks included
+• Early access to platform launches and events
+• Exclusive discounts with partner brands
+• Founders Circle recognition with permanent listing
+• Private networking with Black 100 members
+• Priority spotlights for your business on the platform
 
 Welcome package: The Black Box Innovator Edition
 
 Pay-in-Full Bonus:
 One additional social media feature (extra promotion across Project Black's platforms)
-
-  `  },
+`
+},
   {
     image: womanImg,
     icon: icon3,
@@ -79,18 +79,20 @@ The Black Box — Flame Edition
     icon: icon4,
     title: "Harvesting Change",
     price: "$50 (Limited Time) / Annum",
- text: `The entry-level tier designed for businesses looking to establish their presence and gain early access to Project Black's growing network.
+    text: `The entry-level tier designed for businesses looking to establish their presence and gain early access to Project Black's growing network.
 
 Benefits:
-Business listing in the Directory on GoProjectBlack.com
-Exposure to an engaged audience and exclusive early access opportunities
-Social media highlights to drive traffic to your business
-Recognition in the Founders Circle as an early supporter
+• Business listing in the Directory on GoProjectBlack.com
+• Exposure to an engaged audience and exclusive early access opportunities
+• Social media highlights to drive traffic to your business
+• Recognition in the Founders Circle as an early supporter
 
 Welcome package: The Trailblazer Innovator Edition
 
 Early Bird Rate: $50 (50% off, will increase to $100 after launch)
- `  },
+`
+}
+
 ];
 
 const Tabdirectory = () => {

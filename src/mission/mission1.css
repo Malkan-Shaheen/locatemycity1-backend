@@ -1,17 +1,17 @@
-/* MerchSection-mobile.css - For small screens only */
+/* MerchSection-mobile.css - Adjusted for 3 cards in a row on all screens */
 
 @media screen and (max-width: 1023px) {
   .merch-grid {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 30px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Always 3 columns */
+    gap: 20px; /* Slightly smaller gap */
     margin-top: 40px;
+    justify-items: center;
   }
 
   .merch-card {
     width: 100%;
-    max-width: 364.44px;
+    max-width: 280px; /* Reduced so 3 fit side-by-side */
     height: auto;
     margin-bottom: 0;
   }
@@ -31,18 +31,14 @@
     text-align: center;
     font-family: 'Poppins', sans-serif;
     overflow: visible;
-
   }
 
   .merch-heading h2 {
-    font-size: 24px;
+    font-size: 20px; /* Reduced heading font */
     margin-top: 50px;
   }
 
-  .merch-heading p {
-    display: none;
-  }
-
+  .merch-heading p,
   .merch-heading span {
     display: none;
   }
@@ -50,25 +46,26 @@
   .merch-info,
   .merch-descr,
   .arrow-icon {
-    /* Maintain all original styles */
     display: flex;
     align-items: center;
-    gap: 10px;
-    font-size: 16px;
+    gap: 8px; /* Slightly smaller gap */
+    font-size: 14px; /* Reduced font for fit */
     font-weight: 500;
     letter-spacing: -4%;
     transition: all 0.3s ease;
   }
 
-  /* Maintain hover effects */
-  .merch-card.hovered .merch-descr {
-    background: linear-gradient(90deg, #CD9E3C 0%, #BD8A2D 100%);
-    color: #000;
-    border-radius: 12px;
-    padding: 12px 20px;
-    font-size: 25px;
-    justify-content: space-between;
-  }
+  /* Hover effects */
+ .merch-card.hovered .merch-descr {
+  background: linear-gradient(90deg, #CD9E3C 0%, #BD8A2D 100%);
+  color: #000;
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-size: 18px;
+  justify-content: space-between;
+  white-space: nowrap; /* Prevents line break */
+}
+
 
   .merch-card.hovered .arrow-icon {
     opacity: 0;
@@ -83,7 +80,7 @@
     transform: translateY(12px);
   }
 
-  /* Maintain background effects */
+  /* Background effects */
   .merch-section::before,
   .merch-section::after {
     content: '';
@@ -111,14 +108,55 @@
   }
 }
 
-/* For very small screens (optional extra adjustments) */
 @media screen and (max-width: 480px) {
   .merch-heading h2 {
-    font-size: 20px;
-    margin-top: -200px; /* Adjusted for better mobile viewing */
+    font-size: 18px;
+    margin-top: -200px;
   }
-  
+
   .merch-grid {
-    gap: 20px;
+    grid-template-columns: 1fr; /* ✅ One card per row */
+    gap: 15px;
+    justify-items: center;
+  }
+
+  .merch-card {
+    max-width: 100%;
+  }
+.merch-descr {
+    display: flex; /* Changed from none to flex */
+    align-items: center;
+    justify-content: space-between;
+    background: transparent; /* Start transparent */
+    color: transparent;
+    /* border-radius: 12px; */
+    padding: 14px 12px;
+    font-size: 14px;
+   height: auto;
+    /* width: 90%; */
+    margin: 10px auto 0;
+    height: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+
+  .merch-card.hovered .arrow-icon {
+    opacity: 0;
+  }
+
+  .merch-card.hovered .merch-info h3 {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  .merch-card.hovered .merch-image {
+    transform: translateY(12px);
+  }
+}
+@media screen and (max-width: 480px) {
+  .merch-card {
+    padding: 0 10px; /* Add some padding to prevent edge touching */
+    box-sizing: border-box; /* Include padding in width calculation */
   }
 }

@@ -354,6 +354,11 @@
     padding: 5px 36px;
     font-size: 12px;
   }
+   .bp-card:nth-child(7) {
+    grid-column: 1 / -1;
+    max-width: 361.79px;
+    margin: 0 auto;
+  }
 }
 
 /* Medium to Large Screens (769px to 1023px) */
@@ -362,6 +367,7 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 30px;
     padding: 0 24px;
+    justify-items: center; /* makes single items in a row center */
   }
 
   .bp-card {
@@ -376,6 +382,7 @@
     margin: 0 auto;
   }
 }
+
 
 /* Large Screens (≥1024px) */
 @media (min-width: 1024px) {

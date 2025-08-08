@@ -11,6 +11,11 @@ import icon1 from './../../images/icon1.png';
 import icon2 from './../../images/icon2.png';
 import icon3 from './../../images/icon3.png';
 import icon4 from './../../images/icon4.png';
+import Aicon1 from './../../images/Aicon1.png';
+import Aicon2 from './../../images/Aicon2.png';
+import Aicon3 from './../../images/Aicon3.png';
+import Aicon4 from './../../images/Aicon4.png';
+
 
 // Utility function to safely access window
 const isBrowser = () => typeof window !== 'undefined';
@@ -28,34 +33,35 @@ const contentList = [
     icon: icon1,
     title: "The Seed: Planted in the Directory",
     price: "$50 (Limited Time) / Annum",
-    text: `The entry-level tier designed for businesses looking to establish their presence and gain early access to Project Black's growing network.
+    activeIcon: Aicon1,
+    text: `The entry-level tier designed for businesses looking to establish their presence and gain early access to Project Black’s growing network.
 
 Benefits:
-Business listing in the Directory on GoProjectBlack.com
-Exposure to an engaged audience and exclusive early access opportunities
-Social media highlights to drive traffic to your business
-Recognition in the Founders Circle as an early supporter
+• Business listing in the Directory on GoProjectBlack.com
+• Exposure to an engaged audience and exclusive early access opportunities
+• Social media highlights to drive traffic to your business
+• Recognition in the Founders Circle as an early supporter
 
 Welcome package: The Trailblazer Innovator Edition
 
 Early Bird Rate: $50 (50% off, will increase to $100 after launch)
-
 `
   },
   {
     image: manImg,
     icon: icon2,
+    activeIcon: Aicon2,
     title: "Growth Phase",
     price: "$50 (Limited Time) / Annum",
     text: `Designed for business owners looking for a competitive edge and deeper engagement within Project Black.
 
 Benefits:
-All Trailblazer perks included
-Early access to platform launches and events
-Exclusive discounts with partner brands
-Founders Circle recognition with permanent listing
-Private networking with Black 100 members
-Priority spotlights for your business on the platform
+• All Trailblazer perks included
+• Early access to platform launches and events
+• Exclusive discounts with partner brands
+• Founders Circle recognition with permanent listing
+• Private networking with Black 100 members
+• Priority spotlights for your business on the platform
 
 Welcome package: The Black Box Innovator Edition
 
@@ -67,6 +73,7 @@ One additional social media feature (extra promotion across Project Black's plat
   {
     image: womanImg,
     icon: icon3,
+    activeIcon: Aicon3,
     title: "Established Root",
     price: "$50 (Limited Time) / Annum",
     text: `For entrepreneurs scaling up and ready to lead the culture.
@@ -91,15 +98,16 @@ The Black Box — Flame Edition
   {
     image: crownImg,
     icon: icon4,
+    activeIcon: Aicon4,
     title: "Harvesting Change",
     price: "$50 (Limited Time) / Annum",
     text: `The entry-level tier designed for businesses looking to establish their presence and gain early access to Project Black's growing network.
 
 Benefits:
-Business listing in the Directory on GoProjectBlack.com
-Exposure to an engaged audience and exclusive early access opportunities
-Social media highlights to drive traffic to your business
-Recognition in the Founders Circle as an early supporter
+• Business listing in the Directory on GoProjectBlack.com
+• Exposure to an engaged audience and exclusive early access opportunities
+• Social media highlights to drive traffic to your business
+• Recognition in the Founders Circle as an early supporter
 
 Welcome package: The Trailblazer Innovator Edition
 
@@ -317,7 +325,11 @@ const Directory = () => {
               data-panel={`panel${index + 1}`}
               onClick={() => handleLogoClick(`panel${index + 1}`)}
             >
-              <img src={item.icon} alt={`Icon ${index + 1}`} />
+              <img
+  src={activePanel === `panel${index + 1}` ? item.activeIcon : item.icon}
+  alt={`Icon ${index + 1}`}
+/>
+
             </div>
           ))}
         </div>

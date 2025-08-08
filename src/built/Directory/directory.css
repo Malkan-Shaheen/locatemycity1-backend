@@ -87,17 +87,17 @@ margin-top: 100px;
   align-items: center;
   cursor: pointer;
   transition: all 0.3s ease;
-  border: 1px solid #CD9E3C;
-  width: 40px;
-  height: 40px;
+  /* border: 1px solid #CD9E3C; */
+  width: auto;
+  height: auto;
   border-radius: 117.53px;
   opacity: 1;
   padding: 4.15px;
 }
 
 .logo-item1 img {
-  width: 70%;
-  height: 70%;
+  width: 100%;
+  height: 100%;
 }
 
 .logo-item1.active {
