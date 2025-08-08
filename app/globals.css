@@ -1754,7 +1754,7 @@ body {
   box-shadow: 0 4px 20px rgba(70, 130, 180, 0.2);
   position: relative;
   overflow: hidden;
-  margin-top: 80px;
+  margin-top: 0px;
   background: linear-gradient(135deg, #6bb9f0 0%, #3498db);
 }
 

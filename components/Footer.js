@@ -28,7 +28,7 @@ export default function Footer() {
 
         {/* Right: Contact Info */}
         <div className="footer-section">
-          <h4 className="footer-heading">Contact Us</h4>
+          <h2 className="footer-heading">Contact Us</h2>
   
 <p>
   <FaEnvelope className="footer-icon" />{' '}
