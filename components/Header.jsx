@@ -6,14 +6,13 @@ const Header = () => {
   const [mounted, setMounted] = useState(false);
   const menuRef = useRef(null);
   const hamburgerRef = useRef(null);
+  const headerRef = useRef(null);
 
   useEffect(() => {
     setMounted(true);
     
     const handleClickOutside = (e) => {
-      if (menuOpen && 
-          !menuRef.current.contains(e.target) && 
-          !hamburgerRef.current.contains(e.target)) {
+      if (menuOpen && headerRef.current && !headerRef.current.contains(e.target)) {
         setMenuOpen(false);
       }
     };
@@ -24,6 +23,11 @@ const Header = () => {
 
   const toggleMenu = useCallback(() => {
     setMenuOpen((prev) => !prev);
+  }, []);
+
+  const navigateAndCloseMenu = useCallback((url) => {
+    setMenuOpen(false);
+    window.location.href = url;
   }, []);
 
   if (!mounted) return null;
@@ -38,7 +42,7 @@ const Header = () => {
             overflow: hidden;
             z-index: 1;
             padding: 0;
-            min-height: 80px;
+            min-height: 70px;
             display: flex;
             align-items: center;
         }
@@ -47,7 +51,7 @@ const Header = () => {
             width: 100%;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 1rem;
+            padding: 0 16px;
             position: relative;
         }
 
@@ -77,8 +81,8 @@ const Header = () => {
         .logo-image {
             border-radius: 50%;
             filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-            height: clamp(30px, 6vw, 40px);
-            width: clamp(30px, 6vw, 40px);
+            height: 32px;
+            width: 32px;
             object-fit: contain;
         }
 
@@ -133,82 +137,63 @@ const Header = () => {
         .hamburger {
             display: none;
             cursor: pointer;
-            width: 30px;
-            height: 24px;
+            width: 32px;
+            height: 32px;
             position: relative;
             background: transparent;
             border: none;
             padding: 0;
             z-index: 10;
-            margin-right: 8px;
+            margin: 0 16px 0 0;
         }
 
         .hamburger span {
             display: block;
             position: absolute;
-            height: 3px;
-            width: 100%;
+            height: 2px;
+            width: 24px;
             background: white;
             border-radius: 3px;
             opacity: 1;
-            left: 0;
+            left: 4px;
             transform: rotate(0deg);
             transition: .25s ease-in-out;
         }
 
         .hamburger span:nth-child(1) {
-            top: 0;
-            width: 70%;
-            right: 0;
-            left: auto;
+            top: 10px;
         }
 
         .hamburger span:nth-child(2) {
-            top: 50%;
-            transform: translateY(-50%);
+            top: 16px;
         }
 
         .hamburger span:nth-child(3) {
-            top: 50%;
-            transform: translateY(-50%);
-            width: 80%;
-        }
-
-        .hamburger span:nth-child(4) {
-            bottom: 0;
-            width: 60%;
-            right: 0;
-            left: auto;
+            top: 22px;
         }
 
         .hamburger.open span:nth-child(1) {
-            width: 0%;
-            opacity: 0;
+            top: 16px;
+            transform: rotate(45deg);
         }
 
         .hamburger.open span:nth-child(2) {
-            transform: translateY(-50%) rotate(45deg);
-            width: 100%;
+            opacity: 0;
         }
 
         .hamburger.open span:nth-child(3) {
-            transform: translateY(-50%) rotate(-45deg);
-            width: 100%;
-        }
-
-        .hamburger.open span:nth-child(4) {
-            width: 0%;
-            opacity: 0;
+            top: 16px;
+            transform: rotate(-45deg);
         }
 
         .mobile-menu {
             position: fixed;
-            top: 80px;
+            top: 70px;
             right: 0;
             width: auto;
             min-width: 180px;
             background: rgba(59, 181, 253, 0.98);
-            padding: 1rem;
+            padding: 0.5rem;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
             border-radius: 0 0 0 15px;
             opacity: 0;
@@ -218,9 +203,8 @@ const Header = () => {
             z-index: 9999;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
             font-weight: 600;
-            align-items: flex-start;
         }
 
         .mobile-menu.open {
@@ -233,9 +217,8 @@ const Header = () => {
             color: white;
             text-decoration: none;
             background: rgba(255, 255, 255, 0.1);
-            padding: 10px 20px;
+            padding: 10px 16px;
             border-radius: 6px;
-            text-align: center;
             transition: background 0.3s ease;
             white-space: nowrap;
             width: 100%;
@@ -257,46 +240,33 @@ const Header = () => {
 
         @media (max-width: 768px) {
             .container {
-                padding: 0 0.75rem;
+                padding: 0 16px;
             }
             .logo {
-                font-size: 1.1rem;
-                gap: 8px;
-                margin-left: 8px;
+                margin-left: 0;
+            }
+            .logo h2 {
+                display: none;
             }
             .logo-image {
                 height: 32px;
                 width: 32px;
             }
+            .hamburger {
+                margin-right: 0;
+            }
         }
 
         @media (max-width: 480px) {
-            header {
-                min-height: 70px;
-            }
             .mobile-menu {
-                top: 70px;
-                padding: 0.75rem;
-                font-size: 0.9rem;
-                border-radius: 0 0 0 12px;
                 min-width: 160px;
-            }
-            .logo h2 {
-                font-size: 1rem;
-            }
-            .logo-image {
-                height: 30px;
-                width: 30px;
-            }
-            .hamburger {
-                margin-right: 6px;
-                width: 26px;
-                height: 22px;
+                padding: 0.5rem;
+                font-size: 0.9rem;
             }
         }
       `}</style>
 
-      <header role="banner">
+      <header role="banner" ref={headerRef}>
         <div className="container">
           <div className="header-content">
             <div className="logo">
@@ -304,8 +274,8 @@ const Header = () => {
                 src="/Images/cityfav.png"
                 alt="Locate My City logo"
                 className="logo-image"
-                width="40"
-                height="40"
+                width="32"
+                height="32"
                 loading="lazy"
                 decoding="async"
               />
@@ -330,7 +300,6 @@ const Header = () => {
               <span></span>
               <span></span>
               <span></span>
-              <span></span>
             </button>
           </div>
         </div>
@@ -342,9 +311,9 @@ const Header = () => {
           role="navigation"
           aria-label="Mobile navigation"
         >
-          <a href="/" onClick={() => setMenuOpen(false)}>Home</a>
-          <a href="/about" onClick={() => setMenuOpen(false)}>About Us</a>
-          <a href="/contact" onClick={() => setMenuOpen(false)}>Contact Us</a>
+          <a href="/" onClick={() => navigateAndCloseMenu('/')}>Home</a>
+          <a href="/about" onClick={() => navigateAndCloseMenu('/about')}>About Us</a>
+          <a href="/contact" onClick={() => navigateAndCloseMenu('/contact')}>Contact Us</a>
         </div>
       </header>
     </>
