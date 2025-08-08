@@ -60,15 +60,16 @@
   /* Hover effects */
  .merch-card.hovered .merch-descr {
   background: linear-gradient(90deg, #CD9E3C 0%, #BD8A2D 100%);
-  color: #ee0f0f;
+  color: black;
   border-radius: 16px;
   /* padding: 12px 20px; */
-  height: 80%;
+  height: 100%;
   width: 100%; /* Match width of merch-card (which is same as merch-image) */
   box-sizing: border-box;
   font-size: 18px;
+  justify-items: center;
   justify-content: center;
-  max-width: 280px;
+  max-width: 300px;
   white-space: nowrap; /* Prevents line break */
 }
  .merch-info {
@@ -166,7 +167,7 @@
   }
 }
 @media screen and (max-width: 480px) {
-  .merch-card {
+  .merch-grid {
     padding: 0 10px; /* Add some padding to prevent edge touching */
     box-sizing: border-box; /* Include padding in width calculation */
   }
@@ -176,10 +177,5 @@
   .merch-grid {
     padding: 0 10px; /* 10px padding on left and right */
     box-sizing: border-box;
-  }
-  .merch-image{
-    padding: 0 10px !important; /* 10px padding on left and right */
-    box-sizing: border-box;
-    border-radius: 20px;
   }
 }
