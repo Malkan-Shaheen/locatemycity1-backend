@@ -13,7 +13,7 @@
   .merch-card {
     width: 100%;
     max-width: 280px; /* Reduced so 3 fit side-by-side */
-    height: 550px;
+    height: 530px;
     margin-bottom: 0;
     overflow: hidden;
     position: relative;
@@ -61,9 +61,9 @@
   /* Hover effects */
  .merch-card.hovered .merch-descr {
   background: linear-gradient(90deg, #CD9E3C 0%, #BD8A2D 100%);
-  color: black;
+  color: red;
   border-radius: 16px;
-  /* padding: 12px 20px; */
+  padding: 12px 20px;
   height: 100%;
   width: 100%; /* Match width of merch-card (which is same as merch-image) */
   box-sizing: border-box;
