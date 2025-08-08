@@ -256,6 +256,22 @@ const Header = () => {
                 width: clamp(28px, 10vw, 36px);
             }
         }
+            @media (max-width: 480px) {
+  .logo-image {
+    height: 48px; /* increase logo size */
+    width: 48px;
+  }
+
+  .logo {
+    margin-left: 10px; /* add space from left */
+  }
+
+  .hamburger {
+    width: 24px;  /* decrease hamburger size */
+    height: 16px;
+  }
+}
+
       `}</style>
 
       <header role="banner">
