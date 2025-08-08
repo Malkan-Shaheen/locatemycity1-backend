@@ -8,7 +8,6 @@ const Header = () => {
   const hamburgerRef = useRef(null);
   const headerRef = useRef(null);
 
-  // Close menu when clicking outside or scrolling
   useEffect(() => {
     setMounted(true);
 
@@ -234,9 +233,9 @@ const Header = () => {
             </div>
 
             <nav className="nav-links" aria-label="Main navigation">
-              <a href="#home" onClick={(e) => handleNavigation(e, '#home')}>Home</a>
-              <a href="#about" onClick={(e) => handleNavigation(e, '#about')}>About</a>
-              <a href="#contact" onClick={(e) => handleNavigation(e, '#contact')}>Contact</a>
+              <a href="/" onClick={(e) => handleNavigation(e, '/home')}>Home</a>
+              <a href="/about" onClick={(e) => handleNavigation(e, '/about')}>About</a>
+              <a href="/contact" onClick={(e) => handleNavigation(e, '/contact')}>Contact</a>
             </nav>
 
             <button
