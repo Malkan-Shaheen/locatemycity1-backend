@@ -6,7 +6,6 @@ const Header = () => {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // Only mount once to avoid hydration mismatches
     setMounted(true);
   }, []);
 
@@ -119,10 +118,10 @@ const Header = () => {
         .hamburger {
             display: none;
             cursor: pointer;
-            width: 30px;
-            height: 20px;
+            width: clamp(24px, 6vw, 32px);
+            height: clamp(18px, 4.5vw, 24px);
             position: relative;
-            right:12px;
+            right: 12px;
             z-index: 15;
             background: transparent;
             border: none;
@@ -131,7 +130,7 @@ const Header = () => {
         .hamburger span {
             display: block;
             position: absolute;
-            height: 3px;
+            height: 2px;
             width: 100%;
             background: white;
             border-radius: 3px;
@@ -146,29 +145,30 @@ const Header = () => {
         }
 
         .hamburger span:nth-child(2), .hamburger span:nth-child(3) {
-            top: 10px;
+            top: 50%;
+            transform: translateY(-50%);
         }
 
         .hamburger span:nth-child(4) {
-            top: 20px;
+            bottom: 0px;
         }
 
         .hamburger.open span:nth-child(1) {
-            top: 10px;
+            top: 50%;
             width: 0%;
             left: 50%;
         }
 
         .hamburger.open span:nth-child(2) {
-            transform: rotate(45deg);
+            transform: translateY(-50%) rotate(45deg);
         }
 
         .hamburger.open span:nth-child(3) {
-            transform: rotate(-45deg);
+            transform: translateY(-50%) rotate(-45deg);
         }
 
         .hamburger.open span:nth-child(4) {
-            top: 10px;
+            bottom: 50%;
             width: 0%;
             left: 50%;
         }
@@ -192,6 +192,7 @@ const Header = () => {
             flex-direction: column;
             gap: 10px;
             font-weight: 600;
+            align-items: center; /* center menu items */
         }
 
         .mobile-menu.open {
@@ -204,11 +205,12 @@ const Header = () => {
             color: white;
             text-decoration: none;
             background: rgba(255, 255, 255, 0.1);
-            padding: 8px 16px;
+            padding: 10px 20px;
             border-radius: 6px;
-            text-align: right;
+            text-align: center;
             transition: background 0.3s ease;
             white-space: nowrap;
+            width: 100%;
         }
 
         .mobile-menu a:hover {
@@ -219,10 +221,8 @@ const Header = () => {
             .nav-links {
                 display: none;
             }
-
             .hamburger {
                 display: block;
-                margin-right:12px;
             }
         }
 
@@ -230,12 +230,8 @@ const Header = () => {
             .container {
                 padding: 0.5rem;
             }
-
-            .nav-links a {
-                min-width: 80px;
-                height: 35px;
-                font-size: 0.8rem;
-                padding: 0.5rem;
+            .logo {
+                font-size: 1rem;
             }
         }
 
@@ -243,62 +239,21 @@ const Header = () => {
             header {
                 min-height: 70px;
             }
-            
             .mobile-menu {
                 top: 70px;
-                padding: 0.75rem;
-                font-size: 0.85rem;
+                padding: 1rem;
+                font-size: 0.9rem;
+                border-radius: 0 0 0 12px;
             }
-            
             .logo {
-                gap: 8px;
+                gap: 6px;
             }
-            .logo h2{
-                display:none;
-                }
-        }
-
-        header::before {
-            content: "";
-            position: absolute;
-            top: -50px;
-            left: -50px;
-            width: 150px;
-            height: 150px;
-            background: #3bb5fd;
-            border-radius: 50%;
-            z-index: -1;
-        }
-
-        header::after {
-            content: "";
-            position: absolute;
-            bottom: -80px;
-            right: -60px;
-            width: 200px;
-            height: 200px;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 50%;
-            z-index: -1;
-        }
-
-        .floating-circle {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 50%;
-            z-index: -1;
-            animation: float 15s infinite linear;
-        }
-
-        @keyframes float {
-            0% {
-                transform: translateY(0) rotate(0deg);
+            .logo h2 {
+                display: none;
             }
-            50% {
-                transform: translateY(-20px) rotate(180deg);
-            }
-            100% {
-                transform: translateY(0) rotate(360deg);
+            .logo-image {
+                height: clamp(28px, 10vw, 36px);
+                width: clamp(28px, 10vw, 36px);
             }
         }
       `}</style>
@@ -316,7 +271,7 @@ const Header = () => {
                 loading="lazy"
                 decoding="async"
               />
-              <h2>LocateMy City</h2>
+              <h2>LocateMyCity</h2>
             </div>
 
             <nav className="nav-links" aria-label="Main navigation">
