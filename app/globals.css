@@ -3056,3 +3056,7 @@ display: inline-block;
   color: #4682B4;
   font-size: 1.2rem;
 }
+.mobile-menu a {
+  color: #222; /* much darker gray, almost black */
+  background: #fff; /* white */
+}
