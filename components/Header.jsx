@@ -122,6 +122,7 @@ const Header = () => {
             width: 30px;
             height: 20px;
             position: relative;
+            right:12px;
             z-index: 15;
             background: transparent;
             border: none;
@@ -221,6 +222,7 @@ const Header = () => {
 
             .hamburger {
                 display: block;
+                margin-right:12px;
             }
         }
 
@@ -251,6 +253,9 @@ const Header = () => {
             .logo {
                 gap: 8px;
             }
+            .logo h2{
+                display:none;
+                }
         }
 
         header::before {
@@ -311,7 +316,7 @@ const Header = () => {
                 loading="lazy"
                 decoding="async"
               />
-              <span>LocateMyCity</span>
+              <h2>LocateMyCity</h2>
             </div>
 
             <nav className="nav-links" aria-label="Main navigation">
