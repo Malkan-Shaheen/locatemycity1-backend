@@ -1,22 +1,25 @@
 'use client';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const menuRef = useRef(null);
+  const hamburgerRef = useRef(null);
 
   useEffect(() => {
     setMounted(true);
     
-    // Close menu when clicking outside
     const handleClickOutside = (e) => {
-      if (menuOpen && !e.target.closest('.hamburger') && !e.target.closest('.mobile-menu')) {
+      if (menuOpen && 
+          !menuRef.current.contains(e.target) && 
+          !hamburgerRef.current.contains(e.target)) {
         setMenuOpen(false);
       }
     };
     
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [menuOpen]);
 
   const toggleMenu = useCallback(() => {
@@ -44,7 +47,7 @@ const Header = () => {
             width: 100%;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0.5rem 1rem;
+            padding: 0 1rem;
             position: relative;
         }
 
@@ -68,13 +71,15 @@ const Header = () => {
             background-clip: text;
             -webkit-text-fill-color: transparent;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 0.5rem 0;
         }
 
         .logo-image {
             border-radius: 50%;
             filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-            height: clamp(30px, 8vw, 40px);
-            width: clamp(30px, 8vw, 40px);
+            height: clamp(30px, 6vw, 40px);
+            width: clamp(30px, 6vw, 40px);
+            object-fit: contain;
         }
 
         .nav-links {
@@ -128,68 +133,80 @@ const Header = () => {
         .hamburger {
             display: none;
             cursor: pointer;
-            width: 20px;
-            height: 12px;
+            width: 30px;
+            height: 24px;
             position: relative;
-            right: 0;
-            z-index: 15;
             background: transparent;
             border: none;
             padding: 0;
+            z-index: 10;
+            margin-right: 8px;
         }
 
         .hamburger span {
             display: block;
             position: absolute;
-            height: 2px;
+            height: 3px;
             width: 100%;
             background: white;
             border-radius: 3px;
             opacity: 1;
-            left: 10px;
+            left: 0;
             transform: rotate(0deg);
             transition: .25s ease-in-out;
         }
 
         .hamburger span:nth-child(1) {
-            top: 0px;
+            top: 0;
+            width: 70%;
+            right: 0;
+            left: auto;
         }
 
-        .hamburger span:nth-child(2), .hamburger span:nth-child(3) {
+        .hamburger span:nth-child(2) {
             top: 50%;
             transform: translateY(-50%);
         }
 
+        .hamburger span:nth-child(3) {
+            top: 50%;
+            transform: translateY(-50%);
+            width: 80%;
+        }
+
         .hamburger span:nth-child(4) {
-            bottom: 0px;
+            bottom: 0;
+            width: 60%;
+            right: 0;
+            left: auto;
         }
 
         .hamburger.open span:nth-child(1) {
-            top: 50%;
             width: 0%;
-            left: 50%;
+            opacity: 0;
         }
 
         .hamburger.open span:nth-child(2) {
             transform: translateY(-50%) rotate(45deg);
+            width: 100%;
         }
 
         .hamburger.open span:nth-child(3) {
             transform: translateY(-50%) rotate(-45deg);
+            width: 100%;
         }
 
         .hamburger.open span:nth-child(4) {
-            bottom: 50%;
             width: 0%;
-            left: 50%;
+            opacity: 0;
         }
 
         .mobile-menu {
             position: fixed;
             top: 80px;
-            right: 10px;
+            right: 0;
             width: auto;
-            min-width: 150px;
+            min-width: 180px;
             background: rgba(59, 181, 253, 0.98);
             padding: 1rem;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
@@ -203,7 +220,7 @@ const Header = () => {
             flex-direction: column;
             gap: 10px;
             font-weight: 600;
-            align-items: center;
+            align-items: flex-start;
         }
 
         .mobile-menu.open {
@@ -222,6 +239,7 @@ const Header = () => {
             transition: background 0.3s ease;
             white-space: nowrap;
             width: 100%;
+            box-sizing: border-box;
         }
 
         .mobile-menu a:hover {
@@ -239,10 +257,16 @@ const Header = () => {
 
         @media (max-width: 768px) {
             .container {
-                padding: 0.5rem;
+                padding: 0 0.75rem;
             }
             .logo {
-                font-size: 1rem;
+                font-size: 1.1rem;
+                gap: 8px;
+                margin-left: 8px;
+            }
+            .logo-image {
+                height: 32px;
+                width: 32px;
             }
         }
 
@@ -252,23 +276,22 @@ const Header = () => {
             }
             .mobile-menu {
                 top: 70px;
-                padding: 1rem;
+                padding: 0.75rem;
                 font-size: 0.9rem;
                 border-radius: 0 0 0 12px;
-            }
-            .logo {
-                gap: 10px;
-                margin-left: 14px;
+                min-width: 160px;
             }
             .logo h2 {
-                display: none;
+                font-size: 1rem;
             }
             .logo-image {
-                height: 36px;
-                width: 36px;
+                height: 30px;
+                width: 30px;
             }
             .hamburger {
-                margin-right: 12px;
+                margin-right: 6px;
+                width: 26px;
+                height: 22px;
             }
         }
       `}</style>
@@ -296,6 +319,7 @@ const Header = () => {
             </nav>
 
             <button
+              ref={hamburgerRef}
               className={`hamburger ${menuOpen ? 'open' : ''}`}
               onClick={toggleMenu}
               aria-label={menuOpen ? 'Close menu' : 'Open menu'}
@@ -312,6 +336,7 @@ const Header = () => {
         </div>
 
         <div
+          ref={menuRef}
           id="mobile-menu"
           className={`mobile-menu ${menuOpen ? 'open' : ''}`}
           role="navigation"
