@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useRef } from 'react';
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
@@ -11,16 +11,26 @@ import React from 'react';
 // Fixed dynamic import syntax
 const MapWithNoSSR = dynamic(() => import('../../components/MapComponent'), { 
   ssr: false,
-  loading: () => <div className="loading-indicator" role="status" aria-live="polite">
-                  <div className="loading-spinner" aria-hidden="true"></div>
-                  <span>Loading map...</span>
-                </div>
+  loading: () => (
+    <div className="loading-indicator" role="status" aria-live="polite">
+      <div className="loading-spinner" aria-hidden="true"></div>
+      <span>Loading map...</span>
+    </div>
+  )
 });
 
 export default function RockyLocationsExplorer() {
   const [allRockyLocations, setAllRockyLocations] = useState([]);
   const [selectedUSState, setSelectedUSState] = useState(null);
   const [isDataLoading, setIsDataLoading] = useState(true);
+  const stateHeadingRef = useRef(null);
+
+  // Focus on heading when a new state is selected
+  useEffect(() => {
+    if (selectedUSState && stateHeadingRef.current) {
+      stateHeadingRef.current.focus();
+    }
+  }, [selectedUSState]);
 
   // Load data from backend
   useEffect(() => {
@@ -96,9 +106,10 @@ export default function RockyLocationsExplorer() {
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
       </Head>
 
-      <Header />
+      <Header role="banner" />
 
-      <main id="main-content" role="main">
+    
+
         <section className="hero-banner" aria-labelledby="main-heading" aria-describedby="hero-desc">
           <div className="content-container">
             <h1 id="main-heading" className="main-heading">Cities with "Rock" in the Name</h1>
@@ -208,6 +219,7 @@ export default function RockyLocationsExplorer() {
                     className="state-button" 
                     onClick={() => setSelectedUSState(state)}
                     aria-label={`Show locations in ${state}`}
+                    aria-pressed={selectedUSState === state}
                   >
                     <span>{state}</span>
                   </button>
@@ -216,9 +228,21 @@ export default function RockyLocationsExplorer() {
             </div>
 
             {selectedUSState && (
-              <div className="state-locations-container" style={{ marginTop: '2rem' }} role="region" aria-labelledby={`${selectedUSState}-locations-heading`}>
+              <div 
+                className="state-locations-container" 
+                style={{ marginTop: '2rem' }} 
+                role="region" 
+                aria-labelledby={`${selectedUSState}-locations-heading`}
+              >
                 <div className="state-location-group">
-                  <h3 id={`${selectedUSState}-locations-heading`} className="state-group-heading">{selectedUSState}</h3>
+                  <h3 
+                    id={`${selectedUSState}-locations-heading`} 
+                    className="state-group-heading" 
+                    tabIndex="-1" 
+                    ref={stateHeadingRef}
+                  >
+                    {selectedUSState}
+                  </h3>
                   <div className="location-list">
                     {locationsForSelectedState.map(location => (
                       <div key={`${location.name}-${location.county}-${location.lat}-${location.lon}`} className="location-item">
@@ -270,7 +294,7 @@ export default function RockyLocationsExplorer() {
             )}
           </div>
         </section>
-      </main>
+      
 
       <Footer role="contentinfo" />
     </>
