@@ -15,6 +15,7 @@
     max-width: 280px; /* Reduced so 3 fit side-by-side */
     height: auto;
     margin-bottom: 0;
+    overflow: hidden;
   }
 
   .merch-image {
@@ -59,7 +60,7 @@
   /* Hover effects */
  .merch-card.hovered .merch-descr {
   background: linear-gradient(90deg, #CD9E3C 0%, #BD8A2D 100%);
-  color: #000;
+  color: #ee0f0f;
   border-radius: 16px;
   /* padding: 12px 20px; */
   height: 80%;
@@ -70,6 +71,10 @@
   max-width: 280px;
   white-space: nowrap; /* Prevents line break */
 }
+ .merch-info {
+    position: relative; /* Add this */
+    width: 100%;
+  }
 
 
   .merch-card.hovered .arrow-icon {
@@ -139,7 +144,7 @@
      /* padding: 16px 24px; */
   height: 80vh;
   width: 100vw;
-   
+   position: absolute;
     margin: 10px auto 0;
     height: 0;
     overflow: hidden;
