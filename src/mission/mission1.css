@@ -12,9 +12,10 @@
 
   .merch-card.hovered .merch-descr {
   /* existing styles */
-  min-height: 40px;  /* button won't shrink smaller than this */
-}
-
+  min-height: 40px; 
+   margin-top: 20px;
+min-width: 250px;
+  }
 
   .merch-card {
     width: 100%;
@@ -68,7 +69,7 @@
   /* Hover effects */
  .merch-card.hovered .merch-descr {
   background: linear-gradient(90deg, #CD9E3C 0%, #BD8A2D 100%);
-  color: black;
+  color: red;
   border-radius: 16px;
   padding: 12px 20px;
   height: 100%;
@@ -186,4 +187,17 @@
     padding: 0 10px; /* 10px padding on left and right */
     box-sizing: border-box;
   }
+}
+.merch-card.hovered .merch-descr {
+  /* existing styles */
+  min-height: 40px;
+  margin-top: 20px;  /* margin between image and button */
+  min-width: 250px;
+  width: 100%; /* ensure full width */
+  box-sizing: border-box;
+  max-width: none; /* remove max-width to match merch-image width */
+}
+
+.merch-card.hovered .merch-info {
+  width: 100%; /* ensure merch-info (button container) matches image width */
 }
