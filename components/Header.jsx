@@ -1,22 +1,20 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // Only mount once to avoid hydration mismatches
     setMounted(true);
   }, []);
 
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
-  };
+  const toggleMenu = useCallback(() => {
+    setMenuOpen((prev) => !prev);
+  }, []);
 
-  if (!mounted) {
-    // Don't render on server or before mounting to prevent hydration errors
-    return null;
-  }
+  if (!mounted) return null;
 
   return (
     <>
@@ -302,38 +300,50 @@ const Header = () => {
         }
       `}</style>
 
-      <header>
+    <header role="banner">
         <div className="container">
           <div className="header-content">
             <div className="logo">
-              <img src="/Images/cityfav.png" alt="Logo" className="logo-image" />
+              <img
+                src="/Images/cityfav.png"
+                alt="Locate My City logo"
+                className="logo-image"
+                width="40"
+                height="40"
+                loading="lazy"
+                decoding="async"
+              />
               <span>Locate My City</span>
             </div>
 
-            <nav className="nav-links">
+            <nav className="nav-links" aria-label="Main navigation">
               <a href="/">Home</a>
               <a href="/about">About Us</a>
               <a href="/contact">Contact Us</a>
             </nav>
 
-            <div
+            <button
               className={`hamburger ${menuOpen ? 'open' : ''}`}
               onClick={toggleMenu}
-              aria-label="Toggle menu"
+              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={menuOpen}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') toggleMenu(); }}
+              aria-controls="mobile-menu"
+              type="button"
             >
               <span></span>
               <span></span>
               <span></span>
               <span></span>
-            </div>
+            </button>
           </div>
         </div>
 
-        <div className={`mobile-menu ${menuOpen ? 'open' : ''}`}>
+        <div
+          id="mobile-menu"
+          className={`mobile-menu ${menuOpen ? 'open' : ''}`}
+          role="navigation"
+          aria-label="Mobile navigation"
+        >
           <a href="/" onClick={() => setMenuOpen(false)}>Home</a>
           <a href="/about" onClick={() => setMenuOpen(false)}>About Us</a>
           <a href="/contact" onClick={() => setMenuOpen(false)}>Contact Us</a>
