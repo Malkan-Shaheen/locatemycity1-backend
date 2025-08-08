@@ -8,8 +8,14 @@ import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import React from 'react';
 
-// Dynamically import Leaflet to avoid SSR issues, memoized for performance
-const MapWithNoSSR = dynamic(() => import('../../components/MapComponent').then(mod => React.memo(mod.default)), { ssr: false });
+// Fixed dynamic import syntax
+const MapWithNoSSR = dynamic(() => import('../../components/MapComponent'), { 
+  ssr: false,
+  loading: () => <div className="loading-indicator" role="status" aria-live="polite">
+                  <div className="loading-spinner" aria-hidden="true"></div>
+                  <span>Loading map...</span>
+                </div>
+});
 
 export default function RockyLocationsExplorer() {
   const [allRockyLocations, setAllRockyLocations] = useState([]);
@@ -82,7 +88,6 @@ export default function RockyLocationsExplorer() {
   return (
     <>
       <Head>
-        <html lang="en" />
         <title>LocateMyCity - Rocky Locations Explorer</title>
         <meta name="description" content="Discover unique U.S. cities with 'Rock' in their names" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />

@@ -233,13 +233,13 @@ const Header = () => {
             </div>
 
         <nav className="nav-links" aria-label="Main navigation">
-  <Link href="/" legacyBehavior passHref>
+  <Link href="/">
     <a onClick={(e) => handleNavigation(e, '/')}>Home</a>
   </Link>
-  <Link href="/about" legacyBehavior passHref>
+  <Link href="/about">
     <a onClick={(e) => handleNavigation(e, '/about')}>About</a>
   </Link>
-  <Link href="/contact" legacyBehavior passHref>
+  <Link href="/contact">
     <a onClick={(e) => handleNavigation(e, '/contact')}>Contact</a>
   </Link>
 </nav>
