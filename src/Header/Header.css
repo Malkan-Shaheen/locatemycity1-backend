@@ -3,6 +3,9 @@
   --header-padding-x: 24px;
   --nav-gap: 24px;
   --logo-height: 45px;
+  --hamburger-width: 24px;
+  --hamburger-height: 20px;
+  --hamburger-line-height: 2px;
 }
 
 .custom-header {
@@ -50,6 +53,7 @@
   align-items: center;
   gap: var(--nav-gap);
   flex-shrink: 0;
+  position: relative;
 }
 
 .nav {
@@ -101,6 +105,66 @@
   border-color: #fdb913;
 }
 
+/* Hamburger Menu Styles */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: var(--hamburger-width);
+  height: var(--hamburger-height);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 1000;
+}
+
+.hamburger-line {
+  display: block;
+  width: 100%;
+  height: var(--hamburger-line-height);
+  background-color: white;
+  transition: all 0.3s ease;
+}
+
+.hamburger.active .hamburger-line:nth-child(1) {
+  transform: translateY(calc(var(--hamburger-height)/2 - var(--hamburger-line-height)/2)) rotate(45deg);
+}
+
+.hamburger.active .hamburger-line:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.active .hamburger-line:nth-child(3) {
+  transform: translateY(calc(-1 * (var(--hamburger-height)/2 - var(--hamburger-line-height)/2))) rotate(-45deg);
+}
+
+/* Mobile Menu Styles */
+.mobile-menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background: rgba(10, 6, 1, 0.95);
+  border: 1px solid #FFFFFF1A;
+  border-radius: 10px;
+  padding: 20px;
+  flex-direction: column;
+  gap: 20px;
+  z-index: 999;
+  min-width: 200px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.mobile-nav {
+  flex-direction: column;
+  gap: 15px;
+}
+
+.mobile-lineage {
+  margin-top: 10px;
+}
+
 /* Tablet screens */
 @media (max-width: 1024px) {
   :root {
@@ -130,6 +194,8 @@
     --header-height: 60px;
     --logo-height: 40px;
     --header-padding-x: 12px;
+    --hamburger-width: 22px;
+    --hamburger-height: 18px;
   }
 
   .custom-header {
@@ -137,9 +203,17 @@
     padding: 0 var(--header-padding-x);
   }
 
-  .nav,
-  .lineage-button {
-    display: none ;
+  .desktop-nav,
+  .desktop-lineage {
+    display: none;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
+  .mobile-menu {
+    display: flex;
   }
 
   .logo-img {

@@ -193,10 +193,18 @@
     box-sizing: border-box;
   }
 }
+
+@media screen and (min-width: 1023px) {
+  .merch-info {
+    padding-top:30px; /* 10px padding on left and right */
+  }
+}
+
+
 .merch-card.hovered .merch-descr {
   /* existing styles */
   min-height: 40px;
-  margin-top: 20px;  /* margin between image and button */
+  margin-top: 50px;  /* margin between image and button */
   min-width: 250px;
   width: 100%; /* ensure full width */
   box-sizing: border-box;
