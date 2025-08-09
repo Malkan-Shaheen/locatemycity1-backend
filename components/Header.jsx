@@ -110,7 +110,7 @@ const Header = () => {
         .nav-links a {
           background: rgba(255, 255, 255, 0.15);
           backdrop-filter: blur(10px);
-          color: black;
+          color: white;
           text-decoration: none;
           font-weight: 600;
           padding: 0.5rem 1rem;
