@@ -1,0 +1,446 @@
+/* Center everything on the page */
+.page-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 40px;
+  background: #121212;
+
+}
+
+
+/* Adjust layout to support the line */
+.empower-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0px; /* We'll control spacing with margins now */
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+/* Hide vertical line on smaller screens */
+@media (max-width: 1024px) {
+  .vertical-line {
+    display: none;
+  }
+
+  .empower-section {
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .empower-text {
+    margin-left: 0;
+    padding: 0 10px;
+  }
+}
+
+
+/* Section that holds image + text */
+.empower-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  align-items: flex-start;
+  max-width: 1200px;
+  background-color: transparent;
+  color: #ffffff;
+  font-family: 'Poppins', sans-serif;
+  border-radius: 2px;
+}
+
+/* Frame container */
+.frame-container {
+  width: 580.25px;
+  height: 499.25px;
+  border-radius: 12px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.frame-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+/* Text section */
+.empower-text {
+  max-width: 492.75px;
+  display: flex;
+  flex-direction: column;
+  gap: 21px;
+    margin-left: 80px; 
+    position: relative;
+}
+
+
+
+@media (max-width: 1024px) {
+  .empower-section {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .frame-container {
+    width: 100%;
+    height: auto;
+  }
+
+  .frame-image {
+    height: auto;
+    width: 100%;
+  }
+
+  .empower-text {
+    max-width: 100%;
+    margin-left: 0;      /* Remove the 104px margin on smaller screens */
+    padding: 0 10px;     /* Optional: add horizontal padding for breathing space */
+  }
+}
+
+.empower-heading {
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: capitalize;
+  line-height: 1.45;
+}
+
+.empower-border-line {
+  height: 4.5px;
+  width: 100px;
+  background: linear-gradient(90deg, #CD9E3C 0%, #BD8A2D 100%);
+}
+
+.empower-desc {
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: capitalize;
+  line-height: 1.45;
+  color: #d0d0d0;
+}
+
+/* Responsive layout */
+@media (max-width: 768px) {
+  .empower-section {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .frame-container {
+    width: 100%;
+    height: auto;
+  }
+
+  .frame-image {
+    height: auto;
+    width: 100%;
+  }
+
+  .empower-text {
+    max-width: 100%;
+    padding: 0 10px;
+    font-size: 14px;
+  }
+}
+.text-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Common line style */
+.line {
+  position: absolute;
+  width: 4.5px;
+  background: linear-gradient(180deg, #CD9E3C 0%, #BD8A2D 100%);
+  border-radius: 2px;
+  z-index: 1;
+}
+
+/* Adjusted left lines closer to text */
+.line-top-left {
+  top: 15px;
+  left: 60px; /* Changed from -4.5px to 0px */
+  height: 135px;
+}
+
+.line-bottom-left {
+  top: 295px;
+  left: 60px; /* Changed from -4.5px to 0px */
+  height: 155px;
+}
+.empower-text {
+  padding-left: 16px; /* Optional: creates room between line and text */
+}
+
+
+/* Right vertical line is correct */
+.line-right-vertical {
+  top: 135px;
+  right: 0px;
+  height: 140px;
+}
+
+@media (max-width: 1024px) {
+  .line {
+    display: none;
+  }
+}
+
+.frames-grid {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 7px; /* Tiny space between images */
+  border-radius: 12px;
+  
+}
+
+/* Common image styles */
+.frame-img {
+  object-fit: cover;
+  display: block;
+  transition: all 0.3s ease;
+  transform-origin: center center;
+}
+
+/* Default borders only on 1st and 4th */
+.frame-img-1,
+.frame-img-4 {
+  border: 3px solid;
+  border-image: linear-gradient(90deg, #CD9E3C 0%, #BD8A2D 100%);
+  border-image-slice: 1;
+}
+
+/* Image sizing */
+.frame-img-1 {
+  width: 336.75px;
+  height: 269.25px;
+}
+
+.frame-img-2 {
+  width: 217.5px;
+  height: 150.75px;
+}
+
+.frame-img-3 {
+  width: 336.75px;
+  height: 213px;
+}
+
+.frame-img-4 {
+  width: 217.5px;
+  height: 333.75px;
+}
+
+/* Hover behavior */
+.frame-img:hover {
+  transform: scale(1.03); /* Slight zoom */
+
+  /* If has border, hide it */
+ 
+}
+.frame-img-1:hover,
+.frame-img-4:hover {
+  border: none !important;
+
+}
+
+/* For those without border, show golden on hover */
+.frame-img-2:hover,
+.frame-img-3:hover {
+  border: 3px solid;
+  border-image: linear-gradient(90deg, #CD9E3C 0%, #BD8A2D 100%);
+  border-image-slice: 1;
+}
+/* .frame-img-2 {
+  width: 217.5px;
+  height: 150.75px;
+  margin-top: 113px; 
+} */
+.frame-img-4 {
+  margin-top: -120px; 
+}
+.frame-img:hover {
+  transform: scale(1.03); /* Slight zoom */
+}
+
+@media (max-width: 768px) {
+  .empower-section {
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center;
+    position: relative;
+    overflow: visible !important;
+  }
+
+  .frames-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 7px !important;
+    width: 100% !important;
+    max-width: 600px !important;
+    margin-bottom: 0px !important;
+    position: relative;
+    top: -250px;
+  }
+
+  .frame-img,
+  .frame-img-1,
+  .frame-img-2,
+  .frame-img-3,
+  .frame-img-4 {
+    width: 100% !important;
+    height: auto !important;
+    object-fit: cover !important;
+    aspect-ratio: 4 / 3 !important;
+    margin: 0 !important;
+  }
+
+  .frame-img-4 {
+    margin-top: 0 !important;
+  }
+
+  .empower-text {
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    padding: 0 10px !important;
+    text-align: left !important;
+  }
+  .empower-desc-wrapper{
+    position: relative;
+    top: 400px;
+  }
+
+}
+
+
+
+@media (max-width: 768px) {
+  .empower-section {
+    flex-direction: column !important;
+  }
+
+  .empower-heading-wrapper {
+    order: 1 !important;
+  }
+
+  .frames-grid {
+    order: 2 !important;
+  }
+
+  .empower-desc-wrapper {
+    order: 3 !important;
+  }
+}
+@media (max-width: 360px) {
+  .empower-section {
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0px !important;
+    margin-top:0px;
+    /* max-height: 100px; */
+  }
+
+  .empower-text {
+    width: 100% !important;
+    padding: 0 !important;
+    /* margin: 0 !important; */
+    text-align: left !important;
+    display: flex !important;
+    flex-direction: column !important;
+    margin-top: 0px;
+    /* gap: 20px !important; */
+  }
+
+  .empower-heading-wrapper {
+    order: 1 !important;
+  }
+
+  .empower-heading {
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    text-align: left !important;
+  }
+
+  .mobile-reorder-grid {
+    order: 2 !important;
+    width: 100% !important;
+  }
+
+  .frames-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    /* margin-top: -30px; */
+    /* gap: 12px !important; */
+
+    width: 100% !important;
+    margin-top: 70px;
+  }
+
+  .frame-img,
+  .frame-img-1,
+  .frame-img-2,
+  .frame-img-3,
+  .frame-img-4 {
+    width: 100% !important;
+    height: auto !important;
+    object-fit: cover !important;
+    border-radius: 10px !important;
+    aspect-ratio: 1 / 1 !important;
+    margin: 0 !important;
+  }
+
+  .empower-desc-wrapper {
+    order: 3 !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin-top: -50px;
+  }
+
+  .empower-desc-wrapper {
+    font-size: 8px !important;
+    line-height: 1.6 !important;
+    letter-spacing: 0.01em !important;
+    color: #cccccc !important;
+    text-align: left !important;
+   
+
+  }
+  .empower-desc {
+    /* margin-top: -240px; */
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: capitalize;
+    line-height: 1.45;
+    color: #d0d0d0;
+    padding: 0px;
+    margin-top: 50px;
+}
+
+  .line {
+    display: none ;
+  }
+}
+
+@media (max-width: 768px) {
+  .bp-wrapper {
+    justify-content: flex-start;     /* Push content to top */
+    padding-top: 6rem;               /* Increase top spacing */
+    overflow: auto !important;       /* Allow scrolling */
+  }
+
+  .bp-header {
+    margin-top: 2rem;
+  }
+}
