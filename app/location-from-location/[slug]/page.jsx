@@ -9,12 +9,7 @@ import Footer from '../../../components/Footer';
 import { FaGlobe, FaSun, FaWind, FaPlane, FaAnchor, FaClock } from 'react-icons/fa';
 import { WiSunrise, WiSunset } from 'react-icons/wi';
 
-import { 
-  MetricCard, 
-  WeatherPanel, 
-  FAQItem, 
-  RouteCard 
-} from '../../../components/DistanceComponents';
+const NOMINATIM_URL = 'https://nominatim.openstreetmap.org/search';
 
 // Import Leaflet components dynamically to avoid SSR issues
 const LeafletMap = dynamic(
@@ -32,7 +27,41 @@ const LeafletMap = dynamic(
   }
 );
 
-const NOMINATIM_URL = 'https://nominatim.openstreetmap.org/search';
+// Accessible Metric Card Component
+const MetricCard = ({ icon, title, value, unit, variant, role }) => (
+  <div 
+    className={`distance-result__metric-card distance-result__metric-card--${variant}`}
+    role={role}
+    aria-labelledby={`metric-title-${title.toLowerCase().replace(/\s+/g, '-')}`}
+  >
+    <div className="distance-result__metric-card-content">
+      <div className="distance-result__metric-icon" aria-hidden="true">
+        {icon}
+      </div>
+      <h3 
+        id={`metric-title-${title.toLowerCase().replace(/\s+/g, '-')}`}
+        className="distance-result__metric-title"
+      >
+        {title}
+      </h3>
+      <p className="distance-result__metric-value">
+        {value} <span className="distance-result__metric-unit">{unit}</span>
+      </p>
+    </div>
+  </div>
+);
+
+// Accessible Route Card Component
+const RouteCard = ({ source, destination }) => (
+  <div className="route-card-content">
+    <div className="route-card-locations">
+      <span className="route-card-source">{source}</span>
+      <span className="route-card-arrow" aria-hidden="true">→</span>
+      <span className="route-card-destination">{destination}</span>
+    </div>
+    <div className="route-card-action">Calculate distance</div>
+  </div>
+);
 
 export default function DistanceResult() {
   const [sourcePlace, setSourcePlace] = useState(null);
@@ -45,7 +74,6 @@ export default function DistanceResult() {
   const params = useParams();
   const WEATHER_API_URL = 'https://api.openweathermap.org/data/2.5/weather';
   const WEATHER_API_KEY = '953d1012b9ab5d4722d58e46be4305f7';
-  const POPULAR_ROUTES_API_URL = '/api/popular-routes';
   
   // Extract location names from URL
   const slug = params.slug;
@@ -420,7 +448,7 @@ export default function DistanceResult() {
         {!isLoading && (
           <section aria-labelledby="metrics-heading">
             <h2 id="metrics-heading" className="distance-result__section-title">Distance Information</h2>
-            <div className="distance-result__metrics-grid" role="grid">
+            <div className="distance-result__metrics-grid" role="grid" aria-labelledby="metrics-heading">
               <div role="row" className="distance-result__metrics-row">
                 <MetricCard 
                   icon={<FaGlobe aria-hidden="true" />}
@@ -465,18 +493,48 @@ export default function DistanceResult() {
           <section aria-labelledby="weather-heading">
             <h2 id="weather-heading" className="distance-result__section-title">Side-by-Side Weather</h2>
             <div className="distance-result__weather-grid">
-              <WeatherPanel 
-                location={sourcePlace?.display_name?.split(',')[0]}
-                weather={sourceWeather}
-                type="source"
-                temperatureLabelId="source-temperature-label"
-              />
-              <WeatherPanel 
-                location={destinationPlace?.display_name?.split(',')[0]}
-                weather={destinationWeather}
-                type="destination"
-                temperatureLabelId="destination-temperature-label"
-              />
+              <div className="weather-panel weather-panel--source">
+                <h3 className="weather-panel__title">{sourcePlace?.display_name?.split(',')[0]}</h3>
+                <div className="weather-panel__content">
+                  <div className="weather-panel__metric">
+                    <p className="weather-panel__label" id="source-temperature-label">Temperature</p>
+                    <p className="weather-panel__value">{sourceWeather.temp}</p>
+                  </div>
+                  <div className="weather-panel__metric">
+                    <p className="weather-panel__label">Wind Speed</p>
+                    <p className="weather-panel__value">{sourceWeather.wind}</p>
+                  </div>
+                  <div className="weather-panel__metric">
+                    <p className="weather-panel__label">Sunrise</p>
+                    <p className="weather-panel__value">{sourceWeather.sunrise}</p>
+                  </div>
+                  <div className="weather-panel__metric">
+                    <p className="weather-panel__label">Sunset</p>
+                    <p className="weather-panel__value">{sourceWeather.sunset}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="weather-panel weather-panel--destination">
+                <h3 className="weather-panel__title">{destinationPlace?.display_name?.split(',')[0]}</h3>
+                <div className="weather-panel__content">
+                  <div className="weather-panel__metric">
+                    <p className="weather-panel__label" id="destination-temperature-label">Temperature</p>
+                    <p className="weather-panel__value">{destinationWeather.temp}</p>
+                  </div>
+                  <div className="weather-panel__metric">
+                    <p className="weather-panel__label">Wind Speed</p>
+                    <p className="weather-panel__value">{destinationWeather.wind}</p>
+                  </div>
+                  <div className="weather-panel__metric">
+                    <p className="weather-panel__label">Sunrise</p>
+                    <p className="weather-panel__value">{destinationWeather.sunrise}</p>
+                  </div>
+                  <div className="weather-panel__metric">
+                    <p className="weather-panel__label">Sunset</p>
+                    <p className="weather-panel__value">{destinationWeather.sunset}</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </section>
         )}
@@ -519,24 +577,23 @@ export default function DistanceResult() {
         {!isLoading && (
           <section aria-labelledby="routes-heading">
             <h2 id="routes-heading" className="distance-result__section-title">Most Popular Routes</h2>
-            <div className="distance-result__routes-grid">
+            <ul className="distance-result__routes-list">
               {popularRoutes.map((route, index) => (
-                <div 
-                  key={index}
-                  className="route-card"
-                  tabIndex="0"
-                  onClick={() => navigateToRoute(route.source, route.destination)}
-                  onKeyDown={(e) => handleRouteKeyDown(e, route.source, route.destination)}
-                  aria-label={`Calculate distance between ${route.source} and ${route.destination}`}
-                  role="button"
-                >
-                  <RouteCard 
-                    source={route.source}
-                    destination={route.destination}
-                  />
-                </div>
+                <li key={index} className="distance-result__routes-item">
+                  <button
+                    className="distance-result__route-card"
+                    onClick={() => navigateToRoute(route.source, route.destination)}
+                    onKeyDown={(e) => handleRouteKeyDown(e, route.source, route.destination)}
+                    aria-label={`Calculate distance between ${route.source} and ${route.destination}`}
+                  >
+                    <RouteCard 
+                      source={route.source}
+                      destination={route.destination}
+                    />
+                  </button>
+                </li>
               ))}
-            </div> 
+            </ul>
           </section>
         )}
       </main>
