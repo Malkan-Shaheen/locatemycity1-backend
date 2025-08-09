@@ -1,57 +1,67 @@
 'use client';
-import { FaChevronUp, FaChevronDown, FaGlobe, FaSun, FaWind, FaPlane, FaAnchor, FaClock } from 'react-icons/fa';
-import { WiSunrise, WiSunset } from 'react-icons/wi';
-import { useState, useEffect, useCallback } from 'react';
+import { FaChevronUp, FaChevronDown } from 'react-icons/fa';
+import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
 import Header from '../../../components/Header';
 import Footer from '../../../components/Footer';
-import { MetricCard, WeatherPanel, FAQItem, RouteCard } from '../../../components/DistanceComponents';
-
-const LeafletMap = dynamic(() => import('../../../components/LeafletMap'), {
-  ssr: false,
-  loading: () => (
-    <div className="distance-result__map-loading">
-      <div className="distance-result__map-loader">
-        <div className="distance-result__map-loader-icon"></div>
-        <p className="distance-result__map-loader-text">Loading map...</p>
-      </div>
-    </div>
-  )
-});
+import { FaGlobe, FaSun, FaWind, FaPlane, FaAnchor, FaClock } from 'react-icons/fa';
+import { WiSunrise, WiSunset } from 'react-icons/wi';
 
 const NOMINATIM_URL = 'https://nominatim.openstreetmap.org/search';
-const WEATHER_API_URL = 'https://api.openweathermap.org/data/2.5/weather';
-const WEATHER_API_KEY = '953d1012b9ab5d4722d58e46be4305f7';
 
-const toRad = (degrees) => degrees * Math.PI / 180;
-const kmToMiles = (km) => km * 0.621371;
-const kmToNauticalMiles = (km) => km * 0.539957;
-const calculateFlightTime = (km) => (km / 800).toFixed(1);
+// Import Leaflet components dynamically to avoid SSR issues
+const LeafletMap = dynamic(
+  () => import('../../../components/LeafletMap'),
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="distance-result__map-loading">
+        <div className="distance-result__map-loader">
+          <div className="distance-result__map-loader-icon" aria-hidden="true"></div>
+          <p className="distance-result__map-loader-text">Loading map...</p>
+        </div>
+      </div>
+    )
+  }
+);
 
-const faqs = [
-  {
-    question: 'What information can I find on LocateMyCity?',
-    answer: 'LocateMyCity provides detailed insights about locations, including city/town status, distance measurements, and unique geographical traits.',
-  },
-  {
-    question: 'How do I use the distance calculator?',
-    answer: 'Either allow location access or manually enter locations to calculate real-time distances in miles or kilometers.',
-  },
-  {
-    question: 'Can I compare multiple locations?',
-    answer: 'Yes, our Location to Location tool lets you compare multiple destinations for effective trip planning.',
-  },
-  {
-    question: 'How current is the location data?',
-    answer: 'We update weekly using verified sources including satellite imagery and government data.',
-  },
-  {
-    question: 'What makes LocateMyCity different?',
-    answer: 'We highlight unique natural features and cover both abandoned and active locations with faster search and data accuracy than traditional tools.',
-  },
-];
+// Accessible Metric Card Component
+const MetricCard = ({ icon, title, value, unit, variant, role }) => (
+  <div 
+    className={`distance-result__metric-card distance-result__metric-card--${variant}`}
+    role={role}
+    aria-labelledby={`metric-title-${title.toLowerCase().replace(/\s+/g, '-')}`}
+  >
+    <div className="distance-result__metric-card-content">
+      <div className="distance-result__metric-icon" aria-hidden="true">
+        {icon}
+      </div>
+      <h3 
+        id={`metric-title-${title.toLowerCase().replace(/\s+/g, '-')}`}
+        className="distance-result__metric-title"
+      >
+        {title}
+      </h3>
+      <p className="distance-result__metric-value">
+        {value} <span className="distance-result__metric-unit">{unit}</span>
+      </p>
+    </div>
+  </div>
+);
+
+// Accessible Route Card Component
+const RouteCard = ({ source, destination }) => (
+  <div className="route-card-content">
+    <div className="route-card-locations">
+      <span className="route-card-source">{source}</span>
+      <span className="route-card-arrow" aria-hidden="true">→</span>
+      <span className="route-card-destination">{destination}</span>
+    </div>
+    <div className="route-card-action">Calculate distance</div>
+  </div>
+);
 
 export default function DistanceResult() {
   const [sourcePlace, setSourcePlace] = useState(null);
@@ -60,7 +70,71 @@ export default function DistanceResult() {
   const [isLoading, setIsLoading] = useState(true);
   const [activeFAQ, setActiveFAQ] = useState(null);
   const [popularRoutes, setPopularRoutes] = useState([]);
+  const router = useRouter();
+  const params = useParams();
+  const WEATHER_API_URL = 'https://api.openweathermap.org/data/2.5/weather';
+  const WEATHER_API_KEY = '953d1012b9ab5d4722d58e46be4305f7';
+  
+  // Extract location names from URL
+  const slug = params.slug;
+  const [sourceName, destinationName] = slug 
+    ? slug.replace('how-far-is-', '').split('-from-')
+    : [null, null];
 
+  useEffect(() => {
+    if (!sourceName || !destinationName) {
+      router.push('/locationtolocation');
+      return;
+    }
+
+    const fetchLocations = async () => {
+      setIsLoading(true);
+      try {
+        // Fetch source location details
+        const sourceResponse = await fetch(
+          `${NOMINATIM_URL}?q=${encodeURIComponent(sourceName.replace(/-/g, ' '))}&format=json&limit=1`
+        );
+        const sourceData = await sourceResponse.json();
+        
+        // Fetch destination location details
+        const destResponse = await fetch(
+          `${NOMINATIM_URL}?q=${encodeURIComponent(destinationName.replace(/-/g, ' '))}&format=json&limit=1`
+        );
+        const destData = await destResponse.json();
+
+        if (sourceData.length > 0 && destData.length > 0) {
+          const src = sourceData[0];
+          const dest = destData[0];
+          
+          setSourcePlace({
+            lat: src.lat,
+            lon: src.lon,
+            display_name: src.display_name
+          });
+          
+          setDestinationPlace({
+            lat: dest.lat,
+            lon: dest.lon,
+            display_name: dest.display_name
+          });
+
+          calculateDistance(src, dest);
+          fetchWeatherData(src, dest);
+          fetchPopularRoutes(src, dest);
+        } else {
+          router.push('/locationtolocation');
+        }
+      } catch (error) {
+        console.error('Error fetching location data:', error);
+        router.push('/locationtolocation');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchLocations();
+  }, [sourceName, destinationName, router]);
+  
   const [sourceWeather, setSourceWeather] = useState({
     temp: "Loading...",
     wind: "Loading...",
@@ -83,84 +157,112 @@ export default function DistanceResult() {
     language: "Loading..."
   });
 
-  const router = useRouter();
-  const params = useParams();
-
-const slug = Array.isArray(params.slug) ? params.slug : [params.slug];
- const [sourceName, destinationName] = Array.isArray(slug) && slug.length === 1
-  ? slug[0].replace('how-far-is-', '').split('-from-')
-  : [null, null];
-
-  useEffect(() => {
-    if (!sourceName || !destinationName) return;
-
-    const fetchLocations = async () => {
-      setIsLoading(true);
-      try {
-        const [sourceResponse, destResponse] = await Promise.all([
-          fetch(`${NOMINATIM_URL}?q=${encodeURIComponent(sourceName.replace(/-/g, ' '))}&format=json&limit=1`),
-          fetch(`${NOMINATIM_URL}?q=${encodeURIComponent(destinationName.replace(/-/g, ' '))}&format=json&limit=1`)
-        ]);
-
-        const [sourceData, destData] = await Promise.all([
-          sourceResponse.json(),
-          destResponse.json()
-        ]);
-
-        if (sourceData.length > 0 && destData.length > 0) {
-          const src = sourceData[0];
-          const dest = destData[0];
-
-          setSourcePlace({
-            lat: src.lat,
-            lon: src.lon,
-            display_name: src.display_name
-          });
-
-          setDestinationPlace({
-            lat: dest.lat,
-            lon: dest.lon,
-            display_name: dest.display_name
-          });
-
-          calculateDistance(src, dest);
-          fetchWeatherData(src, dest);
-          fetchPopularRoutes(src, dest);
-        } else {
-          router.push('/locationtolocation');
-        }
-      } catch (error) {
-        console.error('Error fetching location data:', error);
-        router.push('/locationtolocation');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchLocations();
-  }, [sourceName, destinationName]);
-
   const calculateDistance = (src, dest) => {
+    setIsLoading(true);
     const lat1 = parseFloat(src.lat);
     const lon1 = parseFloat(src.lon);
     const lat2 = parseFloat(dest.lat);
     const lon2 = parseFloat(dest.lon);
-
-    const R = 6371;
+    
+    const R = 6371; // Earth radius in km
     const dLat = toRad(lat2 - lat1);
     const dLon = toRad(lon2 - lon1);
     const a = 
-      Math.sin(dLat / 2) ** 2 +
-      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-      Math.sin(dLon / 2) ** 2;
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * 
+      Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
     const distance = R * c;
-
+    
     setDistanceInKm(distance);
+    setIsLoading(false);
+  };
+
+  const fetchCountryData = async (lat, lon) => {
+    try {
+      const reverseGeocodeRes = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&addressdetails=1`,
+        {
+          headers: {
+            'User-Agent': 'LocateMyCity/1.0'
+          }
+        }
+      );
+      
+      const geoData = await reverseGeocodeRes.json();
+      const countryCode = geoData.address?.country_code?.toUpperCase();
+      
+      if (!countryCode) {
+        return { currency: "N/A", language: "N/A" };
+      }
+      
+      const [currency, language] = await Promise.all([
+        fetchCurrency(countryCode),
+        fetchLanguage(countryCode)
+      ]);
+      
+      return { currency, language };
+    } catch (error) {
+      console.error("Error fetching country data:", error);
+      return { currency: "N/A", language: "N/A" };
+    }
+  };
+
+  const fetchCurrency = async (countryCode) => {
+    try {
+      const response = await fetch(`https://restcountries.com/v3.1/alpha/${countryCode}`);
+      const data = await response.json();
+      
+      if (data && data[0]?.currencies) {
+        const currencyCode = Object.keys(data[0].currencies)[0];
+        return `${currencyCode} (${data[0].currencies[currencyCode].name})`;
+      }
+      return "N/A";
+    } catch (error) {
+      console.error("Error fetching currency:", error);
+      return "N/A";
+    }
+  };
+
+  const fetchLanguage = async (countryCode) => {
+    try {
+      const response = await fetch(`https://restcountries.com/v3.1/alpha/${countryCode}`);
+      const data = await response.json();
+      
+      if (data && data[0]?.languages) {
+        return Object.values(data[0].languages)[0];
+      }
+      return "N/A";
+    } catch (error) {
+      console.error("Error fetching language:", error);
+      return "N/A";
+    }
   };
 
   const fetchWeatherData = async (src, dest) => {
     try {
+      setSourceWeather({
+        temp: "Loading...",
+        wind: "Loading...",
+        sunrise: "Loading...",
+        sunset: "Loading...",
+        localtime: "Loading...",
+        coordinates: "Loading...",
+        currency: "Loading...",
+        language: "Loading..."
+      });
+      
+      setDestinationWeather({
+        temp: "Loading...",
+        wind: "Loading...",
+        sunrise: "Loading...",
+        sunset: "Loading...",
+        localtime: "Loading...",
+        coordinates: "Loading...",
+        currency: "Loading...",
+        language: "Loading..."
+      });
+
       const [sourceWeatherRes, destWeatherRes, sourceCountryData, destCountryData] = await Promise.all([
         fetch(`${WEATHER_API_URL}?lat=${src.lat}&lon=${src.lon}&appid=${WEATHER_API_KEY}&units=metric`),
         fetch(`${WEATHER_API_URL}?lat=${dest.lat}&lon=${dest.lon}&appid=${WEATHER_API_KEY}&units=metric`),
@@ -169,26 +271,26 @@ const slug = Array.isArray(params.slug) ? params.slug : [params.slug];
       ]);
 
       if (!sourceWeatherRes.ok || !destWeatherRes.ok) throw new Error('Weather API failed');
-
+      
       const sourceData = await sourceWeatherRes.json();
       const destData = await destWeatherRes.json();
 
       setSourceWeather({
-        temp: `${Math.round(sourceData.main.temp)}°C`,
-        wind: `${Math.round(sourceData.wind.speed * 3.6)} km/h`,
-        sunrise: new Date(sourceData.sys.sunrise * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
-        sunset: new Date(sourceData.sys.sunset * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+        temp: sourceData.main ? `${Math.round(sourceData.main.temp)}°C` : "N/A",
+        wind: sourceData.wind ? `${Math.round(sourceData.wind.speed * 3.6)} km/h` : "N/A",
+        sunrise: sourceData.sys ? new Date(sourceData.sys.sunrise * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "N/A",
+        sunset: sourceData.sys ? new Date(sourceData.sys.sunset * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "N/A",
         localtime: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
         coordinates: `${parseFloat(src.lat).toFixed(4)}, ${parseFloat(src.lon).toFixed(4)}`,
         currency: sourceCountryData.currency,
         language: sourceCountryData.language
       });
-
+      
       setDestinationWeather({
-        temp: `${Math.round(destData.main.temp)}°C`,
-        wind: `${Math.round(destData.wind.speed * 3.6)} km/h`,
-        sunrise: new Date(destData.sys.sunrise * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
-        sunset: new Date(destData.sys.sunset * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+        temp: destData.main ? `${Math.round(destData.main.temp)}°C` : "N/A",
+        wind: destData.wind ? `${Math.round(destData.wind.speed * 3.6)} km/h` : "N/A",
+        sunrise: destData.sys ? new Date(destData.sys.sunrise * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "N/A",
+        sunset: destData.sys ? new Date(destData.sys.sunset * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "N/A",
         localtime: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
         coordinates: `${parseFloat(dest.lat).toFixed(4)}, ${parseFloat(dest.lon).toFixed(4)}`,
         currency: destCountryData.currency,
@@ -196,55 +298,26 @@ const slug = Array.isArray(params.slug) ? params.slug : [params.slug];
       });
     } catch (error) {
       console.error("Error fetching weather data:", error);
-    }
-  };
-
-  const fetchCountryData = async (lat, lon) => {
-    try {
-      const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&addressdetails=1`, {
-        headers: {
-          'User-Agent': 'LocateMyCity/1.0'
-        }
-      });
-      const geoData = await res.json();
-      const countryCode = geoData.address?.country_code?.toUpperCase();
-      if (!countryCode) return { currency: "N/A", language: "N/A" };
-
-      const [currency, language] = await Promise.all([
-        fetchCurrency(countryCode),
-        fetchLanguage(countryCode)
-      ]);
-
-      return { currency, language };
-    } catch {
-      return { currency: "N/A", language: "N/A" };
-    }
-  };
-
-  const fetchCurrency = async (countryCode) => {
-    try {
-      const res = await fetch(`https://restcountries.com/v3.1/alpha/${countryCode}`);
-      const data = await res.json();
-      if (data[0]?.currencies) {
-        const code = Object.keys(data[0].currencies)[0];
-        return `${code} (${data[0].currencies[code].name})`;
-      }
-      return "N/A";
-    } catch {
-      return "N/A";
-    }
-  };
-
-  const fetchLanguage = async (countryCode) => {
-    try {
-      const res = await fetch(`https://restcountries.com/v3.1/alpha/${countryCode}`);
-      const data = await res.json();
-      if (data[0]?.languages) {
-        return Object.values(data[0].languages)[0];
-      }
-      return "N/A";
-    } catch {
-      return "N/A";
+      setSourceWeather(prev => ({
+        ...prev,
+        temp: "Error",
+        wind: "Error",
+        sunrise: "Error",
+        sunset: "Error",
+        coordinates: "Error",
+        currency: "Error",
+        language: "Error"
+      }));
+      setDestinationWeather(prev => ({
+        ...prev,
+        temp: "Error",
+        wind: "Error",
+        sunrise: "Error",
+        sunset: "Error",
+        coordinates: "Error",
+        currency: "Error",
+        language: "Error"
+      }));
     }
   };
 
@@ -261,105 +334,267 @@ const slug = Array.isArray(params.slug) ? params.slug : [params.slug];
     }
   };
 
+  const toRad = (degrees) => degrees * Math.PI / 180;
+  const kmToMiles = (km) => km * 0.621371;
+  const kmToNauticalMiles = (km) => km * 0.539957;
+  const calculateFlightTime = (km) => (km / 800).toFixed(1);
+
   const toggleFAQ = (index) => {
     setActiveFAQ(activeFAQ === index ? null : index);
   };
 
+  const handleFAQKeyDown = (e, index) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      toggleFAQ(index);
+    }
+  };
+
   const navigateToRoute = (source, destination) => {
     const formatForUrl = (str) => str.toLowerCase().replace(/\s+/g, '-');
-    router.push(`/location-from-location/how-far-is-${formatForUrl(destination)}-from-${formatForUrl(source)}`);
+    const sourceFormatted = formatForUrl(source);
+    const destFormatted = formatForUrl(destination);
+    router.push(`/location-from-location/how-far-is-${destFormatted}-from-${sourceFormatted}`);
+  };
+
+  const handleRouteKeyDown = (e, source, destination) => {
+    if (e.key === 'Enter') {
+      navigateToRoute(source, destination);
+    }
   };
 
   if (!sourcePlace || !destinationPlace) {
     return (
       <div className="distance-calc-loading-screen min-h-screen flex items-center justify-center">
         <div className="distance-calc-loading-content text-center">
-          <div className="distance-calc-spinner spinner border-4 border-blue-500 border-t-transparent rounded-full w-12 h-12 animate-spin mx-auto"></div>
+          <div className="distance-calc-spinner spinner border-4 border-blue-500 border-t-transparent rounded-full w-12 h-12 animate-spin mx-auto" aria-hidden="true"></div>
           <p className="distance-calc-loading-text mt-4 text-lg">Loading location data...</p>
         </div>
       </div>
     );
   }
 
-  const sourceShortName = sourcePlace?.display_name?.split(',')[0];
-  const destinationShortName = destinationPlace?.display_name?.split(',')[0];
+  const faqs = [
+    {
+      question: 'What information can I find on LocateMyCity?',
+      answer: 'LocateMyCity provides detailed insights about locations, including city/town status, distance measurements, and unique geographical traits.',
+    },
+    {
+      question: 'How do I use the distance calculator?',
+      answer: 'Either allow location access or manually enter locations to calculate real-time distances in miles or kilometers.',
+    },
+    {
+      question: 'Can I compare multiple locations?',
+      answer: 'Yes, our Location to Location tool lets you compare multiple destinations for effective trip planning.',
+    },
+    {
+      question: 'How current is the location data?',
+      answer: 'We update weekly using verified sources including satellite imagery and government data.',
+    },
+    {
+      question: 'What makes LocateMyCity different?',
+      answer: 'We highlight unique natural features and cover both abandoned and active locations with faster search and data accuracy than traditional tools.',
+    },
+  ];
 
   return (
     <>
+      <a href="#main-content" className="skip-link">Skip to main content</a>
       <Header />
       <Head>
-        <title>{`How far is ${sourceShortName} from ${destinationShortName}?`}</title>
-        <meta name="description" content={`Distance between ${sourcePlace?.display_name} and ${destinationPlace?.display_name}`} />
+        <title>{`How far is ${sourcePlace?.display_name?.split(',')[0]} from ${destinationPlace?.display_name?.split(',')[0]}?`}</title>
+        <meta 
+          name="description" 
+          content={`Distance between ${sourcePlace?.display_name} and ${destinationPlace?.display_name}`} 
+        />
+        <meta name="robots" content="index, follow" />
       </Head>
 
-      <div className="distance-result__header">
-        <div className="distance-result__header-content">
-          <h1 className="distance-result__title">
-            How far is <span className="distance-result__highlight">{sourceShortName}</span> from <span className="distance-result__highlight">{destinationShortName}</span>?
-          </h1>
-          {!isLoading && (
-            <p className="distance-result__description">
-              {sourceShortName} is approximately <strong>{kmToMiles(distanceInKm).toFixed(1)} miles</strong> ({distanceInKm.toFixed(1)} km) from {destinationShortName}, with a flight time of around <strong>{calculateFlightTime(distanceInKm)} hours</strong>.
-            </p>
-          )}
-        </div>
-      </div>
+      <main id="main-content" className="distance-result__container" tabIndex="-1">
+        <section aria-labelledby="distance-heading">
+          <div className="distance-result__header">
+            <div className="distance-result__header-content">
+              <h1 id="distance-heading" className="distance-result__title">
+                How far is <span className="distance-result__highlight">{sourcePlace?.display_name?.split(',')[0]}</span> from <span className="distance-result__highlight">{destinationPlace?.display_name?.split(',')[0]}</span>?
+              </h1>
+              {!isLoading && (
+                <p className="distance-result__description">
+                  {sourcePlace?.display_name?.split(',')[0]} is approximately <strong>{kmToMiles(distanceInKm).toFixed(1)} miles</strong> ({distanceInKm.toFixed(1)} km) from {destinationPlace?.display_name?.split(',')[0]}, with a flight time of around <strong>{calculateFlightTime(distanceInKm)} hours</strong>.
+                </p>
+              )}
+            </div>
+          </div>
+        </section>
 
-      <main className="distance-result__container">
-        <section className="distance-result__map-section">
+        <section aria-labelledby="map-heading">
+          <h2 id="map-heading" className="visually-hidden">Map visualization</h2>
           <div className="distance-result__map-wrapper">
             <LeafletMap 
-              source={{ lat: parseFloat(sourcePlace.lat), lng: parseFloat(sourcePlace.lon), name: sourcePlace.display_name }}
-              destination={{ lat: parseFloat(destinationPlace.lat), lng: parseFloat(destinationPlace.lon), name: destinationPlace.display_name }}
+              source={{
+                lat: parseFloat(sourcePlace?.lat),
+                lng: parseFloat(sourcePlace?.lon),
+                name: sourcePlace?.display_name
+              }}
+              destination={{
+                lat: parseFloat(destinationPlace?.lat),
+                lng: parseFloat(destinationPlace?.lon),
+                name: destinationPlace?.display_name
+              }}
               distance={distanceInKm}
             />
           </div>
         </section>
 
         {!isLoading && (
-          <>
-            <section className="distance-result__metrics">
-              <h2 className="distance-result__section-title">Distance Information</h2>
-              <div className="distance-result__metrics-grid">
-                <MetricCard icon={<FaGlobe />} title="Kilometers" value={distanceInKm.toFixed(1)} unit="km" variant="blue" />
-                <MetricCard icon={<FaGlobe />} title="Miles" value={kmToMiles(distanceInKm).toFixed(1)} unit="mi" variant="green" />
-                <MetricCard icon={<FaAnchor />} title="Nautical Miles" value={kmToNauticalMiles(distanceInKm).toFixed(1)} unit="nmi" variant="purple" />
-                <MetricCard icon={<FaPlane />} title="Flight Time" value={calculateFlightTime(distanceInKm)} unit="hours" variant="red" />
+          <section aria-labelledby="metrics-heading">
+            <h2 id="metrics-heading" className="distance-result__section-title">Distance Information</h2>
+            <div className="distance-result__metrics-grid" role="grid" aria-labelledby="metrics-heading">
+              <div role="row" className="distance-result__metrics-row">
+                <MetricCard 
+                  icon={<FaGlobe aria-hidden="true" />}
+                  title="Kilometers"
+                  value={distanceInKm.toFixed(1)}
+                  unit="km"
+                  variant="blue"
+                  role="gridcell"
+                />
+                <MetricCard 
+                  icon={<FaGlobe aria-hidden="true" />}
+                  title="Miles"
+                  value={kmToMiles(distanceInKm).toFixed(1)}
+                  unit="mi"
+                  variant="green"
+                  role="gridcell"
+                />
               </div>
-            </section>
-
-            <section className="distance-result__weather">
-              <h2 className="distance-result__section-title">Side-by-Side Weather</h2>
-              <div className="distance-result__weather-grid">
-                <WeatherPanel location={sourceShortName} weather={sourceWeather} type="source" />
-                <WeatherPanel location={destinationShortName} weather={destinationWeather} type="destination" />
-              </div>
-            </section>
-
-            <div className="faq-page">
-              <h1 className="faq-title">Frequently Asked Questions</h1>
-              <div className="faq-list">
-                {faqs.map((faq, index) => (
-                  <div key={index} className={`faq-card ${activeFAQ === index ? 'open' : ''}`} onClick={() => toggleFAQ(index)}>
-                    <div className="faq-question">
-                      <span>{faq.question}</span>
-                      {activeFAQ === index ? <FaChevronUp /> : <FaChevronDown />}
-                    </div>
-                    <div className="faq-answer">{activeFAQ === index && <p>{faq.answer}</p>}</div>
-                  </div>
-                ))}
+              <div role="row" className="distance-result__metrics-row">
+                <MetricCard 
+                  icon={<FaAnchor aria-hidden="true" />}
+                  title="Nautical Miles"
+                  value={kmToNauticalMiles(distanceInKm).toFixed(1)}
+                  unit="nmi"
+                  variant="purple"
+                  role="gridcell"
+                />
+                <MetricCard 
+                  icon={<FaPlane aria-hidden="true" />}
+                  title="Flight Time"
+                  value={calculateFlightTime(distanceInKm)}
+                  unit="hours"
+                  variant="red"
+                  role="gridcell"
+                />
               </div>
             </div>
+          </section>
+        )}
 
-            <section className="distance-result__routes">
-              <h2 className="distance-result__section-title">Most Popular Routes</h2>
-              <div className="distance-result__routes-grid">
-                {popularRoutes.map((route, index) => (
-                  <RouteCard key={index} source={route.source} destination={route.destination} onClick={() => navigateToRoute(route.source, route.destination)} />
-                ))}
+        {!isLoading && (
+          <section aria-labelledby="weather-heading">
+            <h2 id="weather-heading" className="distance-result__section-title">Side-by-Side Weather</h2>
+            <div className="distance-result__weather-grid">
+              <div className="weather-panel weather-panel--source">
+                <h3 className="weather-panel__title">{sourcePlace?.display_name?.split(',')[0]}</h3>
+                <div className="weather-panel__content">
+                  <div className="weather-panel__metric">
+                    <p className="weather-panel__label" id="source-temperature-label">Temperature</p>
+                    <p className="weather-panel__value">{sourceWeather.temp}</p>
+                  </div>
+                  <div className="weather-panel__metric">
+                    <p className="weather-panel__label">Wind Speed</p>
+                    <p className="weather-panel__value">{sourceWeather.wind}</p>
+                  </div>
+                  <div className="weather-panel__metric">
+                    <p className="weather-panel__label">Sunrise</p>
+                    <p className="weather-panel__value">{sourceWeather.sunrise}</p>
+                  </div>
+                  <div className="weather-panel__metric">
+                    <p className="weather-panel__label">Sunset</p>
+                    <p className="weather-panel__value">{sourceWeather.sunset}</p>
+                  </div>
+                </div>
               </div>
-            </section>
-          </>
+              <div className="weather-panel weather-panel--destination">
+                <h3 className="weather-panel__title">{destinationPlace?.display_name?.split(',')[0]}</h3>
+                <div className="weather-panel__content">
+                  <div className="weather-panel__metric">
+                    <p className="weather-panel__label" id="destination-temperature-label">Temperature</p>
+                    <p className="weather-panel__value">{destinationWeather.temp}</p>
+                  </div>
+                  <div className="weather-panel__metric">
+                    <p className="weather-panel__label">Wind Speed</p>
+                    <p className="weather-panel__value">{destinationWeather.wind}</p>
+                  </div>
+                  <div className="weather-panel__metric">
+                    <p className="weather-panel__label">Sunrise</p>
+                    <p className="weather-panel__value">{destinationWeather.sunrise}</p>
+                  </div>
+                  <div className="weather-panel__metric">
+                    <p className="weather-panel__label">Sunset</p>
+                    <p className="weather-panel__value">{destinationWeather.sunset}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
+        <section aria-labelledby="faq-heading">
+          <h2 id="faq-heading" className="faq-title">Frequently Asked Questions</h2>
+          <div className="faq-list">
+            {faqs.map((faq, index) => (
+              <div 
+                key={index}
+                className={`faq-card ${activeFAQ === index ? 'open' : ''}`}
+              >
+                <h3>
+                  <button
+                    className="faq-question"
+                    aria-expanded={activeFAQ === index}
+                    aria-controls={`faq-answer-${index}`}
+                    onClick={() => toggleFAQ(index)}
+                    onKeyDown={(e) => handleFAQKeyDown(e, index)}
+                  >
+                    {faq.question}
+                    {activeFAQ === index ? 
+                      <FaChevronUp aria-hidden="true" /> : 
+                      <FaChevronDown aria-hidden="true" />}
+                  </button>
+                </h3>
+                <div 
+                  id={`faq-answer-${index}`}
+                  className="faq-answer"
+                  aria-labelledby={`faq-heading-${index}`}
+                  hidden={activeFAQ !== index}
+                >
+                  {activeFAQ === index && <p>{faq.answer}</p>}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {!isLoading && (
+          <section aria-labelledby="routes-heading">
+            <h2 id="routes-heading" className="distance-result__section-title">Most Popular Routes</h2>
+            <ul className="distance-result__routes-list">
+              {popularRoutes.map((route, index) => (
+                <li key={index} className="distance-result__routes-item">
+                  <button
+                    className="distance-result__route-card"
+                    onClick={() => navigateToRoute(route.source, route.destination)}
+                    onKeyDown={(e) => handleRouteKeyDown(e, route.source, route.destination)}
+                    aria-label={`Calculate distance between ${route.source} and ${route.destination}`}
+                  >
+                    <RouteCard 
+                      source={route.source}
+                      destination={route.destination}
+                    />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </section>
         )}
       </main>
       <Footer />
