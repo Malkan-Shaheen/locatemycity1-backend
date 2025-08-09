@@ -50,7 +50,7 @@
 .merch-grid {
   display: flex;
   justify-content: center;
-  gap: 40px;
+  gap: 120px;
   margin-top: 60px;
   flex-wrap: wrap;
 }
@@ -107,7 +107,7 @@
   box-sizing: border-box;
   justify-content: center;
   position: relative;
-  margin-top: 30px;
+  margin-top: 10px;
   margin: 0;
   padding: 10px 0;
   text-align: center;
@@ -116,7 +116,7 @@
   border-radius: 0 0 12px 12px;
   position: absolute;
   left: 0;
-  bottom: 15px;
+  bottom: 5px;
 }
 
 /* Hide Heritage Drip text on hover */
