@@ -14,7 +14,7 @@
   /* existing styles */
   min-height: 40px; 
    margin-top: 20px;
-min-width: 250px;
+
   }
 
   .merch-card {
@@ -78,7 +78,12 @@ min-width: 250px;
   font-size: 18px;
   justify-items: center;
   justify-content: center;
-  max-width: 300px;
+   width: 100%;
+  min-width: unset;
+  max-width: unset;
+  left: 0;  /* make sure it starts from left edge */
+  right: 0;
+  overflow: visible !important;
   white-space: nowrap; /* Prevents line break */
 }
  .merch-info {

@@ -8,7 +8,6 @@
   text-align: center;
   font-family: 'Poppins', sans-serif;
   overflow: hidden;
-  
 }
 
 .merch-heading h2 {
@@ -42,8 +41,6 @@
   margin: 0 auto;
 }
 
-
-
 .merch-heading span {
   font-size: 18px;
   font-weight: 700;
@@ -58,13 +55,13 @@
   flex-wrap: wrap;
 }
 
-
 .merch-card {
   width: 364.44px;
   height: 435.97px;
   transition: all 0.4s ease;
   cursor: pointer;
   position: relative;
+  overflow: hidden;
 }
 
 .merch-image {
@@ -79,6 +76,8 @@
   margin-top: 12px;
   text-align: left;
   transition: all 0.3s ease;
+  position: relative;
+  min-height: 50px; /* keeps space for title */
 }
 
 .merch-info h3 {
@@ -87,21 +86,41 @@
   letter-spacing: -4%;
   margin-bottom: 4px;
   font-family: 'Poppins';
-font-size: 18px;
-line-height: 100%;
-
+  font-size: 18px;
+  line-height: 100%;
 }
 
+/* Default merch-descr style (hidden until hover) */
+
+/* Hide Shop Now button by default */
 .merch-descr {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 16px;
-  font-weight: 500;
-  letter-spacing: -4%;
-  transition: all 0.3s ease;
+  display: none; /* fully hidden */
 }
 
+/* Show Shop Now only when hovered */
+.merch-card:hover .merch-descr {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  justify-content: center;
+  margin: 0;
+  padding: 10px 0;
+  text-align: center;
+  background: linear-gradient(90deg, #CD9E3C 0%, #BD8A2D 100%);
+  color: #000;
+  border-radius: 0 0 12px 12px;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+}
+
+/* Hide Heritage Drip text on hover */
+.merch-card:hover .merch-info h3 {
+  display: none;
+}
+
+
+/* Icon style */
 .arrow-icon {
   font-size: 20px;
   transition: opacity 0.3s ease;
@@ -112,18 +131,12 @@ line-height: 100%;
   background: linear-gradient(90deg, #CD9E3C 0%, #BD8A2D 100%);
   color: #000;
   border-radius: 12px;
-  /* padding: 12px 20px; */
   font-size: 25px;
   justify-content: space-between;
 }
 
 .merch-card.hovered .arrow-icon {
   opacity: 0;
-}
-
-.merch-card.hovered .merch-info h3 {
-  opacity: 0;
-  transform: translateY(-10px);
 }
 
 .merch-card.hovered .merch-image {
@@ -133,15 +146,14 @@ line-height: 100%;
 /* Background ellipse (blurred shade effect) */
 .merch-section {
   position: relative;
-  overflow: visible; /* Allow children to overflow */
-  isolation: isolate; /* Creates new stacking context */
+  overflow: visible;
+  isolation: isolate;
 }
 
 .merch-section::before,
 .merch-section::after {
   content: '';
   overflow: visible;
-  
   position: absolute;
   width: 440.25px;
   height: 440.25px;
@@ -150,15 +162,14 @@ line-height: 100%;
   mix-blend-mode: screen;
   background: linear-gradient(90deg, #CD9E3C 0%, #BD8A2D 100%);
   border-radius: 50%;
-  z-index: -1; /* Place behind content but above parent background */
-  pointer-events: none; /* Prevent interaction */
+  z-index: -1;
+  pointer-events: none;
 }
 
 .merch-section::before {
   top: 200px;
   height: 400px !important;
   left: -150px;
-  
 }
 
 .merch-section::after {
@@ -170,17 +181,20 @@ line-height: 100%;
 .merch-section-wrapper {
   position: relative;
   overflow: hidden;
-  background: inherit; /* Match parent background */
+  background: inherit;
 }
+
 @media screen and (max-width: 480px) {
   .merch-heading h2 {
     font-size: 18px;
   }
 
-  .merch-heading p ,span {
+  .merch-heading p,
+  span {
     display: none;
   }
 }
+
 @media screen and (max-width: 768px) {
   .merch-section {
     padding: 80px 16px;
@@ -198,7 +212,6 @@ line-height: 100%;
 
   .merch-card {
     width: 100%;
-     
   }
 
   .merch-image {
@@ -236,18 +249,14 @@ line-height: 100%;
     padding-top: 0 !important;
   }
 }
-@media screen and (max-width: 768px) {
+
+@media screen and (max-width: 968px) {
   .merch-descr {
     display: flex !important;
     box-sizing: border-box !important;
     width: 100% !important;
     justify-content: center !important;
     margin-top: 8px !important;
-    margin-right:  0px !important;
+    margin-right: 0px !important;
   }
- .merch-card.hovered .merch-descr {
- margin-left: -80px !important;
-width: 100vw !important;
 }
-}
-
