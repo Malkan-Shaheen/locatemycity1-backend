@@ -28,20 +28,17 @@ const LeafletMap = dynamic(
 );
 
 // Accessible Metric Card Component
-const MetricCard = ({ icon, title, value, unit, variant, role }) => (
+const MetricCard = ({ icon, title, value, unit, variant }) => (
   <div 
     className={`distance-result__metric-card distance-result__metric-card--${variant}`}
-    role={role}
-    aria-labelledby={`metric-title-${title.toLowerCase().replace(/\s+/g, '-')}`}
+    role="listitem"
+    aria-label={`${title}: ${value} ${unit}`}
   >
     <div className="distance-result__metric-card-content">
       <div className="distance-result__metric-icon" aria-hidden="true">
         {icon}
       </div>
-      <h3 
-        id={`metric-title-${title.toLowerCase().replace(/\s+/g, '-')}`}
-        className="distance-result__metric-title"
-      >
+      <h3 className="distance-result__metric-title">
         {title}
       </h3>
       <p className="distance-result__metric-value">
@@ -448,41 +445,41 @@ export default function DistanceResult() {
         {!isLoading && (
           <section aria-labelledby="metrics-heading">
             <h2 id="metrics-heading" className="distance-result__section-title">Distance Information</h2>
-            <div className="distance-result__metrics-grid" role="grid" aria-labelledby="metrics-heading">
-              <div role="row" className="distance-result__metrics-row">
+            <div className="distance-result__metrics-grid" role="list" aria-labelledby="metrics-heading">
+              <div role="listitem">
                 <MetricCard 
                   icon={<FaGlobe aria-hidden="true" />}
                   title="Kilometers"
                   value={distanceInKm.toFixed(1)}
                   unit="km"
                   variant="blue"
-                  role="gridcell"
                 />
+              </div>
+              <div role="listitem">
                 <MetricCard 
                   icon={<FaGlobe aria-hidden="true" />}
                   title="Miles"
                   value={kmToMiles(distanceInKm).toFixed(1)}
                   unit="mi"
                   variant="green"
-                  role="gridcell"
                 />
               </div>
-              <div role="row" className="distance-result__metrics-row">
+              <div role="listitem">
                 <MetricCard 
                   icon={<FaAnchor aria-hidden="true" />}
                   title="Nautical Miles"
                   value={kmToNauticalMiles(distanceInKm).toFixed(1)}
                   unit="nmi"
                   variant="purple"
-                  role="gridcell"
                 />
+              </div>
+              <div role="listitem">
                 <MetricCard 
                   icon={<FaPlane aria-hidden="true" />}
                   title="Flight Time"
                   value={calculateFlightTime(distanceInKm)}
                   unit="hours"
                   variant="red"
-                  role="gridcell"
                 />
               </div>
             </div>
@@ -498,19 +495,19 @@ export default function DistanceResult() {
                 <div className="weather-panel__content">
                   <div className="weather-panel__metric">
                     <p className="weather-panel__label" id="source-temperature-label">Temperature</p>
-                    <p className="weather-panel__value">{sourceWeather.temp}</p>
+                    <p className="weather-panel__value" aria-labelledby="source-temperature-label">{sourceWeather.temp}</p>
                   </div>
                   <div className="weather-panel__metric">
-                    <p className="weather-panel__label">Wind Speed</p>
-                    <p className="weather-panel__value">{sourceWeather.wind}</p>
+                    <p className="weather-panel__label" id="source-wind-label">Wind Speed</p>
+                    <p className="weather-panel__value" aria-labelledby="source-wind-label">{sourceWeather.wind}</p>
                   </div>
                   <div className="weather-panel__metric">
-                    <p className="weather-panel__label">Sunrise</p>
-                    <p className="weather-panel__value">{sourceWeather.sunrise}</p>
+                    <p className="weather-panel__label" id="source-sunrise-label">Sunrise</p>
+                    <p className="weather-panel__value" aria-labelledby="source-sunrise-label">{sourceWeather.sunrise}</p>
                   </div>
                   <div className="weather-panel__metric">
-                    <p className="weather-panel__label">Sunset</p>
-                    <p className="weather-panel__value">{sourceWeather.sunset}</p>
+                    <p className="weather-panel__label" id="source-sunset-label">Sunset</p>
+                    <p className="weather-panel__value" aria-labelledby="source-sunset-label">{sourceWeather.sunset}</p>
                   </div>
                 </div>
               </div>
@@ -519,19 +516,19 @@ export default function DistanceResult() {
                 <div className="weather-panel__content">
                   <div className="weather-panel__metric">
                     <p className="weather-panel__label" id="destination-temperature-label">Temperature</p>
-                    <p className="weather-panel__value">{destinationWeather.temp}</p>
+                    <p className="weather-panel__value" aria-labelledby="destination-temperature-label">{destinationWeather.temp}</p>
                   </div>
                   <div className="weather-panel__metric">
-                    <p className="weather-panel__label">Wind Speed</p>
-                    <p className="weather-panel__value">{destinationWeather.wind}</p>
+                    <p className="weather-panel__label" id="destination-wind-label">Wind Speed</p>
+                    <p className="weather-panel__value" aria-labelledby="destination-wind-label">{destinationWeather.wind}</p>
                   </div>
                   <div className="weather-panel__metric">
-                    <p className="weather-panel__label">Sunrise</p>
-                    <p className="weather-panel__value">{destinationWeather.sunrise}</p>
+                    <p className="weather-panel__label" id="destination-sunrise-label">Sunrise</p>
+                    <p className="weather-panel__value" aria-labelledby="destination-sunrise-label">{destinationWeather.sunrise}</p>
                   </div>
                   <div className="weather-panel__metric">
-                    <p className="weather-panel__label">Sunset</p>
-                    <p className="weather-panel__value">{destinationWeather.sunset}</p>
+                    <p className="weather-panel__label" id="destination-sunset-label">Sunset</p>
+                    <p className="weather-panel__value" aria-labelledby="destination-sunset-label">{destinationWeather.sunset}</p>
                   </div>
                 </div>
               </div>
@@ -541,11 +538,12 @@ export default function DistanceResult() {
 
         <section aria-labelledby="faq-heading">
           <h2 id="faq-heading" className="faq-title">Frequently Asked Questions</h2>
-          <div className="faq-list">
+          <div className="faq-list" role="list">
             {faqs.map((faq, index) => (
               <div 
                 key={index}
                 className={`faq-card ${activeFAQ === index ? 'open' : ''}`}
+                role="listitem"
               >
                 <h3>
                   <button
@@ -564,6 +562,7 @@ export default function DistanceResult() {
                 <div 
                   id={`faq-answer-${index}`}
                   className="faq-answer"
+                  role="region"
                   aria-labelledby={`faq-heading-${index}`}
                   hidden={activeFAQ !== index}
                 >
@@ -577,9 +576,9 @@ export default function DistanceResult() {
         {!isLoading && (
           <section aria-labelledby="routes-heading">
             <h2 id="routes-heading" className="distance-result__section-title">Most Popular Routes</h2>
-            <ul className="distance-result__routes-list">
+            <ul className="distance-result__routes-list" role="list">
               {popularRoutes.map((route, index) => (
-                <li key={index} className="distance-result__routes-item">
+                <li key={index} className="distance-result__routes-item" role="listitem">
                   <button
                     className="distance-result__route-card"
                     onClick={() => navigateToRoute(route.source, route.destination)}
