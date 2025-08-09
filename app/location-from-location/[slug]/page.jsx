@@ -421,34 +421,42 @@ export default function DistanceResult() {
           <section aria-labelledby="metrics-heading">
             <h2 id="metrics-heading" className="distance-result__section-title">Distance Information</h2>
             <div className="distance-result__metrics-grid" role="grid">
-              <MetricCard 
-                icon={<FaGlobe aria-hidden="true" />}
-                title="Kilometers"
-                value={distanceInKm.toFixed(1)}
-                unit="km"
-                variant="blue"
-              />
-              <MetricCard 
-                icon={<FaGlobe aria-hidden="true" />}
-                title="Miles"
-                value={kmToMiles(distanceInKm).toFixed(1)}
-                unit="mi"
-                variant="green"
-              />
-              <MetricCard 
-                icon={<FaAnchor aria-hidden="true" />}
-                title="Nautical Miles"
-                value={kmToNauticalMiles(distanceInKm).toFixed(1)}
-                unit="nmi"
-                variant="purple"
-              />
-              <MetricCard 
-                icon={<FaPlane aria-hidden="true" />}
-                title="Flight Time"
-                value={calculateFlightTime(distanceInKm)}
-                unit="hours"
-                variant="red"
-              />
+              <div role="row" className="distance-result__metrics-row">
+                <MetricCard 
+                  icon={<FaGlobe aria-hidden="true" />}
+                  title="Kilometers"
+                  value={distanceInKm.toFixed(1)}
+                  unit="km"
+                  variant="blue"
+                  role="gridcell"
+                />
+                <MetricCard 
+                  icon={<FaGlobe aria-hidden="true" />}
+                  title="Miles"
+                  value={kmToMiles(distanceInKm).toFixed(1)}
+                  unit="mi"
+                  variant="green"
+                  role="gridcell"
+                />
+              </div>
+              <div role="row" className="distance-result__metrics-row">
+                <MetricCard 
+                  icon={<FaAnchor aria-hidden="true" />}
+                  title="Nautical Miles"
+                  value={kmToNauticalMiles(distanceInKm).toFixed(1)}
+                  unit="nmi"
+                  variant="purple"
+                  role="gridcell"
+                />
+                <MetricCard 
+                  icon={<FaPlane aria-hidden="true" />}
+                  title="Flight Time"
+                  value={calculateFlightTime(distanceInKm)}
+                  unit="hours"
+                  variant="red"
+                  role="gridcell"
+                />
+              </div>
             </div>
           </section>
         )}
@@ -461,11 +469,13 @@ export default function DistanceResult() {
                 location={sourcePlace?.display_name?.split(',')[0]}
                 weather={sourceWeather}
                 type="source"
+                temperatureLabelId="source-temperature-label"
               />
               <WeatherPanel 
                 location={destinationPlace?.display_name?.split(',')[0]}
                 weather={destinationWeather}
                 type="destination"
+                temperatureLabelId="destination-temperature-label"
               />
             </div>
           </section>
@@ -473,12 +483,11 @@ export default function DistanceResult() {
 
         <section aria-labelledby="faq-heading">
           <h2 id="faq-heading" className="faq-title">Frequently Asked Questions</h2>
-          <div className="faq-list" role="list">
+          <div className="faq-list">
             {faqs.map((faq, index) => (
-              <article 
+              <div 
                 key={index}
                 className={`faq-card ${activeFAQ === index ? 'open' : ''}`}
-                role="listitem"
               >
                 <h3>
                   <button
@@ -497,12 +506,12 @@ export default function DistanceResult() {
                 <div 
                   id={`faq-answer-${index}`}
                   className="faq-answer"
-                  role="region"
                   aria-labelledby={`faq-heading-${index}`}
+                  hidden={activeFAQ !== index}
                 >
                   {activeFAQ === index && <p>{faq.answer}</p>}
                 </div>
-              </article>
+              </div>
             ))}
           </div>
         </section>
@@ -510,22 +519,22 @@ export default function DistanceResult() {
         {!isLoading && (
           <section aria-labelledby="routes-heading">
             <h2 id="routes-heading" className="distance-result__section-title">Most Popular Routes</h2>
-            <div className="distance-result__routes-grid" role="list">
+            <div className="distance-result__routes-grid">
               {popularRoutes.map((route, index) => (
-                <article 
+                <div 
                   key={index}
                   className="route-card"
-                  role="listitem"
                   tabIndex="0"
                   onClick={() => navigateToRoute(route.source, route.destination)}
                   onKeyDown={(e) => handleRouteKeyDown(e, route.source, route.destination)}
-                  aria-label={`Navigate from ${route.source} to ${route.destination}`}
+                  aria-label={`Calculate distance between ${route.source} and ${route.destination}`}
+                  role="button"
                 >
                   <RouteCard 
                     source={route.source}
                     destination={route.destination}
                   />
-                </article>
+                </div>
               ))}
             </div> 
           </section>
