@@ -5,17 +5,20 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr); /* Always 3 columns */
     gap: 20px; /* Slightly smaller gap */
-    margin-top: 40px;
+    /* margin-top: 40px; */
     justify-items: center;
   }
 
   .merch-card {
     width: 100%;
     max-width: 280px; /* Reduced so 3 fit side-by-side */
-    height: 500px;
-    margin-bottom: 0;
+    height: 250px;
+    margin-bottom: 0 !important;
     overflow: hidden;
     position: relative;
+  }
+  .merge-info{
+    visibility: hidden;
   }
 
   .merch-image {
@@ -36,7 +39,7 @@
 
   .merch-heading h2 {
     font-size: 20px; /* Reduced heading font */
-    margin-top: 50px;
+    margin-top: -200px;
   }
 
   .merch-heading p,
@@ -94,6 +97,23 @@
     bottom: 120px;
     right: -150px;
   }
+  merch-descr {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: transparent;
+    color: transparent;
+    font-size: 14px;
+    height: 80vh;
+    width: 80vw;
+    border: 2px solid red !important;
+    position: absolute;
+    /* margin: 10px auto 0; */
+    height: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
 }
 
 @media screen and (max-width: 480px) {
@@ -120,12 +140,13 @@
     color: transparent;
     font-size: 14px;
     height: 80vh;
-    width: 100vw;
+    width: 80vw;
+    
     position: absolute;
-    margin: 10px auto 0;
+    /* margin: 10px auto 0; */
     height: 0;
     overflow: hidden;
-    transition: all 0.3s ease;
+    /* transition: all 0.3s ease; */
   }
 
   .merch-card.hovered .arrow-icon {
@@ -139,6 +160,7 @@
 
   .merch-card.hovered .merch-image {
     transform: translateY(12px);
+    
   }
 }
 
@@ -163,13 +185,14 @@
 }
 
 .merch-card.hovered .merch-descr {
-  min-height: 40px;
-  margin-top: 50px;
-  min-width: 150px;
+  min-height: 0px;
+  margin-top: -250px !important;
+  min-width: 50px !important;
   width: 100%;
   box-sizing: border-box;
-  max-width: none;
+  max-width: 250px;
   border: 2px solid transparent !important;
+
 }
 
 .merch-card.hovered .merch-info {
@@ -229,7 +252,11 @@
   }
 }
 
-.merch-card {
-  width: 100%;
-  max-width: 280px !important;
+.merch-descr p {
+  display: none;
+}
+
+.merch-card:hover .merch-descr p,
+.merch-card.hovered .merch-descr p {
+  display: inline;
 }
