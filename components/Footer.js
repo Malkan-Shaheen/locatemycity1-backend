@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 export default function Footer() {
   return (
-    <footer className="footer-wrapper">
+    <footer className="footer-wrapper" role="contentinfo">
       <div className="footer-content">
         {/* Left: Logo + Description */}
         <div className="footer-section">

@@ -16,6 +16,7 @@ export default function ContactPage() {
 
       <div className="contact-page">
         <Header />
+        <main>
         {/* Hero Section */}
         <section className="contact-hero">
           <div className="hero-overlay"></div>
@@ -83,7 +84,9 @@ export default function ContactPage() {
             </p>
           </div>
          
-        </section> <Footer />
+        </section>
+        </main>
+        <Footer />
       </div>
 
       

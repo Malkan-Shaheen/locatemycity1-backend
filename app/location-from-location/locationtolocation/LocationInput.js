@@ -87,31 +87,39 @@ export default function LocationInput({ label, value, onChange, onPlaceSelect, p
     setShowSuggestions(false);
   };
 
+  const inputId = label.replace(/\s+/g, '-').toLowerCase();
+
   return (
     <div className="form-group" ref={containerRef}>
-      <label htmlFor={label.replace(/\s+/g, '-').toLowerCase()}>{label}</label>
+      <label htmlFor={inputId}>{label}</label>
       <div style={{ position: 'relative' }}>
         <input 
           type="text" 
-          id={label.replace(/\s+/g, '-').toLowerCase()}
+          id={inputId}
           className="form-control" 
           placeholder={placeholder}
           value={value}
           onChange={handleInputChange}
           onFocus={() => setShowSuggestions(true)}
+          aria-describedby={showSuggestions && suggestions.length > 0 ? `${inputId}-suggestions` : undefined}
+          aria-expanded={showSuggestions && suggestions.length > 0}
+          aria-autocomplete="list"
+          role="combobox"
         />
         
         {showSuggestions && (isFetching ? (
-          <div className="suggestions-dropdown">
+          <div className="suggestions-dropdown" role="status" aria-live="polite">
             <div className="loading-suggestion">Loading suggestions...</div>
           </div>
         ) : suggestions.length > 0 ? (
-          <ul className="suggestions-dropdown">
+          <ul className="suggestions-dropdown" id={`${inputId}-suggestions`} role="listbox">
             {suggestions.map((suggestion, index) => (
               <li 
                 key={index}
                 onClick={() => selectSuggestion(suggestion)}
                 onMouseDown={(e) => e.preventDefault()}
+                role="option"
+                tabIndex={-1}
               >
                 <div className="suggestion-main">{suggestion.display_name}</div>
                 <div className="suggestion-detail">
@@ -121,7 +129,7 @@ export default function LocationInput({ label, value, onChange, onPlaceSelect, p
             ))}
           </ul>
         ) : value.length > 1 && (
-          <div className="suggestions-dropdown">
+          <div className="suggestions-dropdown" role="status">
             <div className="no-suggestions">No locations found</div>
           </div>
         ))}

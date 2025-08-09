@@ -152,45 +152,39 @@ export const FAQItem = ({ question, answer, isOpen, toggle, index }) => (
 );
 
 export const RouteCard = ({ source, destination, onClick }) => (
-  <article 
-    className="distance-result__route-card"
-    tabIndex={0}
-    onClick={onClick}
-    onKeyDown={(e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        onClick();
-        e.preventDefault();
-      }
-    }}
-    role="button"
-    aria-label={`Calculate distance between ${source} and ${destination}`}
-  >
-    <div className="distance-result__route-source">
-      <div 
-        className="distance-result__route-dot distance-result__route-dot--source"
-        aria-hidden="true"
-      ></div>
-      <p>{source}</p>
-    </div>
-    <div className="distance-result__route-destination">
-      <div 
-        className="distance-result__route-dot distance-result__route-dot--destination"
-        aria-hidden="true"
-      ></div>
-      <p>{destination}</p>
-    </div>
-    <div className="distance-result__route-footer">
-      <span>Calculate distance</span>
-      <svg 
-        viewBox="0 0 24 24" 
-        fill="none" 
-        stroke="currentColor"
-        aria-hidden="true"
-      >
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-      </svg>
-    </div>
-  </article>
+  <div className="distance-result__route-card-wrapper">
+    <button 
+      className="distance-result__route-card"
+      onClick={onClick}
+      aria-label={`Calculate distance between ${source} and ${destination}`}
+    >
+      <div className="distance-result__route-source">
+        <div 
+          className="distance-result__route-dot distance-result__route-dot--source"
+          aria-hidden="true"
+        ></div>
+        <span>{source}</span>
+      </div>
+      <div className="distance-result__route-destination">
+        <div 
+          className="distance-result__route-dot distance-result__route-dot--destination"
+          aria-hidden="true"
+        ></div>
+        <span>{destination}</span>
+      </div>
+      <div className="distance-result__route-footer">
+        <span>Calculate distance</span>
+        <svg 
+          viewBox="0 0 24 24" 
+          fill="none" 
+          stroke="currentColor"
+          aria-hidden="true"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+        </svg>
+      </div>
+    </button>
+  </div>
 );
 
 // Utility component for screen readers

@@ -72,7 +72,7 @@ const AboutPage = () => {
         <section className="about-cta">
           <h3>Start Exploring Today</h3>
           <p>Dive into the world with LocateMyCity — where every location tells a story.</p>
-          <button>Try Our Tools Now</button>
+          <button aria-label="Try our location tools and calculators">Try Our Tools Now</button>
         </section>
       </main>
 

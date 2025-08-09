@@ -149,12 +149,13 @@ export default function SpringLocationsExplorer() {
 
       <Header />
 
-      <section className="page-hero">
-        <div className="container">
-          <h1>Cities with "Spring" in the Name</h1>
-          <p className="subtitle">Discover unique U.S. locations with "Spring" in their name</p>
-        </div>
-      </section>
+      <main>
+        <section className="page-hero">
+          <div className="container">
+            <h1>Cities with "Spring" in the Name</h1>
+            <p className="subtitle">Discover unique U.S. locations with "Spring" in their name</p>
+          </div>
+        </section>
 
       <section className="stats-section">
         <div className="container">
@@ -289,9 +290,10 @@ export default function SpringLocationsExplorer() {
             ))
           )}
         </div>
-        <Footer />
       </section>
+      </main>
       
+      <Footer />
     </>
   );
 }

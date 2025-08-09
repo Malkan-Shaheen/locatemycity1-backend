@@ -43,26 +43,39 @@ export default function FAQPage() {
   return (
     <div>
       <Header />
-    <div className="faq-page">
-      
-      <h1 className="faq-title">Frequently Asked Questions</h1>
-      <div className="faq-list">
-        {faqs.map((faq, index) => (
-          <div
-            key={index}
-            className={`faq-card ${openIndex === index ? 'open' : ''}`}
-            onClick={() => toggleFAQ(index)}
-          >
-            <div className="faq-question">
-              <span>{faq.question}</span>
-              {openIndex === index ? <FaChevronUp /> : <FaChevronDown />}
+      <main className="faq-page">
+        <h1 className="faq-title">Frequently Asked Questions</h1>
+        <div className="faq-list">
+          {faqs.map((faq, index) => (
+            <div
+              key={index}
+              className={`faq-card ${openIndex === index ? 'open' : ''}`}
+            >
+              <h2>
+                <button 
+                  className="faq-question"
+                  onClick={() => toggleFAQ(index)}
+                  aria-expanded={openIndex === index}
+                  aria-controls={`faq-answer-${index}`}
+                >
+                  <span>{faq.question}</span>
+                  {openIndex === index ? <FaChevronUp aria-hidden="true" /> : <FaChevronDown aria-hidden="true" />}
+                </button>
+              </h2>
+              <div 
+                id={`faq-answer-${index}`}
+                className="faq-answer"
+                role="region"
+                aria-labelledby={`faq-question-${index}`}
+                hidden={openIndex !== index}
+              >
+                {openIndex === index && <p>{faq.answer}</p>}
+              </div>
             </div>
-            <div className="faq-answer">{openIndex === index && <p>{faq.answer}</p>}</div>
-          </div>
-        ))}
-      </div>
-    </div>
-    <Footer />
+          ))}
+        </div>
+      </main>
+      <Footer />
     </div>
   );
 }

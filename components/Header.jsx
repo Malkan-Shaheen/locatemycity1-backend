@@ -218,6 +218,9 @@ const Header = () => {
         }
       `}</style>
 
+      <nav aria-label="Skip navigation">
+        <a href="#main-content" className="skip-link">Skip to main content</a>
+      </nav>
       <header role="banner" ref={headerRef}>
         <div className="container">
           <div className="header-content">
@@ -233,12 +236,10 @@ const Header = () => {
               <h2>LocateMyCity</h2>
             </div>
 
-             <nav className="nav-links" aria-label="Main navigation">
-         <nav className="nav-links" aria-label="Main navigation">
-  <a href="/" onClick={(e) => handleNavigation(e, '/')}>Home</a>
-  <a href="/about" onClick={(e) => handleNavigation(e, '/about')}>About</a>
-  <a href="/contact" onClick={(e) => handleNavigation(e, '/contact')}>Contact</a>
-</nav>
+            <nav className="nav-links" aria-label="Main navigation">
+              <a href="/" onClick={(e) => handleNavigation(e, '/')}>Home</a>
+              <a href="/about" onClick={(e) => handleNavigation(e, '/about')}>About</a>
+              <a href="/contact" onClick={(e) => handleNavigation(e, '/contact')}>Contact</a>
             </nav>
 
             <button

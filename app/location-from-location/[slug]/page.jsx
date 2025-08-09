@@ -405,31 +405,29 @@ export default function DistanceResult() {
                     <div 
                       key={faq.id}
                       className={`faq-card ${activeFAQ === index ? 'open' : ''}`}
-                      role="button"
-                      tabIndex="0"
-                      aria-expanded={activeFAQ === index}
-                      aria-controls={`faq-answer-${faq.id}`}
-                      onClick={() => toggleFAQ(index)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault();
-                          toggleFAQ(index);
-                        }
-                      }}
                     >
-                      <div className="faq-question">
-                        <span>{faq.question}</span>
-                        {activeFAQ === index ? 
-                          <FaChevronUp aria-hidden="true" /> : 
-                          <FaChevronDown aria-hidden="true" />
-                        }
-                      </div>
+                      <h3>
+                        <button 
+                          className="faq-question"
+                          aria-expanded={activeFAQ === index}
+                          aria-controls={`faq-answer-${faq.id}`}
+                          onClick={() => toggleFAQ(index)}
+                        >
+                          <span>{faq.question}</span>
+                          {activeFAQ === index ? 
+                            <FaChevronUp aria-hidden="true" /> : 
+                            <FaChevronDown aria-hidden="true" />
+                          }
+                        </button>
+                      </h3>
                       <div 
                         id={`faq-answer-${faq.id}`}
                         className="faq-answer"
-                        aria-hidden={activeFAQ !== index}
+                        role="region"
+                        aria-labelledby={`faq-question-${faq.id}`}
+                        hidden={activeFAQ !== index}
                       >
-                        {activeFAQ === index && <p>{faq.answer}</p>}
+                        <p>{faq.answer}</p>
                       </div>
                     </div>
                   ))}
@@ -445,14 +443,6 @@ export default function DistanceResult() {
                       source={route.source} 
                       destination={route.destination} 
                       onClick={() => navigateToRoute(route.source, route.destination)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                          navigateToRoute(route.source, route.destination);
-                        }
-                      }}
-                      tabIndex="0"
-                      role="button"
-                      aria-label={`Navigate to route from ${route.source} to ${route.destination}`}
                     />
                   ))}
                 </div>

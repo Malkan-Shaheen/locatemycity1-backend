@@ -51,7 +51,7 @@ export default function DistanceCalculator() {
 </Head>
 
 
-      <div className="distance-page">
+      <main className="distance-page">
         <div className="page-title">
           <h1>Distance Calculator</h1>
           <p>Find the exact distance between two locations worldwide.</p>
@@ -91,7 +91,7 @@ export default function DistanceCalculator() {
             </button>
           </div>
         </div>
-      </div>
+      </main>
       <Footer />
     </>
   );

@@ -436,7 +436,7 @@ export default function DistanceResult() {
         
       </Head>
 
-      <div className="distance-page">
+      <main className="distance-page">
         <div className="page-header">
           <h1>How far is {capitalizeWords(destinationName)} from me?</h1>
           <p className="description">
@@ -494,7 +494,7 @@ export default function DistanceResult() {
           <div className="info-card">
             <h3>Distance to Destination</h3>
             
-            <div className="distance-value">
+            <div className="distance-value" role="status" aria-live="polite">
               {sourceCoords ? (
                 !isCalculating && distanceInKm > 0 ? (
                   unit === 'km' 
@@ -511,16 +511,18 @@ export default function DistanceResult() {
               )}
             </div>
 
-            <div className="unit-toggle">
+            <div className="unit-toggle" role="group" aria-label="Distance unit selection">
               <button 
                 className={`unit-btn ${unit === 'km' ? 'active' : ''}`}
                 onClick={() => handleUnitChange('km')}
+                aria-pressed={unit === 'km'}
               >
                 Kilometers
               </button>
               <button 
                 className={`unit-btn ${unit === 'mi' ? 'active' : ''}`}
                 onClick={() => handleUnitChange('mi')}
+                aria-pressed={unit === 'mi'}
               >
                 Miles
               </button>
@@ -716,7 +718,7 @@ export default function DistanceResult() {
             </ul>
           </div>
         </footer>
-      </div>
+      </main>
       <Footer />
     </>
   );
