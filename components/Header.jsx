@@ -235,7 +235,7 @@ const Header = () => {
 
              <nav className="nav-links" aria-label="Main navigation">
          <nav className="nav-links" aria-label="Main navigation">
-  <a href="/home" onClick={(e) => handleNavigation(e, '/home')}>Home</a>
+  <a href="/" onClick={(e) => handleNavigation(e, '/')}>Home</a>
   <a href="/about" onClick={(e) => handleNavigation(e, '/about')}>About</a>
   <a href="/contact" onClick={(e) => handleNavigation(e, '/contact')}>Contact</a>
 </nav>
@@ -261,9 +261,9 @@ const Header = () => {
   aria-hidden={!menuOpen}
 >
   <a
-    href="/home"
+    href="/"
     tabIndex={menuOpen ? 0 : -1}
-    onClick={(e) => handleNavigation(e, '/home')}
+    onClick={(e) => handleNavigation(e, '/')}
   >
     Home
   </a>
