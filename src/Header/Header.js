@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import './Header.css';
 import logoImg from './../images/Logoo.png';
@@ -14,27 +15,32 @@ const Header = () => {
     setIsMobileMenuOpen(false);
   };
 
+
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        closeMobileMenu();
-      }
-    };
-
-    const handleScroll = () => {
-      closeMobileMenu();
-    };
-
-    if (isMobileMenuOpen) {
-      document.addEventListener('click', handleClickOutside);
-      window.addEventListener('scroll', handleScroll);
+  const handleUserActivity = (event) => {
+    // If click/touch is inside the menu or hamburger, do nothing
+    if (menuRef.current && menuRef.current.contains(event.target)) {
+      return;
     }
+    closeMobileMenu();
+  };
 
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [isMobileMenuOpen]);
+  if (isMobileMenuOpen) {
+    document.addEventListener('mousedown', handleUserActivity);
+    document.addEventListener('touchstart', handleUserActivity);
+    window.addEventListener('scroll', closeMobileMenu);
+    window.addEventListener('keydown', closeMobileMenu);
+  }
+
+  return () => {
+    document.removeEventListener('mousedown', handleUserActivity);
+    document.removeEventListener('touchstart', handleUserActivity);
+    window.removeEventListener('scroll', closeMobileMenu);
+    window.removeEventListener('keydown', closeMobileMenu);
+  };
+}, [isMobileMenuOpen]);
+
+
 
   return (
     <header className="custom-header">
