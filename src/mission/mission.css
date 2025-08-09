@@ -110,7 +110,7 @@
   position: relative;
   margin-top: 10px;
   margin: 0;
-  padding: 10px 0;
+  padding: 15px 15px;
   text-align: center;
   background: linear-gradient(90deg, #CD9E3C 0%, #BD8A2D 100%);
   color: #000;
@@ -118,6 +118,7 @@
   position: absolute;
   left: 0;
   bottom: 5px;
+  width: 130% !important;
 }
 
 /* Hide Heritage Drip text on hover */
