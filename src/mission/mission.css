@@ -80,7 +80,7 @@
   text-align: left;
   transition: all 0.3s ease;
   position: relative;
-  min-height: 50px; /* keeps space for title */
+  min-height: 50px; 
 }
 
 .merch-info h3 {
@@ -91,6 +91,7 @@
   font-family: 'Poppins';
   font-size: 18px;
   line-height: 100%;
+  margin-top: -34px !important;
 }
 
 /* Default merch-descr style (hidden until hover) */
@@ -125,7 +126,7 @@
 }
 .merch-image {
   display: block;
-  margin-bottom: 60px; /* reserve space for gap + button */
+  margin-bottom: 10px; /* reserve space for gap + button */
 }
 
 
@@ -142,7 +143,8 @@
   border-radius: 12px;
   font-size: 25px;
   justify-content: space-between;
-  margin-top: 20px !important;
+  padding: 0px 14px;
+  /* margin-top: 20px !important; */
 }
 
 .merch-card.hovered .arrow-icon {
@@ -235,7 +237,7 @@
   border-radius: 12px;
   font-size: 25px;
   justify-content: space-between;
-  margin-top: 20px !important;
+  /* margin-top: 20px !important; */
 }
 
 }
@@ -276,7 +278,7 @@
     box-sizing: border-box !important;
     width: 100% !important;
     justify-content: center !important;
-    margin-top: 8px !important;
+    /* margin-top: 8px !important; */
     margin-right: 0px !important;
   }
 }
