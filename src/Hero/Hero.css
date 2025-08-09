@@ -106,9 +106,33 @@ body, html {
     bottom: -15px;   /* Adjust position for larger heading */
   }
 }
-@media (min-width: 2560px)  {
+
+@media (min-width: 1000px) and (max-width: 1190px) {
+  .img-frame {
+    width: 90%;     /* Slightly wider than the heading */
+    max-width: none;  /* Allows more growth without overflowing too far */
+    bottom: -15px;   /* Adjust position for larger heading */
+  }
+}
+@media (min-width: 1440px) and (max-width: 2000px) {
   .img-frame {
     width: 120%;     /* Slightly wider than the heading */
+    max-width: none;  /* Allows more growth without overflowing too far */
+    bottom: -15px;   /* Adjust position for larger heading */
+  }
+}
+@media (min-width: 2000px)  {
+  .img-frame {
+    width: 125%;     /* Slightly wider than the heading */
+    max-width: none;  /* Allows more growth without overflowing too far */
+    bottom: -15px;   /* Adjust position for larger heading */
+  }
+}
+
+
+@media (min-width: 2560px)  {
+  .img-frame {
+    width: 80%;     /* Slightly wider than the heading */
     max-width: none;  /* Allows more growth without overflowing too far */
     bottom: -15px;   /* Adjust position for larger heading */
   }
