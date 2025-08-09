@@ -10,9 +10,10 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Locate My City</title>
+        <title>Locate My City - Distance Calculator & Location Explorer</title>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="Calculate precise distances between locations, explore cities worldwide, and discover unique geographical features like rock formations and springs." />
         <link rel="icon" type="image/png" href="/images/cityfav.png" />
         <link
           rel="stylesheet"
@@ -59,12 +60,12 @@ export default function Home() {
         />
       </Head>
 
-      <main>
-        <Header />
+      <Header />
+      <main role="main">
         <Hero />
         <Cards />
-        <Footer />
       </main>
+      <Footer />
     </>
   );
 }

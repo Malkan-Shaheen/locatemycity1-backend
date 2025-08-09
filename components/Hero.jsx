@@ -122,7 +122,7 @@ export default function HeroSection() {
 
 
       <div className="hero-container" ref={containerRef}>
-        <div className="hero">
+        <section className="hero" id="main-content">
           <div className="floating-elements">
             <div className="floating-element" style={{ width: '40px', height: '40px', top: '20%', left: '10%', animationDelay: '0s' }}></div>
             <div className="floating-element" style={{ width: '60px', height: '60px', top: '60%', left: '80%', animationDelay: '2s' }}></div>
@@ -146,7 +146,7 @@ export default function HeroSection() {
               <h2>Find Locations</h2>
               <form onSubmit={handleSubmit}>
                 <div className="form-group" style={{ position: 'relative' }}>
-                  <label htmlFor="destination">Enter a Destination</label>
+                  <label htmlFor="heroDestination">Enter a Destination</label>
                   <input 
                     type="text" 
                     id="heroDestination" 
@@ -155,18 +155,24 @@ export default function HeroSection() {
                     onFocus={() => setShowSuggestions(true)}
                     placeholder="Enter address, city, or landmark" 
                     required 
+                    aria-describedby={showSuggestions ? "suggestions-list" : undefined}
+                    aria-expanded={showSuggestions}
+                    aria-autocomplete="list"
+                    role="combobox"
                   />
                   {showSuggestions && (isFetching ? (
-                    <div className="suggestions-dropdown">
+                    <div className="suggestions-dropdown" role="status" aria-live="polite">
                       <div className="loading-suggestion">Loading suggestions...</div>
                     </div>
                   ) : suggestions.length > 0 ? (
-                    <ul className="suggestions-dropdown">
+                    <ul className="suggestions-dropdown" id="suggestions-list" role="listbox">
                       {suggestions.map((suggestion, index) => (
                         <li 
                           key={index}
                           onClick={() => handleSuggestionClick(suggestion)}
                           onMouseDown={(e) => e.preventDefault()}
+                          role="option"
+                          tabIndex={-1}
                         >
                           <div className="suggestion-main">{suggestion.display_name}</div>
                           <div className="suggestion-detail">
@@ -192,7 +198,7 @@ export default function HeroSection() {
               </form>
             </div>
           </div>
-        </div>
+        </section>
       </div>
 
       <style jsx>{`

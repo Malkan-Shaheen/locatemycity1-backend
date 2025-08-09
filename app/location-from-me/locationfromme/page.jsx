@@ -86,7 +86,7 @@ export default function DistanceCalculator() {
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
       </Head>
 
-      <div className="distance-page">
+      <main className="distance-page">
         <div className="floating-elements">
           <div className="floating-element" style={{ width: '100px', height: '100px', top: '20%', left: '10%', animationDelay: '0s' }}></div>
           <div className="floating-element" style={{ width: '150px', height: '150px', top: '60%', left: '70%', animationDelay: '2s' }}></div>
@@ -114,9 +114,14 @@ export default function DistanceCalculator() {
                   onChange={handleInputChange}
                   onFocus={() => setShowSuggestions(true)}
                   onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+                  aria-describedby={showSuggestions && suggestions.length > 0 ? "destination-suggestions" : undefined}
+                  aria-expanded={showSuggestions && suggestions.length > 0}
+                  aria-autocomplete="list"
+                  role="combobox"
                 />
                 <button
                   onClick={() => setShowSuggestions(true)}
+                  aria-label="Show location suggestions"
                   style={{
                     position: 'absolute',
                     right: '10px',
@@ -134,12 +139,14 @@ export default function DistanceCalculator() {
                   <FaArrowRight />
                 </button>
                 {showSuggestions && suggestions.length > 0 && (
-                  <ul className="suggestions-list">
+                  <ul className="suggestions-list" id="destination-suggestions" role="listbox">
                     {suggestions.map((suggestion, index) => (
                       <li
                         key={index}
                         onClick={() => handleSuggestionClick(suggestion)}
                         className="suggestion-item"
+                        role="option"
+                        tabIndex={-1}
                       >
                         {suggestion.short_name}
                       </li>
@@ -154,7 +161,7 @@ export default function DistanceCalculator() {
             </button>
           </div>
         </div>
-      </div>
+      </main>
       <Footer />
     </>
   );
