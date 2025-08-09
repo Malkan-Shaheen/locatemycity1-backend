@@ -227,7 +227,7 @@
     font-size: 12px;
   }
 }
-@media screen and (min-width: 768px) and (max-width: 1024px) {
+@media screen and (min-width: 769px) and (max-width: 1023px) {
   .faq-wrapper {
     margin-top: -250px !important;
   }

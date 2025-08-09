@@ -78,11 +78,27 @@ body, html {
 
 @media (min-width: 1200px) {
   .img-frame {
-    min-width: 120%; /* Slightly wider than the heading */
-    max-width: 100%; /* Allows more growth on very large screens */
+  width: 120%; /* Slightly wider than the heading */
+    max-width: 80%; /* Allows more growth on very large screens */
     bottom: -15px; /* Adjust position for larger heading */
   }
 }
+
+@media (min-width: 1200px) {
+  .img-frame {
+  width: 120%; /* Slightly wider than the heading */
+    max-width: 80%; /* Allows more growth on very large screens */
+    bottom: -15px; /* Adjust position for larger heading */
+  }
+}
+@media (min-width: 1000px) and (max-width: 1024px) {
+  .img-frame {
+    width: 90%;     /* Slightly wider than the heading */
+    max-width: none;  /* Allows more growth without overflowing too far */
+    bottom: -15px;   /* Adjust position for larger heading */
+  }
+}
+
 .subtitle {
   margin-top: 10px;
   font-size: 0.9rem;
