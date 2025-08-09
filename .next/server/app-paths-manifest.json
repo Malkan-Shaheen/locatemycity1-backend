@@ -1,0 +1,5 @@
+{
+  "/location-from-location/[slug]/page": "app/location-from-location/[slug]/page.js",
+  "/location-from-location/locationtolocation/page": "app/location-from-location/locationtolocation/page.js",
+  "/page": "app/page.js"
+}

@@ -68,7 +68,6 @@ export default function DistanceResult() {
         );
         const sourceData = await sourceResponse.json();
         
-        // Fetch destination location details
         const destResponse = await fetch(
           `${NOMINATIM_URL}?q=${encodeURIComponent(destinationName.replace(/-/g, ' '))}&format=json&limit=1`
         );
