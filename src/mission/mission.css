@@ -237,6 +237,7 @@
   color: #000;
   border-radius: 12px;
   font-size: 25px;
+  min-width: 90px;
   justify-content: space-between;
   /* margin-top: 20px !important; */
 }

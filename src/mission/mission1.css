@@ -12,10 +12,11 @@
   .merch-card {
     width: 100%;
     max-width: 280px; /* Reduced so 3 fit side-by-side */
-    height: 250px;
+    height: 340px;
     margin-bottom: 0 !important;
     overflow: hidden;
     position: relative;
+    padding: 0px 20px;
   }
   .merge-info{
     visibility: hidden;
