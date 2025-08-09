@@ -57,16 +57,19 @@
 
 .merch-card {
   width: 364.44px;
-  height: 450.97px;
+  height: 363.97px;
   transition: all 0.4s ease;
   cursor: pointer;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
 }
 
 .merch-image {
-      width: 267.44px;
-    height: 339.97px;
+      width: 364.44px;
+    height: 363.97px;
   border-radius: 20px;
   object-fit: cover;
   transition: all 0.4s ease;
