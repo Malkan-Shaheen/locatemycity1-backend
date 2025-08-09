@@ -99,6 +99,21 @@ body, html {
   }
 }
 
+@media (min-width: 1024px) and (max-width: 1440px) {
+  .img-frame {
+    width: 110%;     /* Slightly wider than the heading */
+    max-width: none;  /* Allows more growth without overflowing too far */
+    bottom: -15px;   /* Adjust position for larger heading */
+  }
+}
+@media (min-width: 2560px)  {
+  .img-frame {
+    width: 120%;     /* Slightly wider than the heading */
+    max-width: none;  /* Allows more growth without overflowing too far */
+    bottom: -15px;   /* Adjust position for larger heading */
+  }
+}
+
 .subtitle {
   margin-top: 10px;
   font-size: 0.9rem;

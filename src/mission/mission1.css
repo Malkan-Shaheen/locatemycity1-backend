@@ -7,14 +7,6 @@
     gap: 20px; /* Slightly smaller gap */
     margin-top: 40px;
     justify-items: center;
-
-  }
-
-  .merch-card.hovered .merch-descr {
-  /* existing styles */
-  min-height: 40px; 
-   margin-top: 20px;
-
   }
 
   .merch-card {
@@ -30,7 +22,6 @@
     width: 100%;
     height: auto;
     aspect-ratio: 1/1;
-    max-height: none !important;
   }
 
   /* Maintain all other styles */
@@ -58,39 +49,11 @@
   .arrow-icon {
     display: flex;
     align-items: center;
-    /* gap: 8px; Slightly smaller gap */
     font-size: 14px; /* Reduced font for fit */
     font-weight: 500;
     letter-spacing: -4%;
     transition: all 0.3s ease;
   }
-  
-
-  /* Hover effects */
- .merch-card.hovered .merch-descr {
-  background: linear-gradient(90deg, #CD9E3C 0%, #BD8A2D 100%);
-  color: black;
-  border-radius: 16px;
-  padding: 12px 20px;
-  height: 100%;
-  width: 100%; /* Match width of merch-card (which is same as merch-image) */
-  box-sizing: border-box;
-  font-size: 18px;
-  justify-items: center;
-  justify-content: center;
-   width: 100%;
-  min-width: unset;
-  max-width: unset;
-  left: 0;  /* make sure it starts from left edge */
-  right: 0;
-  overflow: visible !important;
-  white-space: nowrap; /* Prevents line break */
-}
- .merch-info {
-    position: relative; /* Add this */
-    width: 100%;
-  }
-
 
   .merch-card.hovered .arrow-icon {
     opacity: 0;
@@ -148,24 +111,22 @@
   .merch-card {
     max-width: 100%;
   }
-.merch-descr {
-    display: flex; /* Changed from none to flex */
+
+  .merch-descr {
+    display: flex;
     align-items: center;
     justify-content: space-between;
-    background: transparent; /* Start transparent */
+    background: transparent;
     color: transparent;
-    /* border-radius: 12px; */
     font-size: 14px;
-     /* padding: 16px 24px; */
-  height: 80vh;
-  width: 100vw;
-   position: absolute;
+    height: 80vh;
+    width: 100vw;
+    position: absolute;
     margin: 10px auto 0;
     height: 0;
     overflow: hidden;
     transition: all 0.3s ease;
   }
-
 
   .merch-card.hovered .arrow-icon {
     opacity: 0;
@@ -180,37 +141,95 @@
     transform: translateY(12px);
   }
 }
+
 @media screen and (max-width: 480px) {
   .merch-grid {
-    padding: 0 10px; /* Add some padding to prevent edge touching */
-    box-sizing: border-box; /* Include padding in width calculation */
+    padding: 0 10px;
+    box-sizing: border-box;
   }
 }
 
 @media screen and (max-width: 1023px) {
   .merch-grid {
-    padding: 0 10px; /* 10px padding on left and right */
+    padding: 0 10px;
     box-sizing: border-box;
   }
 }
 
 @media screen and (min-width: 1023px) {
   .merch-info {
-    padding-top:30px; /* 10px padding on left and right */
+    padding-top: 30px;
   }
 }
 
-
 .merch-card.hovered .merch-descr {
-  /* existing styles */
   min-height: 40px;
-  margin-top: 50px;  /* margin between image and button */
-  min-width: 250px;
-  width: 100%; /* ensure full width */
+  margin-top: 50px;
+  min-width: 150px;
+  width: 100%;
   box-sizing: border-box;
-  max-width: none; /* remove max-width to match merch-image width */
+  max-width: none;
+  border: 2px solid transparent !important;
 }
 
 .merch-card.hovered .merch-info {
-  width: 100%; /* ensure merch-info (button container) matches image width */
+  width: 100%;
+}
+
+/* ✅ Updated hover button style */
+@media screen and (max-width: 1023px) {
+  /* Centered, slightly smaller hover button */
+  .merch-descr{
+    border-radius: 16px !important;
+  }
+  .merch-card:hover .merch-descr,
+  .merch-card.hovered .merch-descr {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 85%;
+    height: 50px;
+    background: linear-gradient(90deg, #CD9E3C 0%, #BD8A2D 100%);
+    color: black;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 0 12px;
+    box-sizing: border-box;
+    gap: 8px;
+    margin: 0;
+  }
+
+  .merch-card {
+    position: relative;
+  }
+
+  .merch-info {
+    position: relative;
+    width: 100%;
+    min-height: 50px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .merch-card:hover .merch-descr,
+  .merch-card.hovered .merch-descr {
+    width: 90%;
+    height: 45px;
+    font-size: 14px;
+    gap: 6px;
+  }
+
+  .merch-info {
+    min-height: 45px;
+  }
+}
+
+.merch-card {
+  width: 100%;
+  max-width: 280px !important;
 }

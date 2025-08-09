@@ -57,7 +57,7 @@
 
 .merch-card {
   width: 364.44px;
-  height: 435.97px;
+  height: 450.97px;
   transition: all 0.4s ease;
   cursor: pointer;
   position: relative;
@@ -65,15 +65,15 @@
 }
 
 .merch-image {
-  width: 364.44px;
-  height: 363.97px;
+      width: 267.44px;
+    height: 339.97px;
   border-radius: 20px;
   object-fit: cover;
   transition: all 0.4s ease;
 }
 
 .merch-info {
-  margin-top: 12px;
+  /* margin-top: 12px; */
   text-align: left;
   transition: all 0.3s ease;
   position: relative;
@@ -94,10 +94,7 @@
 
 /* Hide Shop Now button by default */
 .merch-descr {
-  display: none;
-  margin-top: 30px;
-   /* fully hidden */
-
+  display: none; /* fully hidden */
 }
 
 /* Show Shop Now only when hovered */
@@ -106,9 +103,9 @@
   width: 100%;
   box-sizing: border-box;
   justify-content: center;
+  position: relative;
   margin-top: 30px;
   margin: 0;
-  
   padding: 10px 0;
   text-align: center;
   background: linear-gradient(90deg, #CD9E3C 0%, #BD8A2D 100%);
@@ -116,12 +113,16 @@
   border-radius: 0 0 12px 12px;
   position: absolute;
   left: 0;
-  bottom: 0;
+  bottom: 15px;
 }
 
 /* Hide Heritage Drip text on hover */
 .merch-card:hover .merch-info h3 {
   display: none;
+}
+.merch-image {
+  display: block;
+  margin-bottom: 60px; /* reserve space for gap + button */
 }
 
 
@@ -138,6 +139,7 @@
   border-radius: 12px;
   font-size: 25px;
   justify-content: space-between;
+  margin-top: 20px !important;
 }
 
 .merch-card.hovered .arrow-icon {
@@ -222,7 +224,17 @@
   .merch-image {
     height: auto;
     max-height: 300px;
+    /* margin-bottom: 50px; */
   }
+  .merch-card.hovered .merch-descr {
+  background: linear-gradient(90deg, #CD9E3C 0%, #BD8A2D 100%);
+  color: #000;
+  border-radius: 12px;
+  font-size: 25px;
+  justify-content: space-between;
+  margin-top: 20px !important;
+}
+
 }
 
 @media screen and (max-width: 480px) {
@@ -263,5 +275,19 @@
     justify-content: center !important;
     margin-top: 8px !important;
     margin-right: 0px !important;
+  }
+}
+
+/* Remove large-screen extra gaps without affecting other breakpoints */
+@media screen and (min-width: 768px) {
+  .merch-section {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  .merch-heading h2 {
+    margin-top: 0 !important;
   }
 }
