@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import Head from 'next/head';
 import Footer from '../../../components/Footer';
@@ -28,9 +28,13 @@ import { useRouter, usePathname } from 'next/navigation';
 import Header from '../../../components/Header';
 import dynamic from 'next/dynamic';
 
-const Map = dynamic(() => import('@/components/Map-comp'), { ssr: false });
+// Lazy load the Map component with no SSR
+const Map = dynamic(() => import('@/components/Map-comp'), { 
+  ssr: false,
+  loading: () => <div className="map-loading">Loading map...</div>
+});
 
-// Helper functions
+// Memoized helper functions
 const toRad = (degrees) => degrees * Math.PI / 180;
 const kmToMiles = (km) => km * 0.621371;
 const formatTime = (timestamp, timezone) => {
@@ -53,6 +57,17 @@ const formatTimezone = (timezone) => {
   } catch {
     return timezone.split('/').pop() || '--';
   }
+};
+
+// Weather icon mapping
+const WEATHER_ICONS = {
+  clear: { icon: FaSun, color: '#FFD700' },
+  clouds: { icon: FaCloud, color: '#A9A9A9' },
+  rain: { icon: FaCloudRain, color: '#4682B4' },
+  drizzle: { icon: FaUmbrella, color: '#4682B4' },
+  thunderstorm: { icon: FaBolt, color: '#9400D3' },
+  snow: { icon: FaSnowflake, color: '#E0FFFF' },
+  default: { icon: FaCloudSun, color: '#A9A9A9' }
 };
 
 export default function DistanceResult() {
@@ -95,7 +110,8 @@ export default function DistanceResult() {
   const router = useRouter();
   const pathname = usePathname();
 
-  const getDestinationFromPath = (pathname) => {
+  // Memoized destination from path
+  const destination = useMemo(() => {
     if (pathname) {
       const pathMatch = pathname.match(/how-far-is-(.+?)(-from-me)?$/);
       if (pathMatch) {
@@ -103,49 +119,86 @@ export default function DistanceResult() {
         return decodeURIComponent(rawName).replace(/-/g, ' ').trim();
       }
     }
-    
-    if (typeof window !== 'undefined') {
-      const urlMatch = window.location.pathname.match(/how-far-is-(.+?)(-from-me)?$/);
-      return urlMatch ? decodeURIComponent(urlMatch[1]).replace(/-/g, ' ').trim() : null;
-    }
-    
     return null;
-  };
-
-  const [destination, setDestination] = useState(null);
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const pathSegments = window.location.pathname.split('/');
-      if (pathSegments.length > 3 && pathSegments[1] === 'how-far-is-:destination-from-me') {
-        const cleanPath = `/${pathSegments[1]}/${pathSegments[2]}`;
-        window.history.replaceState(null, '', cleanPath);
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    const dest = getDestinationFromPath(pathname);
-    if (dest) {
-      setDestination(dest);
-      setDestinationName(dest);
-    }
   }, [pathname]);
 
   // Clean up URL if needed
   useEffect(() => {
-    if (pathname?.includes('/how-far-is-') && pathname.split('/').length > 3) {
+    if (typeof window !== 'undefined' && pathname?.includes('/how-far-is-') && pathname.split('/').length > 3) {
       const cleanPath = pathname.split('/').slice(0, 3).join('/');
       window.history.replaceState(null, '', cleanPath);
     }
   }, [pathname]);
 
-  // Fetch place details when destination changes
+  // Set destination name when destination changes
   useEffect(() => {
     if (destination) {
-      getPlaceDetails(destination);
+      setDestinationName(destination);
     }
   }, [destination]);
+
+  // Fetch place details with debounce
+  const getPlaceDetails = useCallback(async (address) => {
+    if (!address.trim()) return;
+
+    try {
+      const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1`;
+      const response = await fetch(url);
+      const data = await response.json();
+      
+      if (data && data.length > 0) {
+        const place = data[0];
+        setDestinationPlace(place);
+        const lat = parseFloat(place.lat);
+        const lon = parseFloat(place.lon);
+        
+        setDestinationCoords(`${lat.toFixed(6)}, ${lon.toFixed(6)}`);
+        setDestinationCountry(place.display_name.split(',').pop().trim() || '--');
+      }
+    } catch (error) {
+      console.error('Geocoding error:', error);
+    }
+  }, []);
+
+  // Debounced version of getPlaceDetails
+  useEffect(() => {
+    if (!destination) return;
+    
+    const timer = setTimeout(() => {
+      getPlaceDetails(destination);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [destination, getPlaceDetails]);
+
+  // Calculate distance with memoization
+  const calculateDistance = useCallback((lat1, lon1, lat2, lon2) => {
+    setIsCalculating(true);
+    
+    setTimeout(() => {
+      const R = 6371; // Earth radius in km
+      const dLat = toRad(lat2 - lat1);
+      const dLon = toRad(lon2 - lon1);
+      const a = 
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * 
+        Math.sin(dLon/2) * Math.sin(dLon/2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      const distance = R * c;
+      
+      setDistanceInKm(distance);
+      calculateTravelTimes(distance);
+      setIsCalculating(false);
+    }, 500);
+  }, []);
+
+  const calculateTravelTimes = useCallback((distance) => {
+    setTravelTime({
+      driving: `${(distance / 80).toFixed(1)} hours`,
+      flying: `${(distance / 800).toFixed(1)} hours`,
+      walking: `${(distance / 5).toFixed(1)} hours`
+    });
+  }, []);
 
   // Recalculate when both locations are available
   useEffect(() => {
@@ -161,63 +214,10 @@ export default function DistanceResult() {
         parseFloat(destinationPlace.lon)
       );
     }
-  }, [userLatitude, userLongitude, destinationPlace]);
+  }, [userLatitude, userLongitude, destinationPlace, calculateDistance]);
 
-  // Fetch country info when destination country changes
-  useEffect(() => {
-    const fetchCountryData = async () => {
-      if (!destinationCountry || destinationCountry === '--') return;
-      
-      try {
-        const response = await fetch(`https://restcountries.com/v3.1/name/${encodeURIComponent(destinationCountry)}`);
-        if (!response.ok) throw new Error('Failed to fetch country data');
-        
-        const data = await response.json();
-        if (data && data.length > 0) {
-          const country = data[0];
-          setCountryInfo({
-            currency: getFirstCurrency(country.currencies) || '--',
-            languages: country.languages ? Object.values(country.languages).join(', ') : '--',
-            timezone: country.timezones?.[0] ? formatTimezone(country.timezones[0]) : '--'
-          });
-
-          if (country.borders && country.borders.length > 0) {
-            fetchNeighboringCountries(country.borders);
-          }
-        }
-      } catch (error) {
-        console.error('Error fetching country info:', error);
-        setCountryInfo({
-          currency: '--',
-          languages: '--',
-          timezone: '--'
-        });
-      }
-    };
-
-    fetchCountryData();
-  }, [destinationCountry]);
-
-  const fetchNeighboringCountries = async (borderCodes) => {
-    setLoadingNeighbors(true);
-    try {
-      const response = await fetch(`https://restcountries.com/v3.1/alpha?codes=${borderCodes.join(',')}`);
-      if (!response.ok) throw new Error('Failed to fetch neighboring countries');
-      
-      const data = await response.json();
-      setNeighboringCountries(data.map(country => ({
-        name: country.name.common,
-        code: country.cca2
-      })));
-    } catch (error) {
-      console.error('Error fetching neighboring countries:', error);
-      setNeighboringCountries([]);
-    } finally {
-      setLoadingNeighbors(false);
-    }
-  };
-
-  const fetchWeatherData = async (lat, lon) => {
+  // Optimized weather data fetch
+  const fetchWeatherData = useCallback(async (lat, lon) => {
     try {
       setWeather(prev => ({ ...prev, loading: true }));
       const response = await fetch(
@@ -249,14 +249,71 @@ export default function DistanceResult() {
         error: 'Failed to load weather data'
       }));
     }
-  };
+  }, []);
 
-  const getLocation = async () => {
+  // Optimized country data fetch
+  const fetchCountryData = useCallback(async (countryName) => {
+    if (!countryName || countryName === '--') return;
+    
+    try {
+      const response = await fetch(`https://restcountries.com/v3.1/name/${encodeURIComponent(countryName)}`);
+      if (!response.ok) throw new Error('Failed to fetch country data');
+      
+      const data = await response.json();
+      if (data && data.length > 0) {
+        const country = data[0];
+        setCountryInfo({
+          currency: getFirstCurrency(country.currencies) || '--',
+          languages: country.languages ? Object.values(country.languages).join(', ') : '--',
+          timezone: country.timezones?.[0] ? formatTimezone(country.timezones[0]) : '--'
+        });
+
+        if (country.borders && country.borders.length > 0) {
+          fetchNeighboringCountries(country.borders);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching country info:', error);
+      setCountryInfo({
+        currency: '--',
+        languages: '--',
+        timezone: '--'
+      });
+    }
+  }, []);
+
+  // Fetch country data when destination country changes
+  useEffect(() => {
+    fetchCountryData(destinationCountry);
+  }, [destinationCountry, fetchCountryData]);
+
+  const fetchNeighboringCountries = useCallback(async (borderCodes) => {
+    setLoadingNeighbors(true);
+    try {
+      const response = await fetch(`https://restcountries.com/v3.1/alpha?codes=${borderCodes.join(',')}`);
+      if (!response.ok) throw new Error('Failed to fetch neighboring countries');
+      
+      const data = await response.json();
+      setNeighboringCountries(data.map(country => ({
+        name: country.name.common,
+        code: country.cca2
+      })));
+    } catch (error) {
+      console.error('Error fetching neighboring countries:', error);
+      setNeighboringCountries([]);
+    } finally {
+      setLoadingNeighbors(false);
+    }
+  }, []);
+
+  // Optimized geolocation
+  const getLocation = useCallback(async () => {
     if (!navigator.geolocation) {
       setCurrentLocationText('Geolocation not supported');
       alert('Geolocation is not supported by your browser. Please enter your location manually.');
       return;
     }
+
     try {
       const permissionResult = await navigator.permissions.query({ name: 'geolocation' });
       if (permissionResult.state === 'denied') {
@@ -285,15 +342,15 @@ export default function DistanceResult() {
       setUserLongitude(lng);
       setCurrentLocationText('Location detected!');
       
-      // Immediately update the map without waiting for reverse geocode
-      reverseGeocode(lat, lng);
+      // Reverse geocode in background without blocking
+      setTimeout(() => reverseGeocode(lat, lng), 0);
     } catch (error) {
       setCurrentLocationText('Could not detect location');
       alert('Could not detect your location. Please enter it manually.');
     }
-  };
+  }, []);
 
-  const reverseGeocode = async (lat, lng) => {
+  const reverseGeocode = useCallback(async (lat, lng) => {
     try {
       const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`;
       const response = await fetch(url);
@@ -304,32 +361,9 @@ export default function DistanceResult() {
     } catch (error) {
       console.error('Reverse geocoding error:', error);
     }
-  };
+  }, []);
 
-  const getPlaceDetails = async (address) => {
-    if (!address.trim()) return;
-
-    try {
-      const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1`;
-      const response = await fetch(url);
-      const data = await response.json();
-      
-      if (data && data.length > 0) {
-        const place = data[0];
-        setDestinationPlace(place);
-        const lat = parseFloat(place.lat);
-        const lon = parseFloat(place.lon);
-        
-        setDestinationCoords(`${lat.toFixed(6)}, ${lon.toFixed(6)}`);
-        setDestinationCountry(place.display_name.split(',').pop().trim() || '--');
-        setDestinationName(address);
-      }
-    } catch (error) {
-      console.error('Geocoding error:', error);
-    }
-  };
-
-  const handleManualLocation = async (address) => {
+  const handleManualLocation = useCallback(async (address) => {
     if (!address.trim()) {
       alert('Please enter a location');
       return;
@@ -352,46 +386,19 @@ export default function DistanceResult() {
       console.error('Geocoding error:', error);
       alert('Error finding location. Please try again.');
     }
-  };
+  }, []);
 
-  const calculateDistance = (lat1, lon1, lat2, lon2) => {
-    setIsCalculating(true);
-    
-    setTimeout(() => {
-      const R = 6371; // Earth radius in km
-      const dLat = toRad(lat2 - lat1);
-      const dLon = toRad(lon2 - lon1);
-      const a = 
-        Math.sin(dLat/2) * Math.sin(dLat/2) +
-        Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * 
-        Math.sin(dLon/2) * Math.sin(dLon/2);
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-      const distance = R * c;
-      
-      setDistanceInKm(distance);
-      calculateTravelTimes(distance);
-      setIsCalculating(false);
-    }, 500);
-  };
-
-  const calculateTravelTimes = (distance) => {
-    setTravelTime({
-      driving: `${(distance / 80).toFixed(1)} hours`,
-      flying: `${(distance / 800).toFixed(1)} hours`,
-      walking: `${(distance / 5).toFixed(1)} hours`
-    });
-  };
-
-  const handleUnitChange = (newUnit) => setUnit(newUnit);
+  const handleUnitChange = useCallback((newUnit) => setUnit(newUnit), []);
   
-  const capitalizeWords = (str) => {
+  const capitalizeWords = useCallback((str) => {
     if (!str) return '';
     return str.split(' ').map(word => 
       word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
     ).join(' ');
-  };
+  }, []);
 
-  const getWeatherIcon = () => {
+  // Memoized weather icon
+  const weatherIcon = useMemo(() => {
     if (weather.loading) return <div className="spinner small"></div>;
     if (weather.error) return <div className="weather-error">{weather.error}</div>;
 
@@ -400,27 +407,110 @@ export default function DistanceResult() {
       marginBottom: '10px'
     };
 
-    switch(weather.condition) {
-      case 'clear': return <FaSun style={{...iconStyle, color: '#FFD700'}} />;
-      case 'clouds': return <FaCloud style={{...iconStyle, color: '#A9A9A9'}} />;
-      case 'rain': return <FaCloudRain style={{...iconStyle, color: '#4682B4'}} />;
-      case 'drizzle': return <FaUmbrella style={{...iconStyle, color: '#4682B4'}} />;
-      case 'thunderstorm': return <FaBolt style={{...iconStyle, color: '#9400D3'}} />;
-      case 'snow': return <FaSnowflake style={{...iconStyle, color: '#E0FFFF'}} />;
-      default: return <FaCloudSun style={{...iconStyle, color: '#A9A9A9'}} />;
-    }
-  };
+    const { icon, color } = WEATHER_ICONS[weather.condition] || WEATHER_ICONS.default;
+    const IconComponent = icon;
+    return <IconComponent style={{...iconStyle, color}} />;
+  }, [weather]);
 
-  // Prepare coordinates for the map
-  const sourceCoords = userLatitude && userLongitude ? { 
+  // Memoized coordinates for the map
+  const sourceCoords = useMemo(() => userLatitude && userLongitude ? { 
     lat: parseFloat(userLatitude), 
     lng: parseFloat(userLongitude) 
-  } : null;
+  } : null, [userLatitude, userLongitude]);
 
-  const destCoords = destinationPlace ? { 
+  const destCoords = useMemo(() => destinationPlace ? { 
     lat: parseFloat(destinationPlace.lat), 
     lng: parseFloat(destinationPlace.lon) 
-  } : null;
+  } : null, [destinationPlace]);
+
+  // Memoized distance display
+  const distanceDisplay = useMemo(() => {
+    if (!sourceCoords) {
+      return (
+        <div className="empty-distance">
+          <span className="empty-value">-- {unit === 'km' ? 'km' : 'mi'}</span>
+          <span className="unit-hint"> </span>
+        </div>
+      );
+    }
+
+    if (isCalculating || distanceInKm <= 0) {
+      return <div className="spinner"></div>;
+    }
+
+    return unit === 'km' 
+      ? `${distanceInKm.toFixed(1)} km` 
+      : `${kmToMiles(distanceInKm).toFixed(1)} mi`;
+  }, [sourceCoords, isCalculating, distanceInKm, unit]);
+
+  // Memoized neighboring countries list
+  const neighboringCountriesList = useMemo(() => {
+    if (loadingNeighbors) return <div className="spinner small"></div>;
+    if (neighboringCountries.length === 0) return <p>No neighboring countries found or data unavailable.</p>;
+
+    return (
+      <ul className="routes-list">
+        {neighboringCountries.map((country, index) => {
+          const destSlug = destinationName
+            .split(',')[0]
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-|-$/g, '');
+            
+          const countrySlug = country.name
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-|-$/g, '');
+
+          return (
+            <li key={index} className="route-item">
+              <Link 
+                href={`/location-from-location/how-far-is-${countrySlug}-from-${destSlug}`}
+                className="route-link"
+                prefetch={false}
+              >
+                How far is {country.name} from {destinationName.split(',')[0]}?
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+    );
+  }, [loadingNeighbors, neighboringCountries, destinationName]);
+
+  // Memoized popular routes
+  const popularRoutes = useMemo(() => (
+    <ul className="routes-list">
+      {[
+        'New York',
+        'London',
+        'Tokyo',
+        'Los Angeles'
+      ].map((city, index) => {
+        const destSlug = destinationName
+          .split(',')[0]
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-|-$/g, '');
+          
+        const citySlug = city
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-|-$/g, '');
+
+        return (
+          <li key={index}>
+            <Link 
+              href={`/location-from-location/how-far-is-${citySlug}-from-${destSlug}`}
+              prefetch={false}
+            >
+              {city} to {destinationName.split(',')[0]}
+            </Link>
+          </li>
+        );
+      })}
+    </ul>
+  ), [destinationName]);
 
   return (
     <>
@@ -431,9 +521,7 @@ export default function DistanceResult() {
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-        <meta name="robots" content="index, follow">
-
-</meta>
+        <meta name="robots" content="index, follow" />
       </Head>
 
       <main className="distance-page">
@@ -455,11 +543,13 @@ export default function DistanceResult() {
               value={currentLocationText}
               onChange={(e) => setCurrentLocationText(e.target.value)}
               className="source-input"
+              aria-label="Enter your current location"
             />
             <div className="source-buttons">
               <button 
                 className="my-location-btn"
                 onClick={getLocation}
+                aria-label="Use my current location"
               >
                 <FaMapMarkerAlt style={{ marginRight: '8px' }} />
                 Use My Location
@@ -467,6 +557,7 @@ export default function DistanceResult() {
               <button 
                 className="calculate-btn"
                 onClick={() => handleManualLocation(currentLocationText)}
+                aria-label="Set location manually"
               >
                 Set Location
               </button>
@@ -474,10 +565,10 @@ export default function DistanceResult() {
           </div>
         </div>
 
-        {/* Map Container - Always shown with at least destination marker */}
+        {/* Map Container */}
         <div className="map-container">
           <Map 
-            sourceCoords={sourceCoords} // Will be null when not set
+            sourceCoords={sourceCoords}
             destinationCoords={destCoords}
             distance={sourceCoords ? distanceInKm : null}
           />
@@ -488,25 +579,13 @@ export default function DistanceResult() {
             </div>
           )}
         </div>
+
         <div className="cards-container">
           <div className="info-card">
             <h1>Distance to Destination</h1>
             
             <div className="distance-value" role="status" aria-live="polite">
-              {sourceCoords ? (
-                !isCalculating && distanceInKm > 0 ? (
-                  unit === 'km' 
-                    ? `${distanceInKm.toFixed(1)} km` 
-                    : `${kmToMiles(distanceInKm).toFixed(1)} mi`
-                ) : (
-                  <div className="spinner"></div>
-                )
-              ) : (
-                <div className="empty-distance">
-                  <span className="empty-value">-- {unit === 'km' ? 'km' : 'mi'}</span>
-                  <span className="unit-hint"> </span>
-                </div>
-              )}
+              {distanceDisplay}
             </div>
 
             <div className="unit-toggle" role="group" aria-label="Distance unit selection">
@@ -544,13 +623,13 @@ export default function DistanceResult() {
           </div>
         </div>
 
-        {/* Always show destination info cards */}
+        {/* Destination info cards */}
         <div className="cards-container">
           {/* Weather Card */}
           <div className="info-card weather-card">
             <h3>Current Weather</h3>
             <div className="weather-display">
-              {getWeatherIcon()}
+              {weatherIcon}
               {!weather.loading && !weather.error && (
                 <>
                   <div className="temperature">{weather.temperature}°C</div>
@@ -653,67 +732,11 @@ export default function DistanceResult() {
         <footer className="page-footer">
           <div className="footer-section">
             <h4>How far is {destinationName} from neighboring countries?</h4>
-            {loadingNeighbors ? (
-              <div className="spinner small"></div>
-            ) : neighboringCountries.length > 0 ? (
-              <ul className="routes-list">
-                {neighboringCountries.map((country, index) => {
-                  const destSlug = destinationName
-                    .split(',')[0]
-                    .toLowerCase()
-                    .replace(/[^a-z0-9]+/g, '-')
-                    .replace(/^-|-$/g, '');
-                    
-                  const countrySlug = country.name
-                    .toLowerCase()
-                    .replace(/[^a-z0-9]+/g, '-')
-                    .replace(/^-|-$/g, '');
-
-                  return (
-                    <li key={index} className="route-item">
-                      <Link 
-                        href={`/location-from-location/how-far-is-${countrySlug}-from-${destSlug}`}
-                        className="route-link"
-                      >
-                        How far is {country.name} from {destinationName.split(',')[0]}?
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            ) : (
-              <p>No neighboring countries found or data unavailable.</p>
-            )}
+            {neighboringCountriesList}
           </div>
           <div className="footer-section">
             <h4>Popular Routes to {destinationName.split(',')[0]}</h4>
-            <ul className="routes-list">
-              {[
-                'New York',
-                'London',
-                'Tokyo',
-                'Los Angeles'
-              ].map((city, index) => {
-                const destSlug = destinationName
-                  .split(',')[0]
-                  .toLowerCase()
-                  .replace(/[^a-z0-9]+/g, '-')
-                  .replace(/^-|-$/g, '');
-                  
-                const citySlug = city
-                  .toLowerCase()
-                  .replace(/[^a-z0-9]+/g, '-')
-                  .replace(/^-|-$/g, '');
-
-                return (
-                  <li key={index}>
-                    <Link href={`/location-from-location/how-far-is-${citySlug}-from-${destSlug}`}>
-                      {city} to {destinationName.split(',')[0]}
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
+            {popularRoutes}
           </div>
         </footer>
       </main>
@@ -721,4 +744,3 @@ export default function DistanceResult() {
     </>
   );
 }
-  
