@@ -16,6 +16,15 @@ const nextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      {
+        source: '/location-from-me',
+        destination: '/location-from-me/locationfromme',
+        permanent: true, // set to false if this is temporary
+      },
+    ];
+  },
   async rewrites() {
     return [
       {
