@@ -12,6 +12,7 @@ export default function Home() {
       <Head>
         <title>Locate My City</title>
         <meta charSet="UTF-8" />
+        <meta name="robots" content="index, follow" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="icon" type="image/png" href="/images/cityfav.png" />
         <link

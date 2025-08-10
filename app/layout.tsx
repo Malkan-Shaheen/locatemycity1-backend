@@ -16,6 +16,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "LocateMyCity",
   description: "LocateMyCity helps you instantly explore locations worldwide - from ghost towns to booming cities. Find distances, compare locations, and explore natural features.",
+ robots: "index, follow",
 };
 
 export default function RootLayout({
