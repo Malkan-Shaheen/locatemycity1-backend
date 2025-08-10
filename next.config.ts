@@ -21,7 +21,12 @@ const nextConfig = {
       {
         source: '/location-from-me',
         destination: '/location-from-me/locationfromme',
-        permanent: true, // set to false if this is temporary
+        permanent: true, 
+      },
+      {
+        source: '/location-from-location',
+        destination: '/location-from-location/locationtolocation',
+        permanent: true, 
       },
     ];
   },
