@@ -314,6 +314,7 @@ export default function DistanceResult() {
       <Head>
         <title>{`How far is ${sourceShortName} from ${destinationShortName}?`}</title>
         <meta name="description" content={`Distance between ${sourcePlace?.display_name} and ${destinationPlace?.display_name}`} />
+     <link rel="preload" href="/globals.css" as="style" />
       </Head>
 
       <main>
