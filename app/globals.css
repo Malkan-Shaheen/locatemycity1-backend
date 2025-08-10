@@ -3982,3 +3982,8 @@ display: inline-block;
   white-space: nowrap;
   border-width: 0;
 }
+.distance-result__weather-icon {
+  width: 24px !important;
+  min-width: 24px !important;
+  text-align: center !important;
+}

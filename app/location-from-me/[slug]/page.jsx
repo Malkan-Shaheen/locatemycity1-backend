@@ -257,8 +257,6 @@ export default function DistanceResult() {
       alert('Geolocation is not supported by your browser. Please enter your location manually.');
       return;
     }
-
-    // Show permission prompt
     try {
       const permissionResult = await navigator.permissions.query({ name: 'geolocation' });
       if (permissionResult.state === 'denied') {
@@ -490,11 +488,9 @@ export default function DistanceResult() {
             </div>
           )}
         </div>
-
-        {/* Distance Card - Always shown but empty when source not set */}
         <div className="cards-container">
           <div className="info-card">
-            <h3>Distance to Destination</h3>
+            <h1>Distance to Destination</h1>
             
             <div className="distance-value" role="status" aria-live="polite">
               {sourceCoords ? (
