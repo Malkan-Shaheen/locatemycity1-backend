@@ -50,14 +50,12 @@ const LeafletMap = ({ source, destination, distance }) => {
           3
         );
 
-        // ✅ FIX: Correct way to set aria-label on zoom control
-        if (map.zoomControl && map.zoomControl._container) {
-          map.zoomControl._container.setAttribute('aria-label', 'Map zoom controls');
-          const zoomInBtn = map.zoomControl._container.querySelector('.leaflet-control-zoom-in');
-          const zoomOutBtn = map.zoomControl._container.querySelector('.leaflet-control-zoom-out');
-          if (zoomInBtn) zoomInBtn.setAttribute('aria-label', 'Zoom in');
-          if (zoomOutBtn) zoomOutBtn.setAttribute('aria-label', 'Zoom out');
-        }
+        // Add accessible controls
+        map.zoomControl.setAttribute('aria-label', 'Map zoom controls');
+        map.zoomControl._container.querySelector('.leaflet-control-zoom-in')
+          .setAttribute('aria-label', 'Zoom in');
+        map.zoomControl._container.querySelector('.leaflet-control-zoom-out')
+          .setAttribute('aria-label', 'Zoom out');
 
         mapInstanceRef.current = map;
         layerRef.current = L.layerGroup().addTo(map);
@@ -67,6 +65,7 @@ const LeafletMap = ({ source, destination, distance }) => {
           crossOrigin: 'anonymous'
         }).addTo(map);
 
+        // Custom accessible markers
         const createAccessibleMarker = (latlng, icon, title, content) => {
           const marker = L.marker(latlng, {
             icon,
@@ -102,6 +101,7 @@ const LeafletMap = ({ source, destination, distance }) => {
           shadowSize: [41, 41],
         });
 
+        // Add markers with enhanced accessibility
         createAccessibleMarker(
           [source.lat, source.lng],
           sourceIcon,
@@ -126,6 +126,7 @@ const LeafletMap = ({ source, destination, distance }) => {
           </div>`
         ).addTo(layerRef.current);
 
+        // Accessible route line
         const line = L.polyline(
           [[source.lat, source.lng], [destination.lat, destination.lng]],
           { 
@@ -136,8 +137,9 @@ const LeafletMap = ({ source, destination, distance }) => {
           }
         ).addTo(layerRef.current);
 
+        // Accessible distance label
         const midpoint = line.getBounds().getCenter();
-        L.marker(midpoint, {
+        const distanceMarker = L.marker(midpoint, {
           icon: L.divIcon({
             html: `
               <div class="distance-label" role="status" aria-live="polite">
@@ -148,7 +150,7 @@ const LeafletMap = ({ source, destination, distance }) => {
             iconSize: [100, 30],
           }),
           alt: `Distance: ${distance.toFixed(1)} kilometers`,
-          keyboard: false
+          keyboard: false // Since it's decorative
         }).addTo(layerRef.current);
 
         map.fitBounds(
@@ -162,6 +164,7 @@ const LeafletMap = ({ source, destination, distance }) => {
         setMapStatus(`Map loaded showing route from ${source.name} to ${destination.name}`);
         setIsInteractive(true);
 
+        // Focus management for screen readers
         map.whenReady(() => {
           mapRef.current.setAttribute('aria-busy', 'false');
           mapRef.current.focus();
@@ -188,10 +191,12 @@ const LeafletMap = ({ source, destination, distance }) => {
       aria-live="polite"
       tabIndex={0}
     >
+      {/* Status indicator for screen readers */}
       <div className="sr-only" aria-live="assertive">
         {mapStatus}
       </div>
-
+      
+      {/* Fallback content for when JS fails */}
       <noscript>
         <div className="map-fallback" style={{
           height: '100%',
@@ -206,6 +211,7 @@ const LeafletMap = ({ source, destination, distance }) => {
         </div>
       </noscript>
 
+      {/* Loading indicator */}
       {!isInteractive && (
         <div className="map-loading-overlay" style={{
           position: 'absolute',
