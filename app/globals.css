@@ -1275,12 +1275,7 @@ body {
     text-align: center;
   }
 
-  .hero-content h1 {
-    text-align: center;
-    padding-right: 100px;
-    
-    /* adds padding to the left for better spacing */
-  }
+ 
 
   .hero-content p {
     text-align: left;
@@ -1302,7 +1297,38 @@ body {
     width: 100%;
   }
 }
+@media (min-width: 1441px) {
+  .hero {
+    padding: 80px 10%; /* Adds 10% padding on sides */
+    min-height: unset;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: left;
+    max-width: 1800px; /* Prevents content from stretching too wide */
+    margin: 0 auto; /* Centers the hero */
+  }
 
+  .hero-content {
+    max-width: 800px;
+    padding-right: 60px;
+  }
+
+
+
+  .hero-form-container {
+    max-width: 700px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding-left: 80px; /* Reduced from 160px for better balance */
+  }
+
+  .hero-form {
+    width: 100%;
+    max-width: 500px; /* Better form width control */
+  }
+}
 /* --- Cards --- */
 :root {
   --primary-color: #4DA8DA;
