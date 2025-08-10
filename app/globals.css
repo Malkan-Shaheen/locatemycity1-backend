@@ -323,6 +323,7 @@ a, button {
   transition: all 0.3s ease;
 }
 
+
 .detail-item:last-child {
   border-bottom: none;
 }
@@ -335,6 +336,9 @@ a, button {
 .detail-item h4 {
   margin: 0 0 4px;
   font-size: 0.95rem;
+  position:relative;
+  align-items:left;
+  text-align:left !important;
   font-weight: 600;
   color: #444;
   letter-spacing: 0.3px;
@@ -345,17 +349,12 @@ a, button {
   font-size: 0.88rem;
   color: #666;
   line-height: 1.4;
+  position:relative;
+  align-items:left;
+  text-align:left !important;
 }
 
-.coordinates {
-  font-family: 'Courier New', monospace;
-  font-size: 0.78rem;
-  color: #555;
-  background: #f9f9f9;
-  padding: 3px 6px;
-  border-radius: 4px;
-  display: inline-block;
-}
+
 
 /* ------------------- Travel Times ------------------- */
 .travel-times {
@@ -3986,4 +3985,70 @@ display: inline-block;
   width: 24px !important;
   min-width: 24px !important;
   text-align: center !important;
+}
+/* Add this to your existing CSS file */
+.info-card .detail-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.info-card .detail-item > div {
+  flex: 1;
+}
+
+.info-card .detail-item h4 {
+  margin: 0 0 5px 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.info-card .detail-item p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* Specific alignment for weather details */
+.weather-card .detail-item {
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.weather-card .detail-item:last-child {
+  border-bottom: none;
+}
+
+/* Coordinates specific styling */
+.coordinates {
+  font-family: monospace;
+  word-break: break-all;
+}
+
+/* Icon sizing consistency */
+.detail-icon {
+  font-size: 1.5rem !important;
+  min-width: 24px;
+  text-align: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .info-card .detail-item {
+    gap: 10px;
+  }
+  
+  .detail-icon {
+    font-size: 1.2rem !important;
+  }
+}
+.detail-item h4 {
+    color: #444;
+    letter-spacing: .3px;
+    margin: 0 0 4px;
+    font-size: 0.95rem;
+    position: relative;
+    align-items: left;
+    text-align: left;
 }
