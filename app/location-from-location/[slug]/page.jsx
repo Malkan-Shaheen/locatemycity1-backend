@@ -1,5 +1,6 @@
 'use client';
-import { FaChevronUp, FaChevronDown, FaGlobe, FaPlane, FaAnchor } from 'react-icons/fa';
+import { FaChevronUp, FaChevronDown, FaGlobe, FaSun, FaWind, FaPlane, FaAnchor, FaClock } from 'react-icons/fa';
+import { WiSunrise, WiSunset } from 'react-icons/wi';
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Head from 'next/head';
@@ -27,6 +28,7 @@ const WEATHER_API_URL = 'https://api.openweathermap.org/data/2.5/weather';
 const WEATHER_API_KEY = '953d1012b9ab5d4722d58e46be4305f7';
 
 // Utility functions
+const toRad = (degrees) => degrees * Math.PI / 180;
 const kmToMiles = (km) => km * 0.621371;
 const kmToNauticalMiles = (km) => km * 0.539957;
 const calculateFlightTime = (km) => (km / 800).toFixed(1);
@@ -72,6 +74,7 @@ export default function DistanceResult() {
     wind: "Loading...",
     sunrise: "Loading...",
     sunset: "Loading...",
+    localtime: "Loading...",
     coordinates: "Loading...",
     currency: "Loading...",
     language: "Loading..."
@@ -176,6 +179,7 @@ export default function DistanceResult() {
         wind: `${Math.round(sourceData.wind.speed * 3.6)} km/h`,
         sunrise: new Date(sourceData.sys.sunrise * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
         sunset: new Date(sourceData.sys.sunset * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+        localtime: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
         coordinates: `${parseFloat(src.lat).toFixed(4)}, ${parseFloat(src.lon).toFixed(4)}`,
         currency: sourceCountryData.currency,
         language: sourceCountryData.language
@@ -186,6 +190,7 @@ export default function DistanceResult() {
         wind: `${Math.round(destData.wind.speed * 3.6)} km/h`,
         sunrise: new Date(destData.sys.sunrise * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
         sunset: new Date(destData.sys.sunset * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+        localtime: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
         coordinates: `${parseFloat(dest.lat).toFixed(4)}, ${parseFloat(dest.lon).toFixed(4)}`,
         currency: destCountryData.currency,
         language: destCountryData.language
@@ -202,11 +207,11 @@ export default function DistanceResult() {
     const lon2 = parseFloat(dest.lon);
 
     const R = 6371;
-    const dLat = (lat2 - lat1) * Math.PI / 180;
-    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const dLat = toRad(lat2 - lat1);
+    const dLon = toRad(lon2 - lon1);
     const a = 
       Math.sin(dLat / 2) ** 2 +
-      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
       Math.sin(dLon / 2) ** 2;
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = R * c;
@@ -309,7 +314,7 @@ export default function DistanceResult() {
       <Head>
         <title>{`How far is ${sourceShortName} from ${destinationShortName}?`}</title>
         <meta name="description" content={`Distance between ${sourcePlace?.display_name} and ${destinationPlace?.display_name}`} />
-        <link rel="preload" href="/globals.css" as="style" />
+     <link rel="preload" href="/globals.css" as="style" />
       </Head>
 
       <main>
