@@ -179,7 +179,7 @@ export default function DistanceResult() {
         wind: `${Math.round(sourceData.wind.speed * 3.6)} km/h`,
         sunrise: new Date(sourceData.sys.sunrise * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
         sunset: new Date(sourceData.sys.sunset * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
-        localtime: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+        // localtime: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
         coordinates: `${parseFloat(src.lat).toFixed(4)}, ${parseFloat(src.lon).toFixed(4)}`,
         currency: sourceCountryData.currency,
         language: sourceCountryData.language
