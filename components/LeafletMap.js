@@ -139,3 +139,4 @@ const LeafletMap = ({ source, destination, distance }) => {
 };
 
 export default LeafletMap;
+

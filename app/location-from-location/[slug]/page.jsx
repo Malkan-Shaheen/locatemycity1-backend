@@ -401,28 +401,40 @@ export default function DistanceResult() {
                 </div>
               </section>
 
-            <section className="faq-page" aria-labelledby="faq-section-title">
+        <section className="faq-page" aria-labelledby="faq-section-title">
   <h2 id="faq-section-title" className="faq-title">Frequently Asked Questions</h2>
   <div className="faq-list">
     {faqs.map((faq, index) => (
       <div
         key={faq.id}
         className={`faq-card ${activeFAQ === index ? 'open' : ''}`}
-        onClick={() => toggleFAQ(index)} // 📌 Whole card clickable
         role="button"
-        tabIndex={0}
+        tabIndex={-1}  // Prevent focus
+        onMouseDown={(e) => e.preventDefault()} // Additional prevention
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setActiveFAQ(prev => {
+            const newValue = prev === index ? null : index;
+            console.log('Setting FAQ from', prev, 'to', newValue);
+            return newValue;
+          });
+          // Force maintain scroll position
+          requestAnimationFrame(() => window.scrollTo(0, window.scrollY));
+        }}
         aria-expanded={activeFAQ === index}
         aria-controls={`faq-answer-${faq.id}`}
-        onKeyDown={(e) => e.key === 'Enter' && toggleFAQ(index)} // Keyboard support
       >
         <h3 className="faq-question">{faq.question}</h3>
-
         <div
           id={`faq-answer-${faq.id}`}
           className="faq-answer"
           role="region"
           aria-labelledby={`faq-question-${faq.id}`}
           hidden={activeFAQ !== index}
+          style={{
+            overflowAnchor: 'none' // Prevent scroll anchoring
+          }}
         >
           <p>{faq.answer}</p>
         </div>
