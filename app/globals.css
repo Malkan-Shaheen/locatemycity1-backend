@@ -1240,7 +1240,8 @@ body {
   }
 
   .hero-content h1 {
-    text-align: center;
+    text-align: right;
+    
     /* ensures individual elements are centered */
   }
 
