@@ -133,7 +133,7 @@ export default function DistanceResult() {
       const data = await res.json();
       if (data[0]?.currencies) {
         const code = Object.keys(data[0].currencies)[0];
-        return `${code} (${data[0].currencies[code].name})`;
+        return `${code}`;
       }
       return "N/A";
     } catch {
@@ -315,6 +315,8 @@ export default function DistanceResult() {
         <title>{`How far is ${sourceShortName} from ${destinationShortName}?`}</title>
         <meta name="description" content={`Distance between ${sourcePlace?.display_name} and ${destinationPlace?.display_name}`} />
      <link rel="preload" href="/globals.css" as="style" />
+     <meta name="robots" content="index, follow">
+</meta>
       </Head>
 
       <main>

@@ -145,6 +145,7 @@ export default function SpringLocationsExplorer() {
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
         <title>Spring Locations Explorer</title>
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+        <meta name="robots" content="index, follow"/>
       </Head>
 
       <Header />
