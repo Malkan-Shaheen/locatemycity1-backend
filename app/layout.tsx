@@ -26,19 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* ✅ Google Analytics Script */}
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-MZ2JZL4WKS"
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-MZ2JZL4WKS');
-          `}
-        </Script>
+       
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
