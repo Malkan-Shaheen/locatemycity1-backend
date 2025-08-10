@@ -1,5 +1,5 @@
 'use client';
-import { FaGlobe, FaPlane, FaAnchor, FaClock } from 'react-icons/fa';
+import {  FaGlobe,  FaPlane, FaAnchor, FaClock } from 'react-icons/fa';
 import { WiSunrise, WiSunset } from 'react-icons/wi';
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter, useParams } from 'next/navigation';
@@ -9,7 +9,7 @@ import Header from '../../../components/Header';
 import Footer from '../../../components/Footer';
 import { MetricCard, WeatherPanel, FAQItem, RouteCard } from '../../../components/DistanceComponents';
 
-// Optimized dynamic import with preloading
+// Lazy load heavy components
 const LeafletMap = dynamic(() => import('../../../components/LeafletMap'), {
   ssr: false,
   loading: () => (
@@ -22,28 +22,18 @@ const LeafletMap = dynamic(() => import('../../../components/LeafletMap'), {
   )
 });
 
-// Constants frozen to prevent modification
-const API_CONSTANTS = Object.freeze({
-  NOMINATIM_URL: 'https://nominatim.openstreetmap.org/search',
-  WEATHER_API_URL: 'https://api.openweathermap.org/data/2.5/weather',
-  WEATHER_API_KEY: '953d1012b9ab5d4722d58e46be4305f7',
-  CACHE_TTL: {
-    LONG: 86400, // 24 hours
-    SHORT: 3600  // 1 hour
-  }
-});
+// Constants moved outside component to avoid recreation
+const NOMINATIM_URL = 'https://nominatim.openstreetmap.org/search';
+const WEATHER_API_URL = 'https://api.openweathermap.org/data/2.5/weather';
+const WEATHER_API_KEY = '953d1012b9ab5d4722d58e46be4305f7';
 
-// Pure utility functions (no side effects)
-const UTILS = Object.freeze({
-  toRad: (degrees) => degrees * Math.PI / 180,
-  kmToMiles: (km) => km * 0.621371,
-  kmToNauticalMiles: (km) => km * 0.539957,
-  calculateFlightTime: (km) => (km / 800).toFixed(1),
-  formatTime: (date) => date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-});
+// Utility functions
+const toRad = (degrees) => degrees * Math.PI / 180;
+const kmToMiles = (km) => km * 0.621371;
+const kmToNauticalMiles = (km) => km * 0.539957;
+const calculateFlightTime = (km) => (km / 800).toFixed(1);
 
-// Static FAQ data frozen to prevent modification
-const FAQ_DATA = Object.freeze([
+const faqs = [
   {
     id: 'faq1',
     question: 'What information can I find on LocateMyCity?',
@@ -69,15 +59,7 @@ const FAQ_DATA = Object.freeze([
     question: 'What makes LocateMyCity different?',
     answer: 'We highlight unique natural features and cover both abandoned and active locations with faster search and data accuracy than traditional tools.',
   },
-]);
-
-// Default popular routes frozen
-const DEFAULT_POPULAR_ROUTES = Object.freeze([
-  { id: 'route1', source: "Source", destination: "Destination" },
-  { id: 'route2', source: "New York", destination: "London" },
-  { id: 'route3', source: "Tokyo", destination: "Sydney" },
-  { id: 'route4', source: "Paris", destination: "Rome" }
-]);
+];
 
 export default function DistanceResult() {
   const [sourcePlace, setSourcePlace] = useState(null);
@@ -85,17 +67,16 @@ export default function DistanceResult() {
   const [distanceInKm, setDistanceInKm] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [activeFAQ, setActiveFAQ] = useState(null);
-  const [popularRoutes, setPopularRoutes] = useState(DEFAULT_POPULAR_ROUTES);
+  const [popularRoutes, setPopularRoutes] = useState([]);
 
-  // Memoized initial state to prevent recreation
-  const initialWeatherState = useMemo(() => Object.freeze({
+  const initialWeatherState = useMemo(() => ({
     temp: "Loading...",
     wind: "Loading...",
     sunrise: "Loading...",
     sunset: "Loading...",
     localtime: "Loading...",
     coordinates: "Loading...",
-    currency: "Loading...",
+     currency: "Loading...",
     language: "Loading..."
   }), []);
 
@@ -105,72 +86,84 @@ export default function DistanceResult() {
   const router = useRouter();
   const params = useParams();
 
-  // Optimized slug parsing
-  const [sourceName, destinationName] = useMemo(() => {
-    const slug = Array.isArray(params.slug) ? params.slug : [params.slug];
-    return Array.isArray(slug) && slug.length === 1
-      ? slug[0].replace('how-far-is-', '').split('-from-')
-      : [null, null];
-  }, [params.slug]);
+  const slug = Array.isArray(params.slug) ? params.slug : [params.slug];
+  const [sourceName, destinationName] = Array.isArray(slug) && slug.length === 1
+    ? slug[0].replace('how-far-is-', '').split('-from-')
+    : [null, null];
 
-  // Memoized distance metrics with early return
+  // Memoized calculation of distance metrics
   const distanceMetrics = useMemo(() => {
     if (!distanceInKm) return null;
-    return Object.freeze({
+    return {
       km: distanceInKm.toFixed(1),
-      miles: UTILS.kmToMiles(distanceInKm).toFixed(1),
-      nauticalMiles: UTILS.kmToNauticalMiles(distanceInKm).toFixed(1),
-      flightTime: UTILS.calculateFlightTime(distanceInKm)
-    });
+      miles: kmToMiles(distanceInKm).toFixed(1),
+      nauticalMiles: kmToNauticalMiles(distanceInKm).toFixed(1),
+      flightTime: calculateFlightTime(distanceInKm)
+    };
   }, [distanceInKm]);
 
-  // Country data fetcher with memoization
   const fetchCountryData = useCallback(async (lat, lon) => {
     try {
       const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&addressdetails=1`, {
         headers: {
           'User-Agent': 'LocateMyCity/1.0'
         },
-        next: { revalidate: API_CONSTANTS.CACHE_TTL.LONG }
+        next: { revalidate: 86400 } // Cache for 24 hours
       });
-      
       const geoData = await res.json();
       const countryCode = geoData.address?.country_code?.toUpperCase();
-      if (!countryCode) return Object.freeze({ currency: "N/A", language: "N/A" });
+      if (!countryCode) return { currency: "N/A", language: "N/A" };
 
-      // Parallel fetching with Promise.all
-      const [currencyRes, languageRes] = await Promise.all([
-        fetch(`https://restcountries.com/v3.1/alpha/${countryCode}`, {
-          next: { revalidate: API_CONSTANTS.CACHE_TTL.LONG }
-        }),
-        fetch(`https://restcountries.com/v3.1/alpha/${countryCode}`, {
-          next: { revalidate: API_CONSTANTS.CACHE_TTL.LONG }
-        })
+      const [currency, language] = await Promise.all([
+        fetchCurrency(countryCode),
+        fetchLanguage(countryCode)
       ]);
 
-      const [currencyData, languageData] = await Promise.all([
-        currencyRes.json(),
-        languageRes.json()
-      ]);
-
-      return Object.freeze({
-        currency: currencyData[0]?.currencies ? Object.keys(currencyData[0].currencies)[0] : "N/A",
-        language: languageData[0]?.languages ? Object.values(languageData[0].languages)[0] : "N/A"
-      });
+      return { currency, language };
     } catch {
-      return Object.freeze({ currency: "N/A", language: "N/A" });
+      return { currency: "N/A", language: "N/A" };
     }
   }, []);
 
-  // Optimized weather data fetcher
+  const fetchCurrency = useCallback(async (countryCode) => {
+    try {
+      const res = await fetch(`https://restcountries.com/v3.1/alpha/${countryCode}`, {
+        next: { revalidate: 86400 } // Cache for 24 hours
+      });
+      const data = await res.json();
+      if (data[0]?.currencies) {
+        const code = Object.keys(data[0].currencies)[0];
+        return `${code}`;
+      }
+      return "N/A";
+    } catch {
+      return "N/A";
+    }
+  }, []);
+
+  const fetchLanguage = useCallback(async (countryCode) => {
+    try {
+      const res = await fetch(`https://restcountries.com/v3.1/alpha/${countryCode}`, {
+        next: { revalidate: 86400 } // Cache for 24 hours
+      });
+      const data = await res.json();
+      if (data[0]?.languages) {
+        return Object.values(data[0].languages)[0];
+      }
+      return "N/A";
+    } catch {
+      return "N/A";
+    }
+  }, []);
+
   const fetchWeatherData = useCallback(async (src, dest) => {
     try {
       const [sourceWeatherRes, destWeatherRes, sourceCountryData, destCountryData] = await Promise.all([
-        fetch(`${API_CONSTANTS.WEATHER_API_URL}?lat=${src.lat}&lon=${src.lon}&appid=${API_CONSTANTS.WEATHER_API_KEY}&units=metric`, {
-          next: { revalidate: API_CONSTANTS.CACHE_TTL.SHORT }
+        fetch(`${WEATHER_API_URL}?lat=${src.lat}&lon=${src.lon}&appid=${WEATHER_API_KEY}&units=metric`, {
+          next: { revalidate: 3600 } // Cache for 1 hour
         }),
-        fetch(`${API_CONSTANTS.WEATHER_API_URL}?lat=${dest.lat}&lon=${dest.lon}&appid=${API_CONSTANTS.WEATHER_API_KEY}&units=metric`, {
-          next: { revalidate: API_CONSTANTS.CACHE_TTL.SHORT }
+        fetch(`${WEATHER_API_URL}?lat=${dest.lat}&lon=${dest.lon}&appid=${WEATHER_API_KEY}&units=metric`, {
+          next: { revalidate: 3600 }
         }),
         fetchCountryData(src.lat, src.lon),
         fetchCountryData(dest.lat, dest.lon)
@@ -178,52 +171,47 @@ export default function DistanceResult() {
 
       if (!sourceWeatherRes.ok || !destWeatherRes.ok) throw new Error('Weather API failed');
 
-      const [sourceData, destData] = await Promise.all([
-        sourceWeatherRes.json(),
-        destWeatherRes.json()
-      ]);
+      const sourceData = await sourceWeatherRes.json();
+      const destData = await destWeatherRes.json();
 
-      const now = new Date();
-
-      setSourceWeather(Object.freeze({
+      setSourceWeather({
         temp: `${Math.round(sourceData.main.temp)}°C`,
         wind: `${Math.round(sourceData.wind.speed * 3.6)} km/h`,
-        sunrise: UTILS.formatTime(new Date(sourceData.sys.sunrise * 1000)),
-        sunset: UTILS.formatTime(new Date(sourceData.sys.sunset * 1000)),
-        localtime: UTILS.formatTime(now),
+        sunrise: new Date(sourceData.sys.sunrise * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+        sunset: new Date(sourceData.sys.sunset * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+        localtime: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
         coordinates: `${parseFloat(src.lat).toFixed(4)}, ${parseFloat(src.lon).toFixed(4)}`,
         currency: sourceCountryData.currency,
         language: sourceCountryData.language
-      }));
+      });
 
-      setDestinationWeather(Object.freeze({
+      setDestinationWeather({
         temp: `${Math.round(destData.main.temp)}°C`,
         wind: `${Math.round(destData.wind.speed * 3.6)} km/h`,
-        sunrise: UTILS.formatTime(new Date(destData.sys.sunrise * 1000)),
-        sunset: UTILS.formatTime(new Date(destData.sys.sunset * 1000)),
-        localtime: UTILS.formatTime(now),
+        sunrise: new Date(destData.sys.sunrise * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+        sunset: new Date(destData.sys.sunset * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+        localtime: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
         coordinates: `${parseFloat(dest.lat).toFixed(4)}, ${parseFloat(dest.lon).toFixed(4)}`,
         currency: destCountryData.currency,
         language: destCountryData.language
-      }));
+      });
     } catch (error) {
       console.error("Error fetching weather data:", error);
     }
   }, [fetchCountryData]);
 
-  // Memoized distance calculation
   const calculateDistance = useCallback((src, dest) => {
     const lat1 = parseFloat(src.lat);
     const lon1 = parseFloat(src.lon);
     const lat2 = parseFloat(dest.lat);
     const lon2 = parseFloat(dest.lon);
 
-    const R = 6371; // Earth's radius in km
-    const dLat = UTILS.toRad(lat2 - lat1);
-    const dLon = UTILS.toRad(lon2 - lon1);
+    const R = 6371;
+    const dLat = toRad(lat2 - lat1);
+    const dLon = toRad(lon2 - lon1);
     const a = 
       Math.sin(dLat / 2) ** 2 +
-      Math.cos(UTILS.toRad(lat1)) * Math.cos(UTILS.toRad(lat2)) *
+      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
       Math.sin(dLon / 2) ** 2;
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = R * c;
@@ -231,42 +219,31 @@ export default function DistanceResult() {
     setDistanceInKm(distance);
   }, []);
 
-  // Optimized popular routes fetcher
   const fetchPopularRoutes = useCallback(async (src, dest) => {
     try {
-      setPopularRoutes(prevRoutes => {
-        const newRoute = {
-          id: 'route1',
-          source: src.display_name?.split(',')[0] || "Source",
-          destination: dest.display_name?.split(',')[0] || "Destination"
-        };
-        
-        // Preserve immutability while updating
-        return [newRoute, ...DEFAULT_POPULAR_ROUTES.slice(1)].map(r => Object.freeze(r));
-      });
+      setPopularRoutes([
+        { id: 'route1', source: src.display_name?.split(',')[0] || "Source", destination: dest.display_name?.split(',')[0] || "Destination" },
+        { id: 'route2', source: "New York", destination: "London" },
+        { id: 'route3', source: "Tokyo", destination: "Sydney" },
+        { id: 'route4', source: "Paris", destination: "Rome" }
+      ]);
     } catch (error) {
       console.error("Error fetching popular routes:", error);
     }
   }, []);
 
-  // Main data fetching effect with cleanup
   useEffect(() => {
     if (!sourceName || !destinationName) return;
-
-    let isMounted = true;
-    const controller = new AbortController();
 
     const fetchLocations = async () => {
       setIsLoading(true);
       try {
         const [sourceResponse, destResponse] = await Promise.all([
-          fetch(`${API_CONSTANTS.NOMINATIM_URL}?q=${encodeURIComponent(sourceName.replace(/-/g, ' '))}&format=json&limit=1`, {
-            next: { revalidate: API_CONSTANTS.CACHE_TTL.LONG },
-            signal: controller.signal
+          fetch(`${NOMINATIM_URL}?q=${encodeURIComponent(sourceName.replace(/-/g, ' '))}&format=json&limit=1`, {
+            next: { revalidate: 86400 } // Cache for 24 hours
           }),
-          fetch(`${API_CONSTANTS.NOMINATIM_URL}?q=${encodeURIComponent(destinationName.replace(/-/g, ' '))}&format=json&limit=1`, {
-            next: { revalidate: API_CONSTANTS.CACHE_TTL.LONG },
-            signal: controller.signal
+          fetch(`${NOMINATIM_URL}?q=${encodeURIComponent(destinationName.replace(/-/g, ' '))}&format=json&limit=1`, {
+            next: { revalidate: 86400 }
           })
         ]);
 
@@ -275,66 +252,47 @@ export default function DistanceResult() {
           destResponse.json()
         ]);
 
-        if (!isMounted) return;
-
         if (sourceData.length > 0 && destData.length > 0) {
           const src = sourceData[0];
           const dest = destData[0];
 
-          setSourcePlace(Object.freeze({
+          setSourcePlace({
             lat: src.lat,
             lon: src.lon,
             display_name: src.display_name
-          }));
+          });
 
-          setDestinationPlace(Object.freeze({
+          setDestinationPlace({
             lat: dest.lat,
             lon: dest.lon,
             display_name: dest.display_name
-          }));
+          });
 
-          await Promise.all([
-            calculateDistance(src, dest),
-            fetchWeatherData(src, dest),
-            fetchPopularRoutes(src, dest)
-          ]);
+          calculateDistance(src, dest);
+          fetchWeatherData(src, dest);
+          fetchPopularRoutes(src, dest);
         } else {
           router.push('/locationtolocation');
         }
       } catch (error) {
-        if (error.name !== 'AbortError') {
-          console.error('Error fetching location data:', error);
-          router.push('/locationtolocation');
-        }
+        console.error('Error fetching location data:', error);
+        router.push('/locationtolocation');
       } finally {
-        if (isMounted) setIsLoading(false);
+        setIsLoading(false);
       }
     };
 
     fetchLocations();
-
-    return () => {
-      isMounted = false;
-      controller.abort();
-    };
   }, [sourceName, destinationName, router, calculateDistance, fetchWeatherData, fetchPopularRoutes]);
 
-  // Memoized toggle function
   const toggleFAQ = useCallback((index) => {
-    setActiveFAQ(prev => prev === index ? null : index);
-  }, []);
+    setActiveFAQ(activeFAQ === index ? null : index);
+  }, [activeFAQ]);
 
-  // Memoized navigation function
   const navigateToRoute = useCallback((source, destination) => {
     const formatForUrl = (str) => str.toLowerCase().replace(/\s+/g, '-');
     router.push(`/location-from-location/how-far-is-${formatForUrl(destination)}-from-${formatForUrl(source)}`);
   }, [router]);
-
-  // Memoized short names for rendering
-  const [sourceShortName, destinationShortName] = useMemo(() => [
-    sourcePlace?.display_name?.split(',')[0],
-    destinationPlace?.display_name?.split(',')[0]
-  ], [sourcePlace, destinationPlace]);
 
   if (!sourcePlace || !destinationPlace) {
     return (
@@ -347,17 +305,18 @@ export default function DistanceResult() {
     );
   }
 
+  const sourceShortName = sourcePlace?.display_name?.split(',')[0];
+  const destinationShortName = destinationPlace?.display_name?.split(',')[0];
+
   return (
     <>
       <Header />
       <Head>
         <title>{`How far is ${sourceShortName} from ${destinationShortName}?`}</title>
         <meta name="description" content={`Distance between ${sourcePlace?.display_name} and ${destinationPlace?.display_name}`} />
-        <link rel="preload" href="/globals.css" as="style" />
-        <link rel="preconnect" href="https://nominatim.openstreetmap.org" />
-        <link rel="preconnect" href="https://api.openweathermap.org" />
-        <link rel="preconnect" href="https://restcountries.com" />
-        <meta name="robots" content="index, follow" />
+     <link rel="preload" href="/globals.css" as="style" />
+     <meta name="robots" content="index, follow">
+</meta>
       </Head>
 
       <main>
@@ -368,7 +327,7 @@ export default function DistanceResult() {
             </h1>
             {!isLoading && (
               <p className="distance-result__description">
-                {sourceShortName} is approximately <strong>{UTILS.kmToMiles(distanceInKm).toFixed(1)} miles</strong> ({distanceInKm.toFixed(1)} km) from {destinationShortName}, with a flight time of around <strong>{UTILS.calculateFlightTime(distanceInKm)} hours</strong>.
+                {sourceShortName} is approximately <strong>{kmToMiles(distanceInKm).toFixed(1)} miles</strong> ({distanceInKm.toFixed(1)} km) from {destinationShortName}, with a flight time of around <strong>{calculateFlightTime(distanceInKm)} hours</strong>.
               </p>
             )}
           </div>
@@ -442,32 +401,48 @@ export default function DistanceResult() {
                 </div>
               </section>
 
-              <section className="faq-page" aria-labelledby="faq-section-title">
-                <h2 id="faq-section-title" className="faq-title">Frequently Asked Questions</h2>
-                <div className="faq-list">
-                  {FAQ_DATA.map((faq, index) => (
-                    <div
-                      key={faq.id}
-                      className={`faq-card ${activeFAQ === index ? 'open' : ''}`}
-                      role="button"
-                      tabIndex={0}
-                      aria-expanded={activeFAQ === index}
-                      aria-controls={`faq-answer-${faq.id}`}
-                      onClick={() => toggleFAQ(index)}
-                      onKeyDown={(e) => e.key === 'Enter' && toggleFAQ(index)}
-                    >
-                      <h3 className="faq-question">{faq.question}</h3>
-                      <div
-                        id={`faq-answer-${faq.id}`}
-                        className="faq-answer"
-                        aria-hidden={activeFAQ !== index}
-                      >
-                        <p>{faq.answer}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
+        <section className="faq-page" aria-labelledby="faq-section-title">
+  <h2 id="faq-section-title" className="faq-title">Frequently Asked Questions</h2>
+  <div className="faq-list">
+    {faqs.map((faq, index) => (
+      <div
+        key={faq.id}
+        className={`faq-card ${activeFAQ === index ? 'open' : ''}`}
+        role="button"
+        tabIndex={-1}  // Prevent focus
+        onMouseDown={(e) => e.preventDefault()} // Additional prevention
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setActiveFAQ(prev => {
+            const newValue = prev === index ? null : index;
+            console.log('Setting FAQ from', prev, 'to', newValue);
+            return newValue;
+          });
+          // Force maintain scroll position
+          requestAnimationFrame(() => window.scrollTo(0, window.scrollY));
+        }}
+        aria-expanded={activeFAQ === index}
+        aria-controls={`faq-answer-${faq.id}`}
+      >
+        <h3 className="faq-question">{faq.question}</h3>
+        <div
+          id={`faq-answer-${faq.id}`}
+          className="faq-answer"
+          role="region"
+          aria-labelledby={`faq-question-${faq.id}`}
+          hidden={activeFAQ !== index}
+          style={{
+            overflowAnchor: 'none' // Prevent scroll anchoring
+          }}
+        >
+          <p>{faq.answer}</p>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
+
 
               <section className="distance-result__routes" aria-labelledby="routes-section-title">
                 <h2 id="routes-section-title" className="distance-result__section-title">Most Popular Routes</h2>
