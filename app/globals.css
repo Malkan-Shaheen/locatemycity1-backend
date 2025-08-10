@@ -1239,8 +1239,7 @@ body {
     /* center-align text inside left portion */
   }
 
-  .hero-content h1,
-  .hero-content p {
+  .hero-content h1 {
     text-align: center;
     /* ensures individual elements are centered */
   }
