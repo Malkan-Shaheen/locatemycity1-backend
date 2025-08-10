@@ -1,5 +1,5 @@
 'use client';
-import { FaGlobe, FaPlane, FaAnchor, FaClock } from 'react-icons/fa';
+import {  FaGlobe,  FaPlane, FaAnchor, FaClock } from 'react-icons/fa';
 import { WiSunrise, WiSunset } from 'react-icons/wi';
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter, useParams } from 'next/navigation';
@@ -9,7 +9,7 @@ import Header from '../../../components/Header';
 import Footer from '../../../components/Footer';
 import { MetricCard, WeatherPanel, FAQItem, RouteCard } from '../../../components/DistanceComponents';
 
-// Lazy load heavy components with preconnect hints
+// Lazy load heavy components
 const LeafletMap = dynamic(() => import('../../../components/LeafletMap'), {
   ssr: false,
   loading: () => (
@@ -76,7 +76,7 @@ export default function DistanceResult() {
     sunset: "Loading...",
     localtime: "Loading...",
     coordinates: "Loading...",
-    currency: "Loading...",
+     currency: "Loading...",
     language: "Loading..."
   }), []);
 
@@ -114,7 +114,6 @@ export default function DistanceResult() {
       const countryCode = geoData.address?.country_code?.toUpperCase();
       if (!countryCode) return { currency: "N/A", language: "N/A" };
 
-      // Fetch currency and language in parallel
       const [currency, language] = await Promise.all([
         fetchCurrency(countryCode),
         fetchLanguage(countryCode)
@@ -132,7 +131,11 @@ export default function DistanceResult() {
         next: { revalidate: 86400 } // Cache for 24 hours
       });
       const data = await res.json();
-      return data[0]?.currencies ? Object.keys(data[0].currencies)[0] : "N/A";
+      if (data[0]?.currencies) {
+        const code = Object.keys(data[0].currencies)[0];
+        return `${code}`;
+      }
+      return "N/A";
     } catch {
       return "N/A";
     }
@@ -144,7 +147,10 @@ export default function DistanceResult() {
         next: { revalidate: 86400 } // Cache for 24 hours
       });
       const data = await res.json();
-      return data[0]?.languages ? Object.values(data[0].languages)[0] : "N/A";
+      if (data[0]?.languages) {
+        return Object.values(data[0].languages)[0];
+      }
+      return "N/A";
     } catch {
       return "N/A";
     }
@@ -165,20 +171,15 @@ export default function DistanceResult() {
 
       if (!sourceWeatherRes.ok || !destWeatherRes.ok) throw new Error('Weather API failed');
 
-      const [sourceData, destData] = await Promise.all([
-        sourceWeatherRes.json(),
-        destWeatherRes.json()
-      ]);
-
-      const now = new Date();
-      const formatTime = (date) => date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const sourceData = await sourceWeatherRes.json();
+      const destData = await destWeatherRes.json();
 
       setSourceWeather({
         temp: `${Math.round(sourceData.main.temp)}°C`,
         wind: `${Math.round(sourceData.wind.speed * 3.6)} km/h`,
-        sunrise: formatTime(new Date(sourceData.sys.sunrise * 1000)),
-        sunset: formatTime(new Date(sourceData.sys.sunset * 1000)),
-        localtime: formatTime(now),
+        sunrise: new Date(sourceData.sys.sunrise * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+        sunset: new Date(sourceData.sys.sunset * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+        localtime: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
         coordinates: `${parseFloat(src.lat).toFixed(4)}, ${parseFloat(src.lon).toFixed(4)}`,
         currency: sourceCountryData.currency,
         language: sourceCountryData.language
@@ -187,9 +188,9 @@ export default function DistanceResult() {
       setDestinationWeather({
         temp: `${Math.round(destData.main.temp)}°C`,
         wind: `${Math.round(destData.wind.speed * 3.6)} km/h`,
-        sunrise: formatTime(new Date(destData.sys.sunrise * 1000)),
-        sunset: formatTime(new Date(destData.sys.sunset * 1000)),
-        localtime: formatTime(now),
+        sunrise: new Date(destData.sys.sunrise * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+        sunset: new Date(destData.sys.sunset * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+        localtime: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
         coordinates: `${parseFloat(dest.lat).toFixed(4)}, ${parseFloat(dest.lon).toFixed(4)}`,
         currency: destCountryData.currency,
         language: destCountryData.language
@@ -205,7 +206,7 @@ export default function DistanceResult() {
     const lat2 = parseFloat(dest.lat);
     const lon2 = parseFloat(dest.lon);
 
-    const R = 6371; // Earth's radius in km
+    const R = 6371;
     const dLat = toRad(lat2 - lat1);
     const dLon = toRad(lon2 - lon1);
     const a = 
@@ -267,12 +268,9 @@ export default function DistanceResult() {
             display_name: dest.display_name
           });
 
-          // Perform calculations in parallel
-          await Promise.all([
-            calculateDistance(src, dest),
-            fetchWeatherData(src, dest),
-            fetchPopularRoutes(src, dest)
-          ]);
+          calculateDistance(src, dest);
+          fetchWeatherData(src, dest);
+          fetchPopularRoutes(src, dest);
         } else {
           router.push('/locationtolocation');
         }
@@ -288,8 +286,8 @@ export default function DistanceResult() {
   }, [sourceName, destinationName, router, calculateDistance, fetchWeatherData, fetchPopularRoutes]);
 
   const toggleFAQ = useCallback((index) => {
-    setActiveFAQ(prev => prev === index ? null : index);
-  }, []);
+    setActiveFAQ(activeFAQ === index ? null : index);
+  }, [activeFAQ]);
 
   const navigateToRoute = useCallback((source, destination) => {
     const formatForUrl = (str) => str.toLowerCase().replace(/\s+/g, '-');
@@ -316,11 +314,9 @@ export default function DistanceResult() {
       <Head>
         <title>{`How far is ${sourceShortName} from ${destinationShortName}?`}</title>
         <meta name="description" content={`Distance between ${sourcePlace?.display_name} and ${destinationPlace?.display_name}`} />
-        <link rel="preload" href="/globals.css" as="style" />
-        <link rel="preconnect" href="https://nominatim.openstreetmap.org" />
-        <link rel="preconnect" href="https://api.openweathermap.org" />
-        <link rel="preconnect" href="https://restcountries.com" />
-        <meta name="robots" content="index, follow" />
+     <link rel="preload" href="/globals.css" as="style" />
+     <meta name="robots" content="index, follow">
+</meta>
       </Head>
 
       <main>
@@ -405,32 +401,48 @@ export default function DistanceResult() {
                 </div>
               </section>
 
-              <section className="faq-page" aria-labelledby="faq-section-title">
-                <h2 id="faq-section-title" className="faq-title">Frequently Asked Questions</h2>
-                <div className="faq-list">
-                  {faqs.map((faq, index) => (
-                    <div
-                      key={faq.id}
-                      className={`faq-card ${activeFAQ === index ? 'open' : ''}`}
-                      role="button"
-                      tabIndex={0}
-                      aria-expanded={activeFAQ === index}
-                      aria-controls={`faq-answer-${faq.id}`}
-                      onClick={() => toggleFAQ(index)}
-                      onKeyDown={(e) => e.key === 'Enter' && toggleFAQ(index)}
-                    >
-                      <h3 className="faq-question">{faq.question}</h3>
-                      <div
-                        id={`faq-answer-${faq.id}`}
-                        className="faq-answer"
-                        aria-hidden={activeFAQ !== index}
-                      >
-                        <p>{faq.answer}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
+        <section className="faq-page" aria-labelledby="faq-section-title">
+  <h2 id="faq-section-title" className="faq-title">Frequently Asked Questions</h2>
+  <div className="faq-list">
+    {faqs.map((faq, index) => (
+      <div
+        key={faq.id}
+        className={`faq-card ${activeFAQ === index ? 'open' : ''}`}
+        role="button"
+        tabIndex={-1}  // Prevent focus
+        onMouseDown={(e) => e.preventDefault()} // Additional prevention
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setActiveFAQ(prev => {
+            const newValue = prev === index ? null : index;
+            console.log('Setting FAQ from', prev, 'to', newValue);
+            return newValue;
+          });
+          // Force maintain scroll position
+          requestAnimationFrame(() => window.scrollTo(0, window.scrollY));
+        }}
+        aria-expanded={activeFAQ === index}
+        aria-controls={`faq-answer-${faq.id}`}
+      >
+        <h3 className="faq-question">{faq.question}</h3>
+        <div
+          id={`faq-answer-${faq.id}`}
+          className="faq-answer"
+          role="region"
+          aria-labelledby={`faq-question-${faq.id}`}
+          hidden={activeFAQ !== index}
+          style={{
+            overflowAnchor: 'none' // Prevent scroll anchoring
+          }}
+        >
+          <p>{faq.answer}</p>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
+
 
               <section className="distance-result__routes" aria-labelledby="routes-section-title">
                 <h2 id="routes-section-title" className="distance-result__section-title">Most Popular Routes</h2>
