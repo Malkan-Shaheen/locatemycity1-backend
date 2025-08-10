@@ -1,234 +1,135 @@
 'use client';
-
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
+// Fix for default marker icons in Leaflet
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+});
+
 const LeafletMap = ({ source, destination, distance }) => {
   const mapRef = useRef(null);
-  const mapInstanceRef = useRef(null);
-  const layerRef = useRef(null);
-  const [mapStatus, setMapStatus] = useState('Loading map...');
-  const [isInteractive, setIsInteractive] = useState(false);
+  const mapContainerRef = useRef(null);
+  const markersRef = useRef([]);
+  const lineRef = useRef(null);
+  const distanceLabelRef = useRef(null);
 
   useEffect(() => {
-    if (!source || !destination || !mapRef.current) return;
+    // Initialize map only once
+    if (!mapRef.current && mapContainerRef.current) {
+      const map = L.map(mapContainerRef.current, {
+        center: [0, 0],
+        zoom: 2,
+        worldCopyJump: true,
+      });
 
-    setMapStatus('Initializing map...');
-    
-    const cleanup = () => {
-      if (mapInstanceRef.current) {
-        mapInstanceRef.current.eachLayer(layer => {
-          if (layer.remove) layer.remove();
-        });
-        mapInstanceRef.current.off();
-        mapInstanceRef.current.remove();
-        mapInstanceRef.current = null;
-      }
-      if (layerRef.current) {
-        layerRef.current.clearLayers();
-        layerRef.current = null;
-      }
-      setIsInteractive(false);
-    };
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 18,
+      }).addTo(map);
 
-    cleanup();
+      mapRef.current = map;
+    }
 
-    const initMap = () => {
-      try {
-        const map = L.map(mapRef.current, {
-          preferCanvas: true,
-          zoomControl: true,
-          keyboard: true,
-          keyboardPanDelta: 75,
-          ariaLabel: `Map showing route from ${source.name} to ${destination.name}`
-        }).setView(
-          [
-            (parseFloat(source.lat) + parseFloat(destination.lat)) / 2,
-            (parseFloat(source.lng) + parseFloat(destination.lng)) / 2
-          ],
-          3
-        );
+    const map = mapRef.current;
+    if (!map) return;
 
-        // Add accessible controls
-        map.zoomControl.setAttribute('aria-label', 'Map zoom controls');
-        map.zoomControl._container.querySelector('.leaflet-control-zoom-in')
-          .setAttribute('aria-label', 'Zoom in');
-        map.zoomControl._container.querySelector('.leaflet-control-zoom-out')
-          .setAttribute('aria-label', 'Zoom out');
+    // Clear previous markers and line
+    markersRef.current.forEach(marker => map.removeLayer(marker));
+    markersRef.current = [];
+    if (lineRef.current) map.removeLayer(lineRef.current);
+    if (distanceLabelRef.current) map.removeLayer(distanceLabelRef.current);
 
-        mapInstanceRef.current = map;
-        layerRef.current = L.layerGroup().addTo(map);
+    if (source && destination) {
+      // Create source and destination markers
+      const sourceMarker = L.marker([source.lat, source.lng], {
+        title: source.name,
+        alt: `Source location: ${source.name}`,
+        riseOnHover: true,
+      }).addTo(map);
 
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" aria-label="OpenStreetMap copyright">OpenStreetMap</a> contributors',
-          crossOrigin: 'anonymous'
-        }).addTo(map);
+      const destMarker = L.marker([destination.lat, destination.lng], {
+        title: destination.name,
+        alt: `Destination location: ${destination.name}`,
+        riseOnHover: true,
+      }).addTo(map);
 
-        // Custom accessible markers
-        const createAccessibleMarker = (latlng, icon, title, content) => {
-          const marker = L.marker(latlng, {
-            icon,
-            alt: title,
-            keyboard: true,
-            title: title,
-            riseOnHover: true
-          });
+      markersRef.current = [sourceMarker, destMarker];
 
-          marker.bindPopup(content, {
-            ariaLabel: `${title} details`,
-            className: 'accessible-popup'
-          });
+      // Add popups to markers
+      sourceMarker.bindPopup(`<b>Source:</b> ${source.name}`).openPopup();
+      destMarker.bindPopup(`<b>Destination:</b> ${destination.name}`);
 
-          return marker;
-        };
+      // Create a line between the points
+      const line = L.polyline(
+        [[source.lat, source.lng], [destination.lat, destination.lng]],
+        {
+          color: '#3b82f6',
+          weight: 3,
+          dashArray: '5, 5',
+          className: 'distance-line',
+        }
+      ).addTo(map);
 
-        const sourceIcon = L.icon({
-          iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
-          shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-          iconSize: [25, 41],
-          iconAnchor: [12, 41],
-          popupAnchor: [1, -34],
-          shadowSize: [41, 41],
-        });
+      lineRef.current = line;
 
-        const destinationIcon = L.icon({
-          iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-          shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-          iconSize: [25, 41],
-          iconAnchor: [12, 41],
-          popupAnchor: [1, -34],
-          shadowSize: [41, 41],
-        });
+      // Add distance label at midpoint
+      const midpoint = [
+        (source.lat + destination.lat) / 2,
+        (source.lng + destination.lng) / 2,
+      ];
 
-        // Add markers with enhanced accessibility
-        createAccessibleMarker(
-          [source.lat, source.lng],
-          sourceIcon,
-          `Source location: ${source.name}`,
-          `<div role="document" aria-label="Source location details">
-            <h3>Source</h3>
-            <p>${source.name}</p>
-            <p>Latitude: ${source.lat}</p>
-            <p>Longitude: ${source.lng}</p>
-          </div>`
-        ).addTo(layerRef.current);
+      const distanceLabel = L.divIcon({
+        html: `<div class="distance-label">${distance.toFixed(1)} km<br>(${(distance * 0.621371).toFixed(1)} mi)</div>`,
+        className: 'distance-label-container',
+        iconSize: [100, 40],
+      });
 
-        createAccessibleMarker(
-          [destination.lat, destination.lng],
-          destinationIcon,
-          `Destination location: ${destination.name}`,
-          `<div role="document" aria-label="Destination location details">
-            <h3>Destination</h3>
-            <p>${destination.name}</p>
-            <p>Latitude: ${destination.lat}</p>
-            <p>Longitude: ${destination.lng}</p>
-          </div>`
-        ).addTo(layerRef.current);
+      const labelMarker = L.marker(midpoint, {
+        icon: distanceLabel,
+        interactive: false,
+        zIndexOffset: 1000,
+      }).addTo(map);
 
-        // Accessible route line
-        const line = L.polyline(
-          [[source.lat, source.lng], [destination.lat, destination.lng]],
-          { 
-            color: 'blue', 
-            weight: 2, 
-            dashArray: '5,5',
-            ariaLabel: `Route between ${source.name} and ${destination.name}` 
-          }
-        ).addTo(layerRef.current);
+      distanceLabelRef.current = labelMarker;
 
-        // Accessible distance label
-        const midpoint = line.getBounds().getCenter();
-        const distanceMarker = L.marker(midpoint, {
-          icon: L.divIcon({
-            html: `
-              <div class="distance-label" role="status" aria-live="polite">
-                ${distance.toFixed(1)} km
-                <span class="sr-only">Distance between locations</span>
-              </div>`,
-            className: 'distance-label-container',
-            iconSize: [100, 30],
-          }),
-          alt: `Distance: ${distance.toFixed(1)} kilometers`,
-          keyboard: false // Since it's decorative
-        }).addTo(layerRef.current);
+      // Fit map to show both locations with padding
+      const bounds = L.latLngBounds([source.lat, source.lng], [destination.lat, destination.lng]);
+      map.fitBounds(bounds, { padding: [50, 50] });
+    }
 
-        map.fitBounds(
-          [
-            [source.lat, source.lng],
-            [destination.lat, destination.lng]
-          ],
-          { padding: [50, 50] }
-        );
-
-        setMapStatus(`Map loaded showing route from ${source.name} to ${destination.name}`);
-        setIsInteractive(true);
-
-        // Focus management for screen readers
-        map.whenReady(() => {
-          mapRef.current.setAttribute('aria-busy', 'false');
-          mapRef.current.focus();
-        });
-
-      } catch (error) {
-        setMapStatus('Error loading map. Please try again.');
-        console.error('Map initialization error:', error);
+    return () => {
+      // Cleanup markers and layers but keep the map instance
+      if (mapRef.current) {
+        markersRef.current.forEach(marker => mapRef.current.removeLayer(marker));
+        markersRef.current = [];
+        if (lineRef.current) mapRef.current.removeLayer(lineRef.current);
+        if (distanceLabelRef.current) mapRef.current.removeLayer(distanceLabelRef.current);
       }
     };
-
-    mapRef.current.setAttribute('aria-busy', 'true');
-    requestAnimationFrame(initMap);
-
-    return cleanup;
   }, [source, destination, distance]);
 
-  return (
-    <div
-      ref={mapRef}
-      style={{ height: '500px', width: '100%', borderRadius: '8px', position: 'relative' }}
-      role="application"
-      aria-label={`Interactive map ${mapStatus}`}
-      aria-live="polite"
-      tabIndex={0}
-    >
-      {/* Status indicator for screen readers */}
-      <div className="sr-only" aria-live="assertive">
-        {mapStatus}
-      </div>
-      
-      {/* Fallback content for when JS fails */}
-      <noscript>
-        <div className="map-fallback" style={{
-          height: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: '#f0f0f0'
-        }}>
-          <p>
-            Map cannot be displayed without JavaScript. Distance between {source?.name} and {destination?.name}: {distance?.toFixed(1)} km.
-          </p>
-        </div>
-      </noscript>
+  // Full cleanup when component unmounts
+  useEffect(() => {
+    return () => {
+      if (mapRef.current) {
+        mapRef.current.remove();
+        mapRef.current = null;
+      }
+    };
+  }, []);
 
-      {/* Loading indicator */}
-      {!isInteractive && (
-        <div className="map-loading-overlay" style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: 'rgba(255,255,255,0.7)',
-          zIndex: 1000
-        }}>
-          <p className="map-loading-text">{mapStatus}</p>
-        </div>
-      )}
-    </div>
+  return (
+    <div 
+      ref={mapContainerRef}
+      className="h-full w-full min-h-[400px] rounded-lg shadow-md"
+      aria-label="Map showing distance between locations"
+      role="application"
+    />
   );
 };
 
