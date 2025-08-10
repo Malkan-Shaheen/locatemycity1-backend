@@ -798,18 +798,18 @@ a, button {
 
 /* Focus Management and Keyboard Navigation */
 *:focus-visible {
-  outline: 2px solid #3b82f6;
+  outline: 2px solid transparent;
   outline-offset: 2px;
 }
 
 /* Button focus states for accessibility */
 button:focus-visible {
-  outline: 2px solid #3b82f6;
+  outline: 2px solid transparent;
   outline-offset: 2px;
 }
 
 .faq-question:focus {
-  outline: 2px solid #3b82f6;
+  outline: 2px solid transparent;
   outline-offset: 2px;
 }
 
@@ -2490,6 +2490,7 @@ display: inline-block;
 
 .distance-result__weather-detail--currency svg {
   color: #d97706; /* Amber for currency */
+  margin-right: 3px;
 }
 
 .distance-result__weather-detail--language svg {
@@ -2621,8 +2622,9 @@ display: inline-block;
 .distance-result__route-card:focus {
   transform: translateY(-0.25rem);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  outline: 2px solid #3b82f6;
+  /* outline: 2px solid #3b82f6; */
   outline-offset: 2px;
+  padding: 6px;
 }
 
 .distance-result__route-source,

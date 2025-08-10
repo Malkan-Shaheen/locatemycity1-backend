@@ -79,7 +79,7 @@ export const WeatherPanel = ({ location, weather, type }) => (
       />
       <WeatherDetail 
         icon={<span aria-hidden="true">$</span>} 
-        label="Currency" 
+        label=" Currency" 
         value={weather.currency} 
       />
       <WeatherDetail 
@@ -93,12 +93,7 @@ export const WeatherPanel = ({ location, weather, type }) => (
         value={weather.localtime} 
       />
     </div>
-    <footer className="distance-result__weather-footer">
-      <p className="distance-result__weather-update">
-        <span className="sr-only">Last updated: </span>
-        Just now
-      </p>
-    </footer>
+    
   </section>
 );
 

@@ -1,5 +1,5 @@
 'use client';
-import { FaChevronUp, FaChevronDown, FaGlobe, FaSun, FaWind, FaPlane, FaAnchor, FaClock } from 'react-icons/fa';
+import {  FaGlobe,  FaPlane, FaAnchor, FaClock } from 'react-icons/fa';
 import { WiSunrise, WiSunset } from 'react-icons/wi';
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter, useParams } from 'next/navigation';
@@ -76,7 +76,7 @@ export default function DistanceResult() {
     sunset: "Loading...",
     localtime: "Loading...",
     coordinates: "Loading...",
-    currency: "Loading...",
+     currency: "Loading...",
     language: "Loading..."
   }), []);
 
@@ -179,7 +179,7 @@ export default function DistanceResult() {
         wind: `${Math.round(sourceData.wind.speed * 3.6)} km/h`,
         sunrise: new Date(sourceData.sys.sunrise * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
         sunset: new Date(sourceData.sys.sunset * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
-        // localtime: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+        localtime: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
         coordinates: `${parseFloat(src.lat).toFixed(4)}, ${parseFloat(src.lon).toFixed(4)}`,
         currency: sourceCountryData.currency,
         language: sourceCountryData.language
@@ -399,41 +399,36 @@ export default function DistanceResult() {
                 </div>
               </section>
 
-              <section className="faq-page" aria-labelledby="faq-section-title">
-                <h2 id="faq-section-title" className="faq-title">Frequently Asked Questions</h2>
-                <div className="faq-list">
-                  {faqs.map((faq, index) => (
-                    <div 
-                      key={faq.id}
-                      className={`faq-card ${activeFAQ === index ? 'open' : ''}`}
-                    >
-                      <h3>
-                        <button 
-                          className="faq-question"
-                          aria-expanded={activeFAQ === index}
-                          aria-controls={`faq-answer-${faq.id}`}
-                          onClick={() => toggleFAQ(index)}
-                        >
-                          <span>{faq.question}</span>
-                          {activeFAQ === index ? 
-                            <FaChevronUp aria-hidden="true" /> : 
-                            <FaChevronDown aria-hidden="true" />
-                          }
-                        </button>
-                      </h3>
-                      <div 
-                        id={`faq-answer-${faq.id}`}
-                        className="faq-answer"
-                        role="region"
-                        aria-labelledby={`faq-question-${faq.id}`}
-                        hidden={activeFAQ !== index}
-                      >
-                        <p>{faq.answer}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
+            <section className="faq-page" aria-labelledby="faq-section-title">
+  <h2 id="faq-section-title" className="faq-title">Frequently Asked Questions</h2>
+  <div className="faq-list">
+    {faqs.map((faq, index) => (
+      <div
+        key={faq.id}
+        className={`faq-card ${activeFAQ === index ? 'open' : ''}`}
+        onClick={() => toggleFAQ(index)} // 📌 Whole card clickable
+        role="button"
+        tabIndex={0}
+        aria-expanded={activeFAQ === index}
+        aria-controls={`faq-answer-${faq.id}`}
+        onKeyDown={(e) => e.key === 'Enter' && toggleFAQ(index)} // Keyboard support
+      >
+        <h3 className="faq-question">{faq.question}</h3>
+
+        <div
+          id={`faq-answer-${faq.id}`}
+          className="faq-answer"
+          role="region"
+          aria-labelledby={`faq-question-${faq.id}`}
+          hidden={activeFAQ !== index}
+        >
+          <p>{faq.answer}</p>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
+
 
               <section className="distance-result__routes" aria-labelledby="routes-section-title">
                 <h2 id="routes-section-title" className="distance-result__section-title">Most Popular Routes</h2>
