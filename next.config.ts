@@ -2,7 +2,7 @@ const nextConfig = {
   async headers() {
     return [
       {
-        source: '/:path*',  
+        source: '/:path*',
         headers: [
           {
             key: 'X-Robots-Tag',
@@ -16,13 +16,9 @@ const nextConfig = {
       },
     ];
   },
+
   async redirects() {
     return [
-      {
-        source: '/locationfromme',
-        destination: '/location-from-me/locationfromme',
-        permanent: true,
-      },
       {
         source: '/location-from-location',
         destination: '/location-from-location/locationtolocation',
@@ -34,7 +30,6 @@ const nextConfig = {
         permanent: true,
       },
       {
-        // Only redirect /location-from-me/:slug if slug is NOT 'locationfromme'
         source: '/location-from-me/:slug((?!locationfromme).*)',
         destination: '/:slug',
         permanent: true,
@@ -49,32 +44,20 @@ const nextConfig = {
         destination: 'http://localhost:3001/api/:path*',
       },
       {
-        // If URL contains "me" anywhere in slug
         source: '/:slug*me:rest*',
         destination: '/location-from-me/:slug*me:rest*',
       },
       {
-        // If slug does NOT contain "me"
         source: '/:slug((?!me).*)',
         destination: '/location-from-location/:slug',
       },
-      {
-        source: '/locationfromme',
-        destination: '/location-from-me/locationfromme',
-      },
-      {
-        source: '/card1/how-far-is-:destination-from-me',
-        destination: '/card1/how-far-is-:destination-from-me', 
-      },
-      {
-        source: '/card1/how-far-is-:destination-from-me/',
-        destination: '/card1/how-far-is-:destination-from-me',
-      }
     ];
   },
+
   experimental: {
     // Your experimental config
   },
+
   images: {
     domains: ['cdnjs.cloudflare.com', 'unpkg.com'],
   },

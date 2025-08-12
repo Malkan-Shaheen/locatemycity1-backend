@@ -3,8 +3,8 @@ import { useEffect, useRef, useState } from 'react';
 import Head from 'next/head';
 import { FaMapMarkerAlt, FaArrowRight } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
-import Header from '../../../components/Header';
-import Footer from '../../../components/Footer'
+import Header from '../../components/Header';
+import Footer from '../../components/Footer'
 
 export default function DistanceCalculator() {
   const [destinationInput, setDestinationInput] = useState('');

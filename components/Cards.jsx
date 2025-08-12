@@ -33,7 +33,7 @@ export default function Features() {
             </div>
             <h3>Distance From Me</h3>
             <p>Calculate precise distances from your current location to any destination. Get accurate measurements in miles or kilometers with real-time updates.</p>
-            <Link href="/location-from-me/locationfromme"><button className="card-btn">Calculate Distance</button></Link>
+            <Link href="/location-from-me"><button className="card-btn">Calculate Distance</button></Link>
           </div>
 
           <div className="feature-card">
