@@ -17,24 +17,44 @@ const nextConfig = {
     ];
   },
   async redirects() {
-    return [
-      {
-        source: '/location-from-me',
-        destination: '/location-from-me/locationfromme',
-        permanent: true, 
-      },
-      {
-        source: '/location-from-location',
-        destination: '/location-from-location/locationtolocation',
-        permanent: true, 
-      },
-    ];
-  },
+  return [
+    {
+      source: '/locationfromme',
+      destination: '/location-from-me/locationfromme',
+      permanent: true,
+    },
+    {
+      source: '/location-from-location',
+      destination: '/location-from-location/locationtolocation',
+      permanent: true,
+    },
+    {
+      source: '/location-from-location/:slug',
+      destination: '/:slug',
+      permanent: true,
+    },
+    {
+      // Only redirect /location-from-me/:slug if slug is NOT 'locationfromme'
+      source: '/location-from-me/:slug((?!locationfromme).*)',
+      destination: '/:slug',
+      permanent: true,
+    },
+  ];
+},
+
   async rewrites() {
     return [
       {
         source: '/api/:path*',
         destination: 'http://localhost:3001/api/:path*',
+      },
+       {
+        source: '/:slug',
+        destination: '/location-from-location/:slug',
+      },
+         {
+        source: '/:slug',
+        destination: '/location-from-me/:slug',
       },
       {
         source: '/card1/how-far-is-:destination-from-me',
