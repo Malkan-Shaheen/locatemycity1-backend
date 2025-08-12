@@ -21,7 +21,7 @@ const nextConfig = {
     return [
       {
         source: '/location-from-location',
-        destination: '/location-from-location/locationtolocation',
+        destination: '/location-from-location/location-to-location',
         permanent: true,
       },
       {

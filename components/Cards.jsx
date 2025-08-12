@@ -42,7 +42,7 @@ export default function Features() {
             </div>
             <h3>Location to Location</h3>
             <p>Compare distances between any two points of interest. Perfect for planning trips or finding the most convenient routes between locations.</p>
-            <Link href="/location-from-location/locationtolocation"><button className="card-btn">Compare Locations</button></Link>
+            <Link href="/location-from-location/location-to-location"><button className="card-btn">Compare Locations</button></Link>
           </div>
 
           <div className="feature-card">
