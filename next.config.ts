@@ -59,7 +59,6 @@ const nextConfig = {
       source: '/location-to-location',
       destination: '/location-from-location/location-to-location',
     },
-      // Final catch-all → 404
       {
         source: '/:path*',
         destination: '/404',
