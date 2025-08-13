@@ -48,8 +48,21 @@ const nextConfig = {
         destination: '/location-from-me/:slug*me:rest*',
       },
       {
-        source: '/:slug((?!me).*)',
+        source: '/how-far-is/:path*',
+        destination: '/how-far-is/:path*',
+      },
+      {
+        source: '/location-from-location/:slug',
         destination: '/location-from-location/:slug',
+      },
+      {
+      source: '/location-to-location',
+      destination: '/location-from-location/location-to-location',
+    },
+      // Final catch-all → 404
+      {
+        source: '/:path*',
+        destination: '/404',
       },
     ];
   },
@@ -64,3 +77,4 @@ const nextConfig = {
 };
 
 module.exports = nextConfig;
+
