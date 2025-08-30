@@ -2,6 +2,7 @@
 import React from 'react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
+import Head from 'next/head';
 
 const AboutPage = () => {
   const features = [
@@ -23,6 +24,13 @@ const AboutPage = () => {
   return (
     <div className="about-page">
       <Header />
+      <Head>
+        <title>{`About Us`}</title>
+        <meta name="description" content={`About Us`} />
+     <link rel="preload" href="/globals.css" as="style" />
+     <meta name="robots" content="index, follow">
+</meta>
+      </Head>
 
       <main className="about-main">
         {/* Hero */}

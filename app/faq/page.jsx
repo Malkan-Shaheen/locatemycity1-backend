@@ -1,6 +1,7 @@
 'use client';
 import Header from '../../components/Header';
-import Footer from '../../components/Footer'
+import Footer from '../../components/Footer';
+import Head from 'next/head';
 
 import { useState } from 'react';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
@@ -43,6 +44,13 @@ export default function FAQPage() {
   return (
     <div>
       <Header />
+      <Head>
+              <title>{`faqs`}</title>
+              <meta name="description" content={`faqs`} />
+           <link rel="preload" href="/globals.css" as="style" />
+           <meta name="robots" content="index, follow">
+      </meta>
+            </Head>
       <main className="faq-page">
         <h1 className="faq-title">Frequently Asked Questions</h1>
         <div className="faq-list">
