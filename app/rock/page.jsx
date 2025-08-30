@@ -30,24 +30,50 @@ export default function RockyLocationsExplorer() {
     }
   }, [selectedUSState]);
 
-  useEffect(() => {
-    let isMounted = true;
-    const loadLocationData = async () => {
-      try {
-        setIsDataLoading(true);
-        const backendUrl = 'https://backend-production-cfe6.up.railway.app';
-        const response = await fetch(`${backendUrl}/api/locations`, { cache: 'force-cache' });
+useEffect(() => {
+  let isMounted = true;
 
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+  const loadLocationData = async () => {
+    const backendUrl = 'https://backend-production-cfe6.up.railway.app';
+    console.log("🔄 Starting to load location data from:", backendUrl);
 
-        const locationData = await response.json();
-        if (isMounted) setAllRockyLocations(locationData);
-      } catch (error) {
-        console.error('Error loading location data:', error);
-      } finally {
-        if (isMounted) setIsDataLoading(false);
+    try {
+      setIsDataLoading(true);
+
+      console.log("📡 Sending request to:", `${backendUrl}/api/locations`);
+      const response = await fetch(`${backendUrl}/api/locations`, { cache: 'force-cache' });
+
+      console.log("✅ Response received:", response);
+
+      if (!response.ok) {
+        console.error(`❌ HTTP error! status: ${response.status}, statusText: ${response.statusText}`);
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-    };
+
+      console.log("📦 Parsing JSON data...");
+      const locationData = await response.json();
+
+      if (isMounted) {
+        console.log("📍 Setting location data with", locationData.length, "items");
+        setAllRockyLocations(locationData);
+      }
+    } catch (error) {
+      console.error("🔥 Error loading location data:", error.message);
+      console.error("📜 Full error object:", error);
+    } finally {
+      if (isMounted) {
+        console.log("⏹️ Data loading finished");
+        setIsDataLoading(false);
+      }
+    }
+  };
+
+  loadLocationData();
+
+  return () => {
+    console.log("🧹 Cleaning up: component unmounted");
+    isMounted = false;
+  };
 
     loadLocationData();
     return () => { isMounted = false; };
