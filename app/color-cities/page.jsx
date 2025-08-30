@@ -20,6 +20,7 @@ export default function ColorLocationsExplorer() {
     const loadLocationData = async () => {
       try {
         setIsDataLoading(true);
+        
         const backendUrl = 'https://backend-production-cfe6.up.railway.app/api/colors/flat';
         console.log("Fetching from:", backendUrl);
 
