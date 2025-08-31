@@ -3,6 +3,7 @@ import { useEffect, useState, useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import Head from 'next/head';
 import Footer from '../../../components/Footer';
+import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { 
   FaMapMarkerAlt, 
   FaRoad, 
@@ -33,6 +34,9 @@ const Map = dynamic(() => import('@/components/Map-comp'), {
   ssr: false,
   loading: () => <div className="map-loading">Loading map...</div>
 });
+
+
+
 
 // Memoized helper functions
 const toRad = (degrees) => degrees * Math.PI / 180;
@@ -74,6 +78,13 @@ export default function DistanceResult() {
   // State declarations
   const [userLatitude, setUserLatitude] = useState(null);
   const [userLongitude, setUserLongitude] = useState(null);
+  
+  const [openIndex, setOpenIndex] = useState(null);
+
+  const toggleFAQ = (index) => {
+    setOpenIndex(openIndex === index ? null : index);
+  };
+
   const [destinationPlace, setDestinationPlace] = useState(null);
   const [distanceInKm, setDistanceInKm] = useState(0);
   const [unit, setUnit] = useState('km');
@@ -110,6 +121,30 @@ export default function DistanceResult() {
   const router = useRouter();
   const pathname = usePathname();
 
+  const faqs = [
+  {
+    question: `How does this tool calculate the distance from ${destinationName}?`,
+    answer:
+      'Our distance calculator uses latitude and longitude coordinates to provide accurate results. You can see the distance in miles, kilometers, and nautical miles.',
+  },
+  {
+    question: `Can I check travel time as well as distance to ${destinationName}?`,
+    answer:
+      'The calculator shows straight-line distance. For driving, public transit, or flight times, you can use Google Maps or other travel apps alongside this tool.',
+  },
+  {
+    question: `Can I see which cities and towns are close to ${destinationName}?`,
+    answer:
+      'Yes! We provide a "Places Radius Away" section that lists nearby cities and towns at different distances, including 10, 20, 25, 50, 75, and 100 miles.',
+  },
+  {
+    question: `Does this work on mobile if I use my current location?`,
+    answer:
+      'Absolutely. Just allow location access on your device, and the calculator will automatically detect where you are to measure the distance to ${destinationName}.',
+  },
+];
+
+
   // Memoized destination from path
   const destination = useMemo(() => {
     if (pathname) {
@@ -129,6 +164,21 @@ export default function DistanceResult() {
       window.history.replaceState(null, '', cleanPath);
     }
   }, [pathname]);
+
+  // Add this useEffect for auto-refresh from FAQ navigation
+useEffect(() => {
+  // Check if we need to auto-refresh (only for FAQ navigation)
+  const shouldAutoRefresh = sessionStorage.getItem('shouldAutoRefreshFromFAQ');
+  
+  if (shouldAutoRefresh) {
+    // Remove the flag so it doesn't refresh again
+    sessionStorage.removeItem('shouldAutoRefreshFromFAQ');
+    // Refresh the page after navigation is complete
+    setTimeout(() => {
+      window.location.reload();
+    }, 100);
+  }
+}, []);
 
   // Set destination name when destination changes
   useEffect(() => {
@@ -839,6 +889,41 @@ export default function DistanceResult() {
           </div>
         </div>
 
+
+ <section className="faq-page">
+                  <h1 className="faq-title">Frequently Asked Questions</h1>
+                  <div className="faq-list">
+                    {faqs.map((faq, index) => (
+                      <div
+                        key={index}
+                        className={`faq-card ${openIndex === index ? 'open' : ''}`}
+                      >
+                        <h2>
+                          <button 
+                            className="faq-question"
+                            onClick={() => toggleFAQ(index)}
+                            aria-expanded={openIndex === index}
+                            aria-controls={`faq-answer-${index}`}
+                          >
+                            <span>{faq.question}</span>
+                            {openIndex === index ? <FaChevronUp aria-hidden="true" /> : <FaChevronDown aria-hidden="true" />}
+                          </button>
+                        </h2>
+                        <div 
+                          id={`faq-answer-${index}`}
+                          className="faq-answer"
+                          role="region"
+                          aria-labelledby={`faq-question-${index}`}
+                          hidden={openIndex !== index}
+                        >
+                          {openIndex === index && <p>{faq.answer}</p>}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+
+
         <footer className="page-footer">
           <div className="footer-section">
             <h4>How far is {destinationName} from neighboring countries?</h4>
@@ -848,6 +933,7 @@ export default function DistanceResult() {
             <h4>Popular Routes to {destinationName.split(',')[0]}</h4>
             {popularRoutes}
           </div>
+         
         </footer>
       </main>
       <Footer />

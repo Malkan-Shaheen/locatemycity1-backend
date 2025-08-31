@@ -113,6 +113,23 @@ function buildTownsQuery(lat, lon, radius, countryCode = null) {
   `;
 }
 
+function buildParksQuery(lat, lon, radius, countryCode = null) {
+  let areaFilter = "";
+  if (countryCode) {
+    areaFilter = `area["ISO3166-1"="${countryCode}"][admin_level=2];`;
+  }
+  return `
+    [out:json][timeout:25];
+    ${areaFilter}
+    (
+      node(around:${radius},${lat},${lon})["leisure"~"park"]${areaFilter ? '(area)' : ''};
+      way(around:${radius},${lat},${lon})["leisure"~"park"]${areaFilter ? '(area)' : ''};
+      relation(around:${radius},${lat},${lon})["leisure"~"park"]${areaFilter ? '(area)' : ''};
+    );
+    out center;
+  `;
+}
+
 function buildCombinedQuery(lat, lon, radius, countryCode = null) {
   let areaFilter = "";
   if (countryCode) {
@@ -313,7 +330,7 @@ function processChunk(elements, centerLat, centerLon, radius, query = "") {
     const name = tags.name || "Unnamed settlement";
     const nameEn = tags["name:en"] || null;
     const displayName = nameEn && nameEn !== name ? `${name} (${nameEn})` : name;
-    const placeType = tags.place || "settlement";
+    const placeType = tags.place || tags.leisure || "settlement";
     
     // ❌ Skip if name matches query
     if (query && name.toLowerCase().includes(query.toLowerCase())) continue;
@@ -418,6 +435,26 @@ async function fetchTownsDirectly(lat, lon, radius, onDataChunk, query, countryC
   }
 }
 
+async function fetchParksDirectly(lat, lon, radius, onDataChunk, query, countryCode) {
+  console.log("fetchParksDirectly called with:", {lat, lon, radius, countryCode});
+  
+  try {
+    const json = await callOverpassWithChunking(
+      lat, lon, radius,
+      (lat, lon, rad) => buildParksQuery(lat, lon, rad, countryCode),
+      onDataChunk,
+      query
+    );
+    
+    const elements = json.elements || [];
+    console.log("Total park elements from API:", elements.length);
+    return elements.length;
+  } catch (e) {
+    console.error("Error in fetchParksDirectly:", e);
+    throw new Error("Failed to fetch parks: " + e.message);
+  }
+}
+
 function ResultsContent() {
   // Safely extract parameters with proper fallbacks
   const params = useParams();
@@ -448,6 +485,7 @@ function ResultsContent() {
   const [center, setCenter] = useState([31.5204, 74.3587]); // Default to Islamabad
   const [loadingCities, setLoadingCities] = useState(false);
   const [loadingTowns, setLoadingTowns] = useState(false);
+  const [loadingParks, setLoadingParks] = useState(false);
   const [geo, setGeo] = useState(null);
   const [activeFAQ, setActiveFAQ] = useState(null);
   
@@ -456,6 +494,8 @@ function ResultsContent() {
   const [visibleCities, setVisibleCities] = useState([]);
   const [allTowns, setAllTowns] = useState([]);
   const [visibleTowns, setVisibleTowns] = useState([]);
+  const [allParks, setAllParks] = useState([]);
+  const [visibleParks, setVisibleParks] = useState([]);
   const [error, setError] = useState("");
   const [mapReady, setMapReady] = useState(false);
   const [initialLoadComplete, setInitialLoadComplete] = useState(false);
@@ -485,157 +525,191 @@ function ResultsContent() {
     })();
   }, []);
   
-  // Fetch geo + cities + towns
-  useEffect(() => {
-    let isCancelled = false;
-    
-    async function fetchData() {
-      try {
-        setError("");
-        console.log("Starting data fetch for query:", query);
-        
-        if (!query) {
-          throw new Error("No location provided");
+  // Fetch geo + cities + towns + parks
+ useEffect(() => {
+  let isCancelled = false;
+  
+  async function fetchData() {
+    try {
+      setError("");
+      console.log("Starting data fetch for query:", query);
+      
+      if (!query) {
+        throw new Error("No location provided");
+      }
+      
+      // Fetch geocode
+      console.log("Fetching geocode for:", query);
+      const geoRes = await fetch(`/api/geocode?query=${encodeURIComponent(query)}`);
+      if (!geoRes.ok) throw new Error("Geocoding failed");
+      
+      const g = await geoRes.json();
+      if (!g?.lat || !g?.lon) throw new Error("Location not found");
+      
+      // Extract country code from the response
+      const countryCode = g.country_code || null;
+      console.log("Country code detected:", countryCode);
+      
+      if (isCancelled) {
+        return;
+      }
+      
+      const lat = Number(g.lat);
+      const lon = Number(g.lon);
+      console.log("Geocode result:", g);
+      
+      setGeo(g);
+      setCenter([lat, lon]);
+      
+      // Clear previous data
+      setVisibleCities([]);
+      setVisibleTowns([]);
+      setVisibleParks([]);
+      setAllCities([]);
+      setAllTowns([]);
+      setAllParks([]);
+      
+      // First: Fetch initial results quickly with combined query
+      console.log("Starting initial combined fetch");
+      setLoadingCities(true);
+      setLoadingTowns(true);
+      
+      fetchInitialSettlements(lat, lon, radiusMeters, (data) => {
+        if (!isCancelled) {
+          console.log("Processing initial settlements:", data.cities.length, "cities,", data.towns.length, "towns");
+          
+          if (data.cities.length > 0) {
+            setVisibleCities(data.cities.sort((a, b) => a.distance - b.distance));
+            setAllCities(data.cities);
+          }
+          
+          if (data.towns.length > 0) {
+            setVisibleTowns(data.towns.sort((a, b) => a.distance - b.distance));
+            setAllTowns(data.towns);
+          }
+          
+          setInitialLoadComplete(true);
+          setLoadingCities(false);
+          setLoadingTowns(false);
         }
-        
-        // Fetch geocode
-        console.log("Fetching geocode for:", query);
-        const geoRes = await fetch(`/api/geocode?query=${encodeURIComponent(query)}`);
-        if (!geoRes.ok) throw new Error("Geocoding failed");
-        
-        const g = await geoRes.json();
-        if (!g?.lat || !g?.lon) throw new Error("Location not found");
-        
-        // Extract country code from the response
-        const countryCode = g.country_code || null;
-        console.log("Country code detected:", countryCode);
-        
-        if (isCancelled) {
-          return;
+      }, query, countryCode) // Pass countryCode here
+      .then(totalCount => {
+        if (!isCancelled) {
+          console.log("Initial fetch completed:", totalCount, "items processed");
         }
-        
-        const lat = Number(g.lat);
-        const lon = Number(g.lon);
-        console.log("Geocode result:", g);
-        
-        setGeo(g);
-        setCenter([lat, lon]);
-        
-        // Clear previous data
-        setVisibleCities([]);
-        setVisibleTowns([]);
-        setAllCities([]);
-        setAllTowns([]);
-        
-        // First: Fetch initial results quickly with combined query
-        console.log("Starting initial combined fetch");
+      })
+      .catch(err => {
+        if (!isCancelled) {
+          console.error("Initial fetch error:", err);
+          // Continue with individual fetches even if initial fails
+        }
+      });
+      
+      // Second: Fetch full results in background
+      if (radiusMeters > 50000) {
+        console.log("Starting full cities fetch in background");
         setLoadingCities(true);
-        setLoadingTowns(true);
         
-        fetchInitialSettlements(lat, lon, radiusMeters, (data) => {
+        fetchCitiesDirectly(lat, lon, radiusMeters, (citiesChunk) => {
           if (!isCancelled) {
-            console.log("Processing initial settlements:", data.cities.length, "cities,", data.towns.length, "towns");
-            
-            if (data.cities.length > 0) {
-              setVisibleCities(data.cities.sort((a, b) => a.distance - b.distance));
-              setAllCities(data.cities);
-            }
-            
-            if (data.towns.length > 0) {
-              setVisibleTowns(data.towns.sort((a, b) => a.distance - b.distance));
-              setAllTowns(data.towns);
-            }
-            
-            setInitialLoadComplete(true);
-            setLoadingCities(false);
-            setLoadingTowns(false);
+            console.log("Processing cities chunk:", citiesChunk.length);
+            setVisibleCities(prev => {
+              const newCities = [...prev, ...citiesChunk];
+              // Sort by distance as we add new items
+              return newCities.sort((a, b) => a.distance - b.distance);
+            });
+            setAllCities(prev => [...prev, ...citiesChunk]);
           }
         }, query, countryCode) // Pass countryCode here
         .then(totalCount => {
           if (!isCancelled) {
-            console.log("Initial fetch completed:", totalCount, "items processed");
+            console.log("Cities fetch completed:", totalCount, "cities processed");
+            setLoadingCities(false);
           }
         })
         .catch(err => {
           if (!isCancelled) {
-            console.error("Initial fetch error:", err);
-            // Continue with individual fetches even if initial fails
+            console.error("Cities fetch error:", err);
+            setError("Failed to load cities: " + err.message);
+            setLoadingCities(false);
           }
         });
         
-        // Second: Fetch full results in background
-        if (radiusMeters > 50000) {
-          console.log("Starting full cities fetch in background");
-          setLoadingCities(true);
-          
-          fetchCitiesDirectly(lat, lon, radiusMeters, (citiesChunk) => {
-            if (!isCancelled) {
-              console.log("Processing cities chunk:", citiesChunk.length);
-              setVisibleCities(prev => {
-                const newCities = [...prev, ...citiesChunk];
-                // Sort by distance as we add new items
-                return newCities.sort((a, b) => a.distance - b.distance);
-              });
-              setAllCities(prev => [...prev, ...citiesChunk]);
-            }
-          }, query, countryCode) // Pass countryCode here
-          .then(totalCount => {
-            if (!isCancelled) {
-              console.log("Cities fetch completed:", totalCount, "cities processed");
-              setLoadingCities(false);
-            }
-          })
-          .catch(err => {
-            if (!isCancelled) {
-              console.error("Cities fetch error:", err);
-              setError("Failed to load cities: " + err.message);
-              setLoadingCities(false);
-            }
-          });
-          
-          console.log("Starting full towns fetch in background");
-          setLoadingTowns(true);
-          
-          fetchTownsDirectly(lat, lon, radiusMeters, (townsChunk) => {
-            if (!isCancelled) {
-              console.log("Processing towns chunk:", townsChunk.length);
-              setVisibleTowns(prev => {
-                const newTowns = [...prev, ...townsChunk];
-                // Sort by distance as we add new items
-                return newTowns.sort((a, b) => a.distance - b.distance);
-              });
-              setAllTowns(prev => [...prev, ...townsChunk]);
-            }
-          }, query, countryCode) // Pass countryCode here
-          .then(totalCount => {
-            if (!isCancelled) {
-              console.log("Towns fetch completed:", totalCount, "towns processed");
-              setLoadingTowns(false);
-            }
-          })
-          .catch(err => {
-            if (!isCancelled) {
-              console.error("Towns fetch error:", err);
-              setError("Failed to load towns: " + err.message);
-              setLoadingTowns(false);
-            }
-          });
-        }
-      } catch (err) {
+        console.log("Starting full towns fetch in background");
+        setLoadingTowns(true);
+        
+        fetchTownsDirectly(lat, lon, radiusMeters, (townsChunk) => {
+          if (!isCancelled) {
+            console.log("Processing towns chunk:", townsChunk.length);
+            setVisibleTowns(prev => {
+              const newTowns = [...prev, ...townsChunk];
+              // Sort by distance as we add new items
+              return newTowns.sort((a, b) => a.distance - b.distance);
+            });
+            setAllTowns(prev => [...prev, ...townsChunk]);
+          }
+        }, query, countryCode) // Pass countryCode here
+        .then(totalCount => {
+          if (!isCancelled) {
+            console.log("Towns fetch completed:", totalCount, "towns processed");
+            setLoadingTowns(false);
+          }
+        })
+        .catch(err => {
+          if (!isCancelled) {
+            console.error("Towns fetch error:", err);
+            setError("Failed to load towns: " + err.message);
+            setLoadingTowns(false);
+          }
+        });
+      }
+      
+      // ALWAYS fetch parks with 10 miles radius regardless of URL parameter
+      console.log("Starting parks fetch in background (always 10 miles)");
+      setLoadingParks(true);
+      
+      const parksRadiusMeters = milesToMeters(10); // Always 10 miles for parks
+      
+      fetchParksDirectly(lat, lon, parksRadiusMeters, (parksChunk) => {
         if (!isCancelled) {
-          console.error("Data fetch error:", err);
-          setError(err.message || "Something went wrong");
+          console.log("Processing parks chunk:", parksChunk.length);
+          setVisibleParks(prev => {
+            const newParks = [...prev, ...parksChunk];
+            // Sort by distance as we add new items
+            return newParks.sort((a, b) => a.distance - b.distance);
+          });
+          setAllParks(prev => [...prev, ...parksChunk]);
         }
+      }, query, countryCode) // Pass countryCode here
+      .then(totalCount => {
+        if (!isCancelled) {
+          console.log("Parks fetch completed:", totalCount, "parks processed");
+          setLoadingParks(false);
+        }
+      })
+      .catch(err => {
+        if (!isCancelled) {
+          console.error("Parks fetch error:", err);
+          setError("Failed to load parks: " + err.message);
+          setLoadingParks(false);
+        }
+      });
+      
+    } catch (err) {
+      if (!isCancelled) {
+        console.error("Data fetch error:", err);
+        setError(err.message || "Something went wrong");
       }
     }
-    
-    fetchData();
-    
-    return () => {
-      isCancelled = true;
-      console.log("Cleanup: cancelling data fetch");
-    };
-  }, [query, radiusMeters]);
+  }
+  
+  fetchData();
+  
+  return () => {
+    isCancelled = true;
+    console.log("Cleanup: cancelling data fetch");
+  };
+}, [query, radiusMeters]);
   
   useEffect(() => {
     if (visibleCities.length > 0 || visibleTowns.length > 0) {
@@ -649,9 +723,10 @@ function ResultsContent() {
     const mk = [];
     for (const c of visibleCities) if (c.lat && c.lon) mk.push({ ...c, kind: "city" });
     for (const t of visibleTowns) if (t.lat && t.lon) mk.push({ ...t, kind: "town" });
+    for (const p of visibleParks) if (p.lat && p.lon) mk.push({ ...p, kind: "park" });
     console.log("All markers for map:", mk.length);
     return mk;
-  }, [visibleCities, visibleTowns]);
+  }, [visibleCities, visibleTowns, visibleParks]);
   
   const createSlug = (name) => {
     return name
@@ -663,10 +738,13 @@ function ResultsContent() {
   console.log("Rendering with state:", {
     loadingCities,
     loadingTowns,
+    loadingParks,
     visibleCities: visibleCities.length,
     visibleTowns: visibleTowns.length,
+    visibleParks: visibleParks.length,
     allCities: allCities.length,
     allTowns: allTowns.length,
+    allParks: allParks.length,
     error,
     initialLoadComplete
   });
@@ -677,10 +755,11 @@ function ResultsContent() {
         Cities and towns within {radius} miles of {query}
       </h1>
       
-      {(loadingCities || loadingTowns) && (
+      {(loadingCities || loadingTowns || loadingParks) && (
         <div className="info">
           {loadingCities && "Loading cities… "}
-          {loadingTowns && "Loading towns…"}
+          {loadingTowns && "Loading towns… "}
+          {loadingParks && "Loading parks…"}
           {initialLoadComplete && " (loading more results…)"}
         </div>
       )}
@@ -861,181 +940,327 @@ function ResultsContent() {
             </div>
           </section>
           
-         <section className="faq-page container" style={{ marginBottom: '60px' }} aria-labelledby="faq-section-title">
-  <h2 id="faq-section-title" className="faq-title">Frequently Asked Questions about Places within {radius} Miles of {query}</h2>
-  
-  <div className="faq-list">
-    <div
-      className={`faq-card ${activeFAQ === 0 ? 'open' : ''}`}
-      role="button"
-      tabIndex={-1}
-      onMouseDown={(e) => e.preventDefault()}
-      onClick={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        setActiveFAQ(prev => prev === 0 ? null : 0);
-        requestAnimationFrame(() => window.scrollTo(0, window.scrollY));
-      }}
-      aria-expanded={activeFAQ === 0}
-      aria-controls="faq-answer-1"
-    >
-      <h3 className="faq-question">What cities are within {radius} miles of {query}?</h3>
-      <div
-        id="faq-answer-1"
-        className="faq-answer"
-        role="region"
-        aria-labelledby="faq-question-1"
-        hidden={activeFAQ !== 0}
-        style={{ overflowAnchor: 'none' }}
-      >
-        <p>
-          {visibleCities.length > 0 ? (
-            <>Nearby cities include {visibleCities[0]?.name}, {visibleCities[1]?.name} and others within {radius} miles.</>
-          ) : (
-            <>There are no cities within this radius.</>
-          )}
-        </p>
-      </div>
-    </div>
-    
-    <div
-      className={`faq-card ${activeFAQ === 1 ? 'open' : ''}`}
-      role="button"
-      tabIndex={-1}
-      onMouseDown={(e) => e.preventDefault()}
-      onClick={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        setActiveFAQ(prev => prev === 1 ? null : 1);
-        requestAnimationFrame(() => window.scrollTo(0, window.scrollY));
-      }}
-      aria-expanded={activeFAQ === 1}
-      aria-controls="faq-answer-2"
-    >
-      <h3 className="faq-question">What towns are within {radius} miles of {query}?</h3>
-      <div
-        id="faq-answer-2"
-        className="faq-answer"
-        role="region"
-        aria-labelledby="faq-question-2"
-        hidden={activeFAQ !== 1}
-        style={{ overflowAnchor: 'none' }}
-      >
-        <p>
-          {visibleTowns.length > 0 ? (
-            <>You'll find towns like {visibleTowns[0]?.name} and {visibleTowns[1]?.name}, all easily accessible from {query}.</>
-          ) : (
-            <>No towns were found in this radius.</>
-          )}
-        </p>
-      </div>
-    </div>
-    
-    <div
-      className={`faq-card ${activeFAQ === 2 ? 'open' : ''}`}
-      role="button"
-      tabIndex={-1}
-      onMouseDown={(e) => e.preventDefault()}
-      onClick={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        setActiveFAQ(prev => prev === 2 ? null : 2);
-        requestAnimationFrame(() => window.scrollTo(0, window.scrollY));
-      }}
-      aria-expanded={activeFAQ === 2}
-      aria-controls="faq-answer-3"
-    >
-      <h3 className="faq-question">How do you calculate the distances?</h3>
-      <div
-        id="faq-answer-3"
-        className="faq-answer"
-        role="region"
-        aria-labelledby="faq-question-3"
-        hidden={activeFAQ !== 2}
-        style={{ overflowAnchor: 'none' }}
-      >
-        <p>We use the great-circle formula ("as the crow flies") from {query} to each place. Driving times may differ depending on roads and traffic.</p>
-      </div>
-    </div>
-    <div
-  className={`faq-card ${activeFAQ === 3 ? "open" : ""}`}
-  role="button"
-  tabIndex={-1}
-  onMouseDown={(e) => e.preventDefault()}
-  onClick={(e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setActiveFAQ((prev) => (prev === 3 ? null : 3));
-    requestAnimationFrame(() => window.scrollTo(0, window.scrollY));
-  }}
-  aria-expanded={activeFAQ === 3}
-  aria-controls="faq-answer-4"
+          {/* Parks Section */}
+          <section className="parks-section" style={{ marginTop: '40px', marginBottom: '40px' }}>
+            <div className="card">
+              <div className="card-header">
+                <h2>Nearby Parks (within 10 miles)</h2>
+                <span className="badge">{visibleParks.length}</span>
+              </div>
+              <div className="card-body">
+                {loadingParks && visibleParks.length === 0 ? (
+                  <div className="muted">Loading parks…</div>
+                ) : visibleParks.length === 0 ? (
+                  <div className="muted">No parks found in this radius.</div>
+                ) : (
+                  <>
+                    {visibleParks.slice(0, 7).map((p) => (
+                      <Link
+                        key={`park-${p.id}`}
+                        href={`/how-far-is-${createSlug(p.name)}-from-me`}
+                        target="_blank"
+                        className="result-link"
+                      >
+                        <div className="result-section">
+                          <h3 className="result-title">{p.name}</h3>
+                          <dl className="result-meta">
+                            {p.distance != null && (
+                              <>
+                                <dt>Distance</dt>
+                                <dd>{(p.distance / 1609.344).toFixed(1)} miles</dd>
+                              </>
+                            )}
+                            <dt>Coordinates</dt>
+                            <dd>
+                              {p.lat.toFixed(5)}, {p.lon.toFixed(5)}
+                            </dd>
+                          </dl>
+                        </div>
+                      </Link>
+                    ))}
+                    {loadingParks && initialLoadComplete && <div className="muted">Loading more parks…</div>}
+                  </>
+                )}
+              </div>
+            </div>
+            
+            {/* Parks Map */}
+            <div className="map-wrap" style={{ marginTop: '20px' }}>
+              <div className="map" style={{ height: '400px' }}>
+                {mapReady && center && (
+                  <MapContainer
+                    center={center}
+                    zoom={10}
+                    style={{ height: "100%", width: "100%" }}
+                    zoomControl={true}
+                  >
+                    <TileLayer
+                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
+                    
+                    {/* Search area circle */}
+                    <Circle
+                      center={center}
+                      radius={milesToMeters(10)}
+                      color="green"
+                      fillColor="green"
+                      fillOpacity={0.1}
+                    />
+                    
+                    {/* Center marker */}
+                    <Marker position={center}>
+                      <Popup>
+                        <strong>Search Center: {query}</strong>
+                        <br />
+                        <span>Radius: {radius} miles</span>
+                      </Popup>
+                    </Marker>
+                    
+                    {/* Park markers */}
+                    {visibleParks.slice(0, 7).map((p) => (
+                      <Marker
+                        key={`park-${p.id}`}
+                        position={[p.lat, p.lon]}
+                      >
+                        <Popup>
+                          <strong>{p.name}</strong>
+                          <br />
+                          <span>{(p.distance / 1609.344).toFixed(1)} miles away</span>
+                          <br />
+                          <Link
+                            href={`/how-far-is-${createSlug(p.name)}-from-me`}
+                            target="_blank"
+                            className="popup-link"
+                          >
+                            View details
+                          </Link>
+                        </Popup>
+                      </Marker>
+                    ))}
+                    
+                    {/* Auto-pan immediately after geocode - only if user hasn't interacted */}
+                    {!userHasInteracted && <AutoPanToCenter center={center} />}
+                    
+                    {/* Map bounds fitter - only fit if user hasn't interacted */}
+                    <MapBoundsFitter
+                      center={center}
+                      radiusMeters={radiusMeters}
+                      markers={visibleParks.slice(0, 7)}
+                      shouldFit={!userHasInteracted}
+                    />
+                  </MapContainer>
+                )}
+              </div>
+            </div>
+          </section>
+          
+          <section className="faq-page container" style={{ marginBottom: '60px' }} aria-labelledby="faq-section-title">
+            <h2 id="faq-section-title" className="faq-title">Frequently Asked Questions about Places within {radius} Miles of {query}</h2>
+            
+            <div className="faq-list">
+              <div
+                className={`faq-card ${activeFAQ === 0 ? 'open' : ''}`}
+                role="button"
+                tabIndex={-1}
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setActiveFAQ(prev => prev === 0 ? null : 0);
+                  requestAnimationFrame(() => window.scrollTo(0, window.scrollY));
+                }}
+                aria-expanded={activeFAQ === 0}
+                aria-controls="faq-answer-1"
+              >
+                <h3 className="faq-question">What cities are within {radius} miles of {query}?</h3>
+                <div
+                  id="faq-answer-1"
+                  className="faq-answer"
+                  role="region"
+                  aria-labelledby="faq-question-1"
+                  hidden={activeFAQ !== 0}
+                  style={{ overflowAnchor: 'none' }}
+                >
+                  <p>
+                    {visibleCities.length > 0 ? (
+                      <>Nearby cities include {visibleCities[0]?.name}, {visibleCities[1]?.name} and others within {radius} miles.</>
+                    ) : (
+                      <>There are no cities within this radius.</>
+                    )}
+                  </p>
+                </div>
+              </div>
+              
+              <div
+                className={`faq-card ${activeFAQ === 1 ? 'open' : ''}`}
+                role="button"
+                tabIndex={-1}
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setActiveFAQ(prev => prev === 1 ? null : 1);
+                  requestAnimationFrame(() => window.scrollTo(0, window.scrollY));
+                }}
+                aria-expanded={activeFAQ === 1}
+                aria-controls="faq-answer-2"
+              >
+                <h3 className="faq-question">What towns are within {radius} miles of {query}?</h3>
+                <div
+                  id="faq-answer-2"
+                  className="faq-answer"
+                  role="region"
+                  aria-labelledby="faq-question-2"
+                  hidden={activeFAQ !== 1}
+                  style={{ overflowAnchor: 'none' }}
+                >
+                  <p>
+                    {visibleTowns.length > 0 ? (
+                      <>You'll find towns like {visibleTowns[0]?.name} and {visibleTowns[1]?.name}, all easily accessible from {query}.</>
+                    ) : (
+                      <>No towns were found in this radius.</>
+                    )}
+                  </p>
+                </div>
+              </div>
+              
+              <div
+                className={`faq-card ${activeFAQ === 2 ? 'open' : ''}`}
+                role="button"
+                tabIndex={-1}
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setActiveFAQ(prev => prev === 2 ? null : 2);
+                  requestAnimationFrame(() => window.scrollTo(0, window.scrollY));
+                }}
+                aria-expanded={activeFAQ === 2}
+                aria-controls="faq-answer-3"
+              >
+                <h3 className="faq-question">How do you calculate the distances?</h3>
+                <div
+                  id="faq-answer-3"
+                  className="faq-answer"
+                  role="region"
+                  aria-labelledby="faq-question-3"
+                  hidden={activeFAQ !== 2}
+                  style={{ overflowAnchor: 'none' }}
+                >
+                  <p>We use the great-circle formula ("as the crow flies") from {query} to each place. Driving times may differ depending on roads and traffic.</p>
+                </div>
+              </div>
+              <div
+                className={`faq-card ${activeFAQ === 3 ? "open" : ""}`}
+                role="button"
+                tabIndex={-1}
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setActiveFAQ((prev) => (prev === 3 ? null : 3));
+                  requestAnimationFrame(() => window.scrollTo(0, window.scrollY));
+                }}
+                aria-expanded={activeFAQ === 3}
+                aria-controls="faq-answer-4"
+              >
+                <h3 className="faq-question">Can I search a different radius?</h3>
+              <div
+  id="faq-answer-4"
+  className="faq-answer"
+  role="region"
+  aria-labelledby="faq-question-4"
+  hidden={activeFAQ !== 3}
+  style={{ overflowAnchor: "none" }}
 >
-  <h3 className="faq-question">Can I search a different radius?</h3>
-  <div
-    id="faq-answer-4"
-    className="faq-answer"
-    role="region"
-    aria-labelledby="faq-question-4"
-    hidden={activeFAQ !== 3}
-    style={{ overflowAnchor: "none" }}
-  >
-    {(() => {
-      const radiusOptions = [5,10, 20, 25, 50, 75, 100,110 ];
-      const currentIndex = radiusOptions.indexOf(parseInt(radius));
-      const prevRadius =
-        currentIndex > 0 ? radiusOptions[currentIndex - 1] : null;
-      const nextRadius =
-        currentIndex < radiusOptions.length - 1
-          ? radiusOptions[currentIndex + 1]
-          : null;
-      const slug = createSlug(query);
+  {(() => {
+    const radiusOptions = [5,10, 20, 25, 50, 75, 100,110 ];
+    const currentIndex = radiusOptions.indexOf(parseInt(radius));
+    const prevRadius =
+      currentIndex > 0 ? radiusOptions[currentIndex - 1] : null;
+    const nextRadius =
+      currentIndex < radiusOptions.length - 1
+        ? radiusOptions[currentIndex + 1]
+        : null;
+    const slug = createSlug(query);
 
-      if (prevRadius && nextRadius) {
-        return (
-          <p>
-            Yes! You can expand your search to{" "}
-            <Link href={`/places-${nextRadius}-miles-from-${slug}`}>
-              {nextRadius} miles
-            </Link>{" "}
-            or shrink it to{" "}
-            <Link href={`/places-${prevRadius}-miles-from-${slug}`}>
-              {prevRadius} miles
-            </Link>
-            .
-          </p>
-        );
-      } else if (prevRadius) {
-        return (
-          <p>
-            Yes! You can shrink your search to{" "}
-            <Link href={`/places-${prevRadius}-miles-from-${slug}`}>
-              {prevRadius} miles
-            </Link>
-            .
-          </p>
-        );
-      } else if (nextRadius) {
-        return (
-          <p>
-            Yes! You can expand your search to{" "}
-            <Link href={`/places-${nextRadius}-miles-from-${slug}`}>
-              {nextRadius} miles
-            </Link>
-            .
-          </p>
-        );
-      } else {
-        return <p>No other radius options are available.</p>;
-      }
-    })()}
-  </div>
+    // Function to handle FAQ navigation with auto-refresh
+    const handleFAQNavigation = (href) => {
+      sessionStorage.setItem('shouldAutoRefreshFromFAQ', 'true');
+      window.location.href = href;
+    };
+
+    if (prevRadius && nextRadius) {
+      return (
+        <p>
+          Yes! You can expand your search to{" "}
+          <a 
+            href={`/places-${nextRadius}-miles-from-${slug}`}
+            onClick={(e) => {
+              e.preventDefault();
+              handleFAQNavigation(`/places-${nextRadius}-miles-from-${slug}`);
+            }}
+            style={{color: 'blue', textDecoration: 'underline', cursor: 'pointer'}}
+          >
+            {nextRadius} miles
+          </a>{" "}
+          or shrink it to{" "}
+          <a 
+            href={`/places-${prevRadius}-miles-from-${slug}`}
+            onClick={(e) => {
+              e.preventDefault();
+              handleFAQNavigation(`/places-${prevRadius}-miles-from-${slug}`);
+            }}
+            style={{color: 'blue', textDecoration: 'underline', cursor: 'pointer'}}
+          >
+            {prevRadius} miles
+          </a>
+          .
+        </p>
+      );
+    } else if (prevRadius) {
+      return (
+        <p>
+          Yes! You can shrink your search to{" "}
+          <a 
+            href={`/places-${prevRadius}-miles-from-${slug}`}
+            onClick={(e) => {
+              e.preventDefault();
+              handleFAQNavigation(`/places-${prevRadius}-miles-from-${slug}`);
+            }}
+            style={{color: 'blue', textDecoration: 'underline', cursor: 'pointer'}}
+          >
+            {prevRadius} miles
+          </a>
+          .
+        </p>
+      );
+    } else if (nextRadius) {
+      return (
+        <p>
+          Yes! You can expand your search to{" "}
+          <a 
+            href={`/places-${nextRadius}-miles-from-${slug}`}
+            onClick={(e) => {
+              e.preventDefault();
+              handleFAQNavigation(`/places-${nextRadius}-miles-from-${slug}`);
+            }}
+            style={{color: 'blue', textDecoration: 'underline', cursor: 'pointer'}}
+          >
+            {nextRadius} miles
+          </a>
+          .
+        </p>
+      );
+    } else {
+      return <p>No other radius options are available.</p>;
+    }
+  })()}
 </div>
-
-    
-    
-  </div>
-</section>
+</div>
+            </div>
+          </section>
         </>
       )}
     </>
@@ -1098,7 +1323,7 @@ export default function ResultsPage() {
 
     }
   `}</style>
-</Head>
+        </Head>
        
         <main id="main-content">
           <section className="hero-banner" aria-labelledby="main-heading" aria-describedby="hero-desc">
