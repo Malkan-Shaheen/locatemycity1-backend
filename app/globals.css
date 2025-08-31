@@ -2553,6 +2553,9 @@ display: inline-block;
   font-weight: 600;
   font-size: 1.1rem;
 }
+.faq-question:hover {
+  cursor: pointer;
+}
     .hero-content p {
         font-size: 1.25rem;
         text-align: left;
