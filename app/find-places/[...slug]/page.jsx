@@ -901,8 +901,11 @@ function ResultsContent() {
                     </Popup>
                   </Marker>
                   
-                  {/* City and town markers */}
-                  {allMarkers.map((m) => (
+                  {/* City and town markers - only show what's in cards */}
+                  {allMarkers.filter(marker => 
+                    visibleCities.some(c => c.id === marker.id) || 
+                    visibleTowns.some(t => t.id === marker.id)
+                  ).map((m) => (
                     <Marker
                       key={`${m.kind}-${m.id}`}
                       position={[m.lat, m.lon]}
@@ -932,7 +935,10 @@ function ResultsContent() {
                   <MapBoundsFitter
                     center={center}
                     radiusMeters={radiusMeters}
-                    markers={allMarkers}
+                    markers={allMarkers.filter(marker => 
+                      visibleCities.some(c => c.id === marker.id) || 
+                      visibleTowns.some(t => t.id === marker.id)
+                    )}
                     shouldFit={!userHasInteracted}
                   />
                 </MapContainer>
@@ -945,7 +951,7 @@ function ResultsContent() {
             <div className="card">
               <div className="card-header">
                 <h2>Nearby Parks (within 10 miles)</h2>
-                <span className="badge">{visibleParks.length}</span>
+                <span className="badge">{Math.min(visibleParks.length, 15)}</span>
               </div>
               <div className="card-body">
                 {loadingParks && visibleParks.length === 0 ? (
@@ -954,7 +960,7 @@ function ResultsContent() {
                   <div className="muted">No parks found in this radius.</div>
                 ) : (
                   <>
-                    {visibleParks.slice(0, 7).map((p) => (
+                    {visibleParks.slice(0, 15).map((p) => (
                       <Link
                         key={`park-${p.id}`}
                         href={`/how-far-is-${createSlug(p.name)}-from-me`}
@@ -1017,8 +1023,8 @@ function ResultsContent() {
                       </Popup>
                     </Marker>
                     
-                    {/* Park markers */}
-                    {visibleParks.slice(0, 7).map((p) => (
+                    {/* Park markers - only show what's in cards */}
+                    {visibleParks.slice(0, 15).map((p) => (
                       <Marker
                         key={`park-${p.id}`}
                         position={[p.lat, p.lon]}
@@ -1046,7 +1052,7 @@ function ResultsContent() {
                     <MapBoundsFitter
                       center={center}
                       radiusMeters={radiusMeters}
-                      markers={visibleParks.slice(0, 7)}
+                      markers={visibleParks.slice(0, 15)}
                       shouldFit={!userHasInteracted}
                     />
                   </MapContainer>
@@ -1084,7 +1090,13 @@ function ResultsContent() {
                 >
                   <p>
                     {visibleCities.length > 0 ? (
-                      <>Nearby cities include {visibleCities[0]?.name}, {visibleCities[1]?.name} and others within {radius} miles.</>
+                      <>
+                        {visibleCities.length === 1 ? (
+                          <>You'll find the city of {visibleCities[0]?.name} within {radius} miles.</>
+                        ) : (
+                          <>Nearby cities include {visibleCities[0]?.name}{visibleCities.length > 2 ? ',' : ''} {visibleCities[1]?.name}{visibleCities.length > 2 ? ` and ${visibleCities.length - 2} more` : ''} within {radius} miles.</>
+                        )}
+                      </>
                     ) : (
                       <>There are no cities within this radius.</>
                     )}
@@ -1117,7 +1129,13 @@ function ResultsContent() {
                 >
                   <p>
                     {visibleTowns.length > 0 ? (
-                      <>You'll find towns like {visibleTowns[0]?.name} and {visibleTowns[1]?.name}, all easily accessible from {query}.</>
+                      <>
+                        {visibleTowns.length === 1 ? (
+                          <>You'll find the town of {visibleTowns[0]?.name} within {radius} miles of {query}.</>
+                        ) : (
+                          <>You'll find towns like {visibleTowns[0]?.name}{visibleTowns.length > 2 ? ',' : ''} {visibleTowns[1]?.name}{visibleTowns.length > 2 ? ` and ${visibleTowns.length - 2} more` : ''}, all easily accessible from {query}.</>
+                        )}
+                      </>
                     ) : (
                       <>No towns were found in this radius.</>
                     )}

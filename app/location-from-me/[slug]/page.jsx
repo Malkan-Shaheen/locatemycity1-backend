@@ -140,7 +140,7 @@ export default function DistanceResult() {
   {
     question: `Does this work on mobile if I use my current location?`,
     answer:
-      'Absolutely. Just allow location access on your device, and the calculator will automatically detect where you are to measure the distance to ${destinationName}.',
+      `Absolutely. Just allow location access on your device, and the calculator will automatically detect where you are to measure the distance to ${destinationName}.`,
   },
 ];
 

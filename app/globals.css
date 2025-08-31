@@ -2548,10 +2548,15 @@ display: inline-block;
 .faq-question {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: left;
+  text-align: left;
   font-weight: 600;
   font-size: 1.1rem;
 }
+    .hero-content p {
+        font-size: 1.25rem;
+        text-align: left;
+    }
 
 .faq-answer {
   margin-top: 0.8rem;
