@@ -968,10 +968,10 @@ body {
   font-size: 3.5rem;
   font-weight: 700;
   margin-bottom: 20px;
-  background: linear-gradient(90deg, #3bb5fd, #3bb5fd);
+  background: linear-gradient(90deg, #158bf5, #158bf5);
   -webkit-background-clip: text;
   background-clip: text;
-  -webkit-text-fill-color: #3bb5fd;
+  -webkit-text-fill-color: #158bf5;
   line-height: 1.2;
 }
 
@@ -1121,7 +1121,7 @@ body {
 }
 
 .find-me-btn {
-  background: linear-gradient(135deg,#3bb5fd 0%, #3bb5fd 100%);
+  background: linear-gradient(135deg,#158bf5 0%, #0776d8 100%);
   color: white;
   border: none;
   padding: 16px;
@@ -1332,90 +1332,125 @@ body {
 }
 /* --- Cards --- */
 .features-wrapper1 {
-          font-family: "Poppins", sans-serif;
-          max-width: 1100px;
-          margin: 0 auto;
-          padding: 60px 20px;
-        }
+  font-family: "Poppins", sans-serif;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 60px 20px;
+}
 
-        .main-title1 {
-          text-align: center;
-          font-size: 2.5rem;
-          color: #046c8c;
-          margin-bottom: 60px;
-        }
+.main-title1 {
+  text-align: center;
+  font-size: 2.5rem;
+  color: #046c8c;
+  margin-bottom: 60px;
+}
 
-        .feature-section1 {
-          display: flex;
-          align-items: center;
-          gap: 25px;
-          background: rgba(255, 255, 255, 0.7);
-          backdrop-filter: blur(12px);
-          border-radius: 18px;
-          padding: 25px 35px;
-          margin-bottom: 40px;
-          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-          transition: all 0.3s ease;
-        }
+.feature-section1 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 25px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  border-radius: 18px;
+  padding: 25px 35px;
+  margin-bottom: 40px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
 
-        .feature-section1:hover {
-          transform: translateY(-4px) scale(1.01);
-          box-shadow: 0 15px 35px rgba(0, 123, 255, 0.15);
-        }
 
-        .feature-icon1 {
-          font-size: 2.5rem;
-          background: linear-gradient(135deg, #a0e9ff, #72cfff);
-          color: white;
-          width: 80px;
-          height: 80px;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-shrink: 0;
-          box-shadow: 0 8px 20px rgba(0, 123, 255, 0.2);
-        }
+.feature-section1:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 15px 35px rgba(0, 123, 255, 0.15);
+    background: #ebe395;
+    cursor: pointer;
+}
 
-        .feature-content1 {
-          flex: 1;
-        }
+.feature-left1 {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex: 1;
+}
 
-        .feature-content1 h3 {
-          font-size: 1.6rem;
-          color: #034f68;
-          margin-bottom: 10px;
-        }
+.feature-icon1 {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: #b4e6fe; /* light background */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 8px 20px rgba(0, 123, 255, 0.1);
+}
 
-        .feature-content1 p {
-          color: #444;
-          line-height: 1.6;
-          font-size: 1rem;
-          margin-bottom: 15px;
-        }
+.feature-icon1 img {
+  width: 45px;
+  height: 45px;
+  object-fit: contain;
+}
 
-        .feature-btn1 {
-          background: linear-gradient(135deg, #0497c2, #046c8c);
-          color: white;
-          padding: 8px 22px;
-          border: none;
-          border-radius: 30px;
-          cursor: pointer;
-          font-size: 0.95rem;
-          transition: all 0.3s ease;
-        }
+.feature-content1 h3 {
+  font-size: 1.6rem;
+  color: black;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
 
-        .feature-btn1:hover {
-          background: linear-gradient(135deg, #046c8c, #03485a);
-        }
+.feature-content1 p {
+  color: #444;
+  line-height: 1.6;
+  font-size: 1rem;
+  margin: 0;
+}
 
-        @media (max-width: 900px) {
-          .feature-section1 {
-            flex-direction: column;
-            text-align: center;
-            gap: 15px;
-          }
-        }
+.feature-btn1 {
+  background: none;
+  border: none;
+  color: #046c8c;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.feature-btn1:hover {
+  color: #03485a;
+  transform: translateX(3px);
+}
+
+.feature-btn1 span {
+  font-size: 1.6rem; /* increase arrow size */
+  font-weight: 1100;  /* make it bolder if you want */
+  transition: transform 0.3s ease;}
+
+.feature-btn1:hover span {
+  transform: translateX(3px); /* little slide effect */
+}
+
+@media (max-width: 900px) {
+  .feature-section1 {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+  }
+
+  .feature-left1 {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .feature-btn1 {
+    justify-content: center;
+    margin-top: 15px;
+  }
+}
 
 
 /* --- Rock cities --- */

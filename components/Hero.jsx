@@ -193,7 +193,7 @@ export default function HeroSection() {
                 </div>
                 <p className="location-from-me-text">or find locations near me</p>
                 <button type="submit" className="find-me-btn">
-                  <span aria-label="location">📍</span> Find Location From Me
+                  <span aria-label="location"></span> Find Location From Me
                 </button>
               </form>
             </div>

@@ -63,7 +63,7 @@ const router = useRouter();
       <style>{`
         header {
           width: 100%;
-          background: #3bb5fd;
+          background: #158bf5;
           position: sticky;
           top: 0;
           z-index: 1000;
@@ -248,7 +248,7 @@ const router = useRouter();
       
     >
       <img
-        src="/Images/cityfav.png"
+        src="/Images/cityfav1.png"
         alt="Locate My City logo"
         className="logo-image"
         width="32"
@@ -259,7 +259,7 @@ const router = useRouter();
     </button>
 
             <nav className="nav-links" aria-label="Main navigation">
-              <a href="/" onClick={(e) => handleNavigation(e, '/')}>Home</a>
+              {/* <a href="/" onClick={(e) => handleNavigation(e, '/')}>Home</a> */}
               <a href="/about" onClick={(e) => handleNavigation(e, '/about')}>About</a>
               <a href="/contact" onClick={(e) => handleNavigation(e, '/contact')}>Contact</a>
             </nav>

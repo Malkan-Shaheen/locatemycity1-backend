@@ -906,7 +906,7 @@ useEffect(() => {
                             aria-controls={`faq-answer-${index}`}
                           >
                             <span>{faq.question}</span>
-                            {openIndex === index ? <FaChevronUp aria-hidden="true" /> : <FaChevronDown aria-hidden="true" />}
+                           
                           </button>
                         </h2>
                         <div 

@@ -2,41 +2,42 @@
 
 import Head from "next/head";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Features() {
   const features = [
     {
-      icon: "📍",
+      icon: "/Images/cityfav1.png",
       title: "Distance From Me",
-      desc: "Calculate precise distances from your current location to any destination. Get accurate measurements in miles or kilometers with real-time updates.",
+      desc: "Calculate the distance from your current location to chosen destination.",
       link: "/location-from-me",
       btn: "Calculate Distance",
     },
     {
-      icon: "🗺️",
+      icon: "/Images/map.png",
       title: "Location to Location",
-      desc: "Compare distances between any two points of interest. Perfect for planning trips or finding the most convenient routes between locations.",
+      desc: "Measure the distance between two locations of your choice.",
       link: "/location-from-location/location-to-location",
       btn: "Compare Locations",
     },
     {
-      icon: "🪨",
+      icon: "/Images/rocks.png",
       title: "Rock Cities",
-      desc: "Explore cities and towns with “rock” in their name—unique places tied together by one powerful word.",
+      desc: "Explore cities with “rock” in their name, such as historic towns and ancient ones made of stories!",
       link: "/cities-with-rock-in-their-name",
       btn: "Explore Rocks",
     },
     {
-      icon: "💧",
+      icon: "/Images/spring.png",
       title: "Spring Cities",
-      desc: "Explore cities with “Spring” in their name—perfect for discovering places that sound refreshing, whether or not water is involved.",
+      desc: "Discover cities with “Spring” in their name, ideal for finding places with natural springs.",
       link: "/cities-with-spring-in-their-name",
       btn: "Discover Springs",
     },
     {
-      icon: "🌆",
+      icon: "/Images/search.png",
       title: "Find Places & Cities",
-      desc: "Search for any place or city around the world. Get instant details, locations, and explore them on an interactive map.",
+      desc: "Search for any place, city, town name, or browse through categories.",
       link: "/find-places",
       btn: "Search Now",
     },
@@ -57,19 +58,23 @@ export default function Features() {
 
         {features.map((f, i) => (
           <div className="feature-section1" key={i}>
-            <div className="feature-icon1">{f.icon}</div>
-            <div className="feature-content1">
-              <h3>{f.title}</h3>
-              <p>{f.desc}</p>
-              <Link href={f.link}>
-                <button className="feature-btn1">{f.btn}</button>
-              </Link>
+            <div className="feature-left1">
+              <div className="feature-icon1">
+                <Image src={f.icon} alt={f.title} width={45} height={45} />
+              </div>
+              <div className="feature-content1">
+                <h3>{f.title}</h3>
+                <p>{f.desc}</p>
+              </div>
             </div>
+            <Link href={f.link}>
+              <button className="feature-btn1">
+                {f.btn} <span>→</span>
+              </button>
+            </Link>
           </div>
         ))}
       </section>
-
-   
     </>
   );
 }
