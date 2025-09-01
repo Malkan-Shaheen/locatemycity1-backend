@@ -3,6 +3,9 @@ import React from 'react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import Head from 'next/head';
+import { useRouter } from "next/navigation";
+
+
 
 const AboutPage = () => {
   const features = [
@@ -20,6 +23,7 @@ const AboutPage = () => {
     { emoji: '📡', text: 'Open data – Transparent and trustworthy.' },
     { emoji: '⏳', text: 'Ready when you are – Explore on your time.' },
   ];
+  const router = useRouter();
 
   return (
     <div className="about-page">
@@ -78,10 +82,15 @@ const AboutPage = () => {
 
         {/* CTA */}
         <section className="about-cta">
-          <h3>Start Exploring Today</h3>
-          <p>Dive into the world with LocateMyCity — where every location tells a story.</p>
-          <button aria-label="Try our location tools and calculators">Try Our Tools Now</button>
-        </section>
+      <h3>Start Exploring Today</h3>
+      <p>Dive into the world with LocateMyCity — where every location tells a story.</p>
+      <button
+        onClick={() => router.push("/")}
+        aria-label="Try our location tools and calculators"
+      >
+        Try Our Tools Now
+      </button>
+    </section>
       </main>
 
       <Footer />

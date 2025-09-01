@@ -21,7 +21,7 @@ export default function ContactPage() {
         {/* Hero Section */}
         <section className="contact-hero">
           <div className="hero-overlay"></div>
-          <div className="hero-content">
+          <div className="hero1-content">
             <h1>Get in <span>Touch</span></h1>
             <p className="hero-subtitle">
               Have a question, found an error, or want to suggest a location? We'd love to hear from you.

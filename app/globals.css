@@ -982,6 +982,24 @@ body {
   line-height: 1.6;
 }
 
+.hero-content1 h1 {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  background: linear-gradient(90deg, #c6d2db, #b0b3b6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: #158bf5;
+  line-height: 1.2;
+}
+
+.hero-content1 p {
+  font-size: 1.1rem;
+  color: #757980;
+  margin-bottom: 30px;
+  line-height: 1.6;
+}
+
 .floating-elements {
   position: absolute;
   width: 100%;
@@ -1363,7 +1381,7 @@ body {
 .feature-section1:hover {
   transform: translateY(-4px) scale(1.01);
   box-shadow: 0 15px 35px rgba(0, 123, 255, 0.15);
-    background: #D3D3D3;
+    background: #eeeeee;
     cursor: pointer;
 }
 
@@ -3398,6 +3416,9 @@ display: inline-block;
           color: #4b5563;
           font-size: 1.2rem;
           line-height: 1.6;
+        }
+        .about-promise{
+            margin-top: 60px;
         }
         .about-what-we-do h2,
         .about-why h2,
