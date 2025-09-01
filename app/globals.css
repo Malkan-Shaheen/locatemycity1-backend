@@ -1363,7 +1363,7 @@ body {
 .feature-section1:hover {
   transform: translateY(-4px) scale(1.01);
   box-shadow: 0 15px 35px rgba(0, 123, 255, 0.15);
-    background: #ebe395;
+    background: #D3D3D3;
     cursor: pointer;
 }
 
