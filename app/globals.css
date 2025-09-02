@@ -2839,6 +2839,13 @@ display: inline-block;
         font-size: 1.25rem;
         text-align: left;
     }
+    @media (max-width: 768px) {
+        .hero-content p {
+            font-size: 14px;
+           
+        }
+      
+    }
 
 .faq-answer {
   margin-top: 0.8rem;
@@ -3689,6 +3696,14 @@ display: inline-block;
         
         /* Responsive */
         @media (max-width: 768px) {
+          .about-page {
+          background: linear-gradient(to bottom right, #f0f4ff, #e0e7ff);
+          min-height: 100vh;
+          min-width: 100vh;
+          display: flex;
+          flex-direction: column;
+          font-family: Arial, sans-serif;
+        }
           .stats-container {
             grid-template-columns: 1fr;
           }
@@ -3708,10 +3723,12 @@ display: inline-block;
         .about-page {
           background: linear-gradient(to bottom right, #f0f4ff, #e0e7ff);
           min-height: 100vh;
+          min-width: 100vh;
           display: flex;
           flex-direction: column;
           font-family: Arial, sans-serif;
         }
+
         .about-main {
           flex-grow: 1;
           max-width: 1200px;

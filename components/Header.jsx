@@ -70,6 +70,7 @@ const router = useRouter();
           min-height: 70px;
           display: flex;
           align-items: center;
+          width:auto;
           box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
@@ -147,6 +148,7 @@ const router = useRouter();
           border: none;
           padding: 0;
           z-index: 1001;
+          top:6px;
         }
 
         .hamburger span {
