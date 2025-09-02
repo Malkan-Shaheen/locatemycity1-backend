@@ -57,22 +57,22 @@ export default function Features() {
         <h2 className="main-title1">Explore Location Features</h2>
 
         {features.map((f, i) => (
-          <div className="feature-section1" key={i}>
-            <div className="feature-left1">
-              <div className="feature-icon1">
-                <Image src={f.icon} alt={f.title} width={45} height={45} />
+          <Link href={f.link} key={i} className="feature-card-link">
+            <div className="feature-section1 hover-card">
+              <div className="feature-left1">
+                <div className="feature-icon1">
+                  <Image src={f.icon} alt={f.title} width={45} height={45} />
+                </div>
+                <div className="feature-content1">
+                  <h3>{f.title}</h3>
+                  <p>{f.desc}</p>
+                </div>
               </div>
-              <div className="feature-content1">
-                <h3>{f.title}</h3>
-                <p>{f.desc}</p>
+              <div className="feature-btn1">
+                {f.btn} <span>→</span>
               </div>
             </div>
-            <Link href={f.link}>
-              <button className="feature-btn1">
-                {f.btn} <span>→</span>
-              </button>
-            </Link>
-          </div>
+          </Link>
         ))}
       </section>
     </>
