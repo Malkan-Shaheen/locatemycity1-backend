@@ -5,10 +5,9 @@ const path = require('path');
 
 const app = express();
 
-
-// Allow your Vercel frontend in production, localhost in dev
 // Allow your Vercel frontend in production, localhost in dev
 const allowedOrigins = [
+  'http://localhost:3000',
   'https://locate-my-city.vercel.app',
   'https://locate-my-city-81kz.vercel.app',
   'https://locatemycitywebmain.vercel.app',
@@ -18,92 +17,105 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow server-to-server requests (no origin) or if in the list
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS: ' + origin));
+    // Allow server-to-server requests (no origin, like curl/Postman)
+    if (!origin) return callback(null, true);
+
+    // Always allow localhost
+    if (origin.startsWith("http://localhost:3000")) {
+      return callback(null, true);
     }
+
+    // Allow all Vercel preview deployments for your project
+    if (/^https:\/\/locate-my-city.*\.vercel\.app$/.test(origin)) {
+      return callback(null, true);
+    }
+
+    // Allow if in explicit list
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    // Otherwise block
+    callback(new Error("Not allowed by CORS: " + origin));
   }
 }));
-
 
 // Load data at startup
 let rockCities = [];
 let springCities = {};
 
 function flattenStateGroupedData(data) {
-    return Object.keys(data).flatMap(state => 
-        data[state].map(item => ({ ...item, state }))
-    );
+  return Object.keys(data).flatMap(state =>
+    data[state].map(item => ({ ...item, state }))
+  );
 }
 
 try {
-    rockCities = JSON.parse(fs.readFileSync(path.join(__dirname, 'rock_cities.json'), 'utf8'));
+  rockCities = JSON.parse(fs.readFileSync(path.join(__dirname, 'rock_cities.json'), 'utf8'));
 } catch (error) {
-    console.error('Error loading rock_cities.json:', error.message);
-    rockCities = [];
+  console.error('Error loading rock_cities.json:', error.message);
+  rockCities = [];
 }
 
 try {
-    springCities = JSON.parse(fs.readFileSync(path.join(__dirname, 'spring_cities.json'), 'utf8'));
+  springCities = JSON.parse(fs.readFileSync(path.join(__dirname, 'spring_cities.json'), 'utf8'));
 } catch (error) {
-    console.error('Error loading spring_cities.json:', error.message);
-    springCities = {};
+  console.error('Error loading spring_cities.json:', error.message);
+  springCities = {};
 }
 
 // Routes
 app.get('/api/locations', (req, res) => {
-    res.json(rockCities);
+  res.json(rockCities);
 });
 
 app.get('/api/states', (req, res) => {
-    const states = [...new Set(rockCities.map(item => item.state))].sort();
-    res.json(states);
+  const states = [...new Set(rockCities.map(item => item.state))].sort();
+  res.json(states);
 });
 
 app.get('/api/locations/:state', (req, res) => {
-    const stateLocations = rockCities.filter(item => item.state === req.params.state);
-    res.json(stateLocations);
+  const stateLocations = rockCities.filter(item => item.state === req.params.state);
+  res.json(stateLocations);
 });
 
 app.get('/api/springs', (req, res) => {
-    res.json(springCities);
+  res.json(springCities);
 });
 
 app.get('/api/springs/flat', (req, res) => {
-    res.json(flattenStateGroupedData(springCities));
+  res.json(flattenStateGroupedData(springCities));
 });
 
 app.get('/api/springs/states', (req, res) => {
-    res.json(Object.keys(springCities).sort());
+  res.json(Object.keys(springCities).sort());
 });
 
 app.get('/api/springs/:state', (req, res) => {
-    res.json(springCities[req.params.state] || []);
+  res.json(springCities[req.params.state] || []);
 });
 
 app.get('/api/stats', (req, res) => {
-    const flatSprings = flattenStateGroupedData(springCities);
-    res.json({
-        rockCities: {
-            total: rockCities.length,
-            states: [...new Set(rockCities.map(item => item.state))].length
-        },
-        springCities: {
-            total: flatSprings.length,
-            states: Object.keys(springCities).length
-        }
-    });
+  const flatSprings = flattenStateGroupedData(springCities);
+  res.json({
+    rockCities: {
+      total: rockCities.length,
+      states: [...new Set(rockCities.map(item => item.state))].length
+    },
+    springCities: {
+      total: flatSprings.length,
+      states: Object.keys(springCities).length
+    }
+  });
 });
 
 // Simple test route
 app.get('/ping', (req, res) => {
-    res.json({ message: 'Backend is running!' });
+  res.json({ message: 'Backend is running!' });
 });
 
 // Start server
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
