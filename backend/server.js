@@ -1,4 +1,4 @@
-const express = require('express');
+vconst express = require('express');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
@@ -9,10 +9,11 @@ const app = express();
 // Allow your Vercel frontend in production, localhost in dev
 // Allow your Vercel frontend in production, localhost in dev
 const allowedOrigins = [
-  'http://localhost:3000',                // local dev
-  'https://locate-my-city.vercel.app',     // your Vercel frontend
+  'http://localhost:3000',
+  'https://locate-my-city.vercel.app',
   'https://locate-my-city-81kz.vercel.app',
-  'https://locatemycitywebmain.vercel.app' // removed trailing slash
+  'https://locatemycitywebmain.vercel.app',
+  'https://locate-my-city-nlzad4qy2-malkans-projects-4f541c42.vercel.app' // <--- add this
 ];
 
 app.use(cors({
