@@ -5,7 +5,7 @@ const path = require('path');
 
 const app = express();
 
-// Allow your Vercel frontend in production, localhost in dev
+// Explicitly allowed origins
 const allowedOrigins = [
   'http://localhost:3000',
   'https://locate-my-city.vercel.app',
@@ -17,27 +17,28 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow server-to-server requests (no origin, like curl/Postman)
+    // Allow server-to-server requests (like Postman, curl, etc.)
     if (!origin) return callback(null, true);
 
-    // Always allow localhost
+    // Allow localhost during dev
     if (origin.startsWith("http://localhost:3000")) {
       return callback(null, true);
     }
 
-    // Allow all Vercel preview deployments for your project
+    // Allow any Vercel preview or production deployment of your project
     if (/^https:\/\/locate-my-city.*\.vercel\.app$/.test(origin)) {
       return callback(null, true);
     }
 
-    // Allow if in explicit list
+    // Allow if in explicit whitelist
     if (allowedOrigins.includes(origin)) {
       return callback(null, true);
     }
 
     // Otherwise block
-    callback(new Error("Not allowed by CORS: " + origin));
-  }
+    return callback(new Error("Not allowed by CORS: " + origin));
+  },
+  credentials: true
 }));
 
 // Load data at startup
