@@ -9,7 +9,6 @@ const app = express();
 // Allow your Vercel frontend in production, localhost in dev
 // Allow your Vercel frontend in production, localhost in dev
 const allowedOrigins = [
-  'http://localhost:3000',
   'https://locate-my-city.vercel.app',
   'https://locate-my-city-81kz.vercel.app',
   'https://locatemycitywebmain.vercel.app',
