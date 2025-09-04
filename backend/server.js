@@ -12,7 +12,8 @@ const allowedOrigins = [
   'https://locate-my-city.vercel.app',
   'https://locate-my-city-81kz.vercel.app',
   'https://locatemycitywebmain.vercel.app',
-  'https://locate-my-city-nlzad4qy2-malkans-projects-4f541c42.vercel.app' // <--- add this
+  'https://locate-my-city-nlzad4qy2-malkans-projects-4f541c42.vercel.app',
+  'https://locate-my-city-blue.vercel.app'
 ];
 
 app.use(cors({
